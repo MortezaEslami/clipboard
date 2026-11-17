@@ -9,6 +9,7 @@ import { renderVocab } from './vocab.js';
 import { renderMarks } from './marks.js';
 import { renderGame } from './game.js';
 import { renderStats } from './stats.js';
+import { renderStoryList, renderStory } from './stories.js';
 import { getToken, syncNow, lastSync } from './sync.js';
 import { renderSettings } from './settings.js';
 
@@ -35,6 +36,10 @@ async function render() {
     if (name.startsWith('p-') && S.lessonMap.has(name.slice(2))) {
       view.classList.add('full'); key = '';
       const c = await renderPlayer(view, name.slice(2), { nav, ...opts });
+      if (my !== seq) { c && c(); return; } cleanup = c;
+    } else if (name === 'stories') { await renderStoryList(view, nav); key = 'home';
+    } else if (name.startsWith('story/')) {
+      key = 'home'; const c = await renderStory(view, nav, name.slice(6));
       if (my !== seq) { c && c(); return; } cleanup = c;
     } else if (name === 'stats') { renderStats(view, nav); key = 'home';
     } else if (name === 'game') { renderGame(view, nav); key = 'review';

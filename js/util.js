@@ -156,12 +156,13 @@ try { loadVoices(); speechSynthesis.addEventListener('voiceschanged', loadVoices
 export const LANG_NAMES = { en: 'English', fr: 'Français', es: 'Español', tr: 'Türkçe', it: 'Italiano', ar: t('العربية'), de: 'Deutsch' };
 const LOCALE = { de: 'de-DE', en: 'en-US', fr: 'fr-FR', es: 'es-ES', tr: 'tr-TR', it: 'it-IT', ar: 'ar-SA' };
 export const vlang = (v) => (v && v.ctx && v.ctx.lang) || 'de';
-export function speak(text, rate = 0.9, lang = 'de') {
+export function speak(text, rate = 0.9, lang = 'de', onend = null) {
   try {
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     const loc = LOCALE[lang] || lang;
     u.lang = loc; u.rate = rate;
+    if (onend) { u.onend = onend; u.onerror = onend; }
     const v = voices.find((x) => x.lang.replace('_', '-').toLowerCase() === loc.toLowerCase()) || voices.find((x) => x.lang.toLowerCase().startsWith(lang));
     if (v) u.voice = v;
     speechSynthesis.speak(u);

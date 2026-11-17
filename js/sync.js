@@ -27,7 +27,7 @@ async function findGist() {
   if (g) { localStorage.setItem(GID, g.id); return api('/gists/' + g.id); }
   return null;
 }
-const payload = () => ({ v: 1, t: Date.now(), xp: S.settings.xp || 0, days: S.days, vocab: [...S.vocab.values()], cards: [...S.cards.values()], marks: [...S.marks.values()], progress: [...S.progress.values()], tomb: S.settings.tomb || {} });
+const payload = () => ({ v: 1, t: Date.now(), xp: S.settings.xp || 0, days: S.days, vocab: [...S.vocab.values()], cards: [...S.cards.values()], marks: [...S.marks.values()], progress: [...S.progress.values()], tomb: S.settings.tomb || {}, stories: S.settings.stories || {} });
 const stamp = (o) => o.upd || o.created || o.t || 0;
 
 async function merge(r) {
@@ -63,6 +63,8 @@ async function merge(r) {
     if (!c) S.days[k] = v; else { c.r = Math.max(c.r || 0, v.r || 0); c.n = Math.max(c.n || 0, v.n || 0); c.w = Math.max(c.w || 0, v.w || 0); }
   }
   S.settings.xp = Math.max(S.settings.xp || 0, r.xp || 0);
+  const sd = (S.settings.stories = S.settings.stories || {});
+  for (const [k, v] of Object.entries(r.stories || {})) if (!sd[k] || (v.score || 0) > (sd[k].score || 0)) sd[k] = v;
   await Promise.all([DB.putMany('vocab', putV), DB.putMany('cards', putC), DB.putMany('marks', putM), DB.putMany('progress', putP), ...dels.map(([s, id]) => DB.del(s, id))]);
   flushDays(); saveSettings();
   return putV.length + putC.length + putM.length + putP.length + dels.length;
