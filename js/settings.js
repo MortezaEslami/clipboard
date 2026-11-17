@@ -118,5 +118,5 @@ export async function renderSettings(root, nav) {
       for (const s of ['vocab', 'cards', 'marks', 'progress']) { await DB.clear(s); S[s].clear(); }
       S.days = {}; await DB.put('meta', { id: 'days', v: {} }); toast(t('پاک شد')); nav('home');
     } }, t('پاک کردن')))),
-    h('div', { style: { textAlign: 'center', color: 'var(--muted)', fontSize: '12px', padding: '20px 0 6px' } }, 'Clipboard · v1.5.0 — Nicos Weg & Momente'));
+    h('div', { style: { textAlign: 'center', color: 'var(--muted)', fontSize: '12px', padding: '20px 0 6px' } }, 'Clipboard · v1.5.1 — Nicos Weg & Momente'));
 }

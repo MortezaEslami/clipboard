@@ -223,17 +223,31 @@ export function answerCard(id, g) {
   d.r++; if (wasNew) d.n++; S.days[k] = d; saveDays();
   return n;
 }
+const WATCH_MIN = 30; // seconds of video in a day that count as an active day
+export const dayActive = (d) => !!d && ((d.r || 0) > 0 || (d.w || 0) >= WATCH_MIN);
 export function streak() {
   let n = 0; const d = new Date();
-  if (!(S.days[dayKey(d)] || {}).r) d.setDate(d.getDate() - 1);
-  while ((S.days[dayKey(d)] || {}).r) { n++; d.setDate(d.getDate() - 1); }
+  if (!dayActive(S.days[dayKey(d)])) d.setDate(d.getDate() - 1);
+  while (dayActive(S.days[dayKey(d)])) { n++; d.setDate(d.getDate() - 1); }
   return n;
+}
+export function bestStreak() {
+  const ks = Object.keys(S.days).filter((k) => dayActive(S.days[k])).sort(); let best = 0, run = 0, prev = null;
+  for (const k of ks) { const dt = new Date(k + 'T12:00:00'); if (prev && Math.round((dt - prev) / 864e5) === 1) run++; else run = 1; best = Math.max(best, run); prev = dt; }
+  return Math.max(best, streak());
 }
 export function lastDays(n = 7) {
   const out = []; const d = new Date(); d.setDate(d.getDate() - n + 1);
-  for (let i = 0; i < n; i++) { out.push({ k: dayKey(d), r: (S.days[dayKey(d)] || {}).r || 0 }); d.setDate(d.getDate() + 1); }
+  for (let i = 0; i < n; i++) { const e = S.days[dayKey(d)] || {}; out.push({ k: dayKey(d), r: e.r || 0, w: e.w || 0, on: dayActive(e) }); d.setDate(d.getDate() + 1); }
   return out;
 }
+let _wSave = 0;
+export function addWatch(sec = 1) {
+  const k = dayKey(); const d = S.days[k] || { r: 0, n: 0 }; d.w = (d.w || 0) + sec; S.days[k] = d;
+  if (Date.now() - _wSave > 8000) { _wSave = Date.now(); saveDays(); }
+}
+export const flushDays = () => saveDays();
+export const todayWatch = () => (S.days[dayKey()] || {}).w || 0;
 
 // ---------- backup / import / export
 export function exportAll() {
@@ -251,7 +265,7 @@ export async function importAll(o) {
     S.lessons.push(c.lesson); S.lessonMap.set(c.lesson.id, c.lesson); S.cues.set(c.lesson.id, c.cues);
     await DB.put('meta', { id: 'cl-' + c.lesson.id, v: c.lesson }); await DB.put('meta', { id: 'cc-' + c.lesson.id, v: { cues: c.cues } });
   }
-  if (o.days) { for (const [k, v] of Object.entries(o.days)) { const cur = S.days[k]; if (!cur || cur.r < v.r) S.days[k] = v; } saveDays(); }
+  if (o.days) { for (const [k, v] of Object.entries(o.days)) { const cur = S.days[k]; if (!cur) S.days[k] = v; else { cur.r = Math.max(cur.r || 0, v.r || 0); cur.n = Math.max(cur.n || 0, v.n || 0); cur.w = Math.max(cur.w || 0, v.w || 0); } } saveDays(); }
   if (o.settings) { S.settings = { ...S.settings, ...o.settings }; saveSettings(); }
 }
 

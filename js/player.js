@@ -1,5 +1,5 @@
 import { t } from './i18n.js';
-import { S, MARKS, loadCues, loadGlossary, lookup as lookupDE, findVocab, addVocab, saveVocab, deleteVocab, setMark, removeMark, markId, saveProgress, saveSettings, KINDS, vocabLevel } from './state.js';
+import { addWatch, flushDays, S, MARKS, loadCues, loadGlossary, lookup as lookupDE, findVocab, addVocab, saveVocab, deleteVocab, setMark, removeMark, markId, saveProgress, saveSettings, KINDS, vocabLevel } from './state.js';
 import { confetti, sfx, buzz } from './fx.js';
 import * as Videos from './videos.js';
 import { h, ic, icon, fmtTime, tokenize, norm, openSheet, toast, speak, fa, confirmSheet, LANG_NAMES } from './util.js';
@@ -513,7 +513,9 @@ export async function renderPlayer(root, lessonId, opts = {}) {
   await attach();
   if (opts.startAt != null) { const i = findCue(opts.startAt); if (i >= 0) { setCur(i); } }
 
+  const watchTimer = setInterval(() => { if (playing && !document.hidden && hasVideo()) addWatch(1); }, 1000);
   return function cleanup() {
+    clearInterval(watchTimer); flushDays();
     cancelAnimationFrame(raf);
     try { saveProgress(lessonId, video.currentTime || 0, dur); } catch (e) { /* ignore */ }
     video.pause(); video.removeAttribute('src'); video.load();

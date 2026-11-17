@@ -255,3 +255,22 @@ html[lang=fa] body,html[lang=fa] button,html[lang=fa] input,html[lang=fa] textar
 .mg-card.bad{border-color:#ff3860;background:#ffe3e9;animation:shake .38s}
 .mg-end{width:100%}
 .pl-now .n-act{display:grid;grid-template-columns:repeat(2,auto);gap:0 2px;align-content:start}
+
+/* ---- stats ---- */
+.wk-more{margin-top:8px;font-size:12px;color:var(--accent);font-weight:700;text-align:center}
+.weekdots{cursor:pointer}
+.st-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 14px}
+.st-card{border-radius:18px;padding:12px 14px;color:#fff;display:flex;flex-direction:column;gap:2px;box-shadow:0 6px 16px rgba(0,0,0,.12)}
+.st-card .ic{font-size:20px}.st-card b{font-size:20px;font-weight:800}.st-card small{opacity:.92;font-size:11.5px}
+.st-card.a{background:linear-gradient(135deg,#ff9500,#ff2e5f)}.st-card.b{background:linear-gradient(135deg,#ffc800,#ff8a00)}
+.st-card.c{background:linear-gradient(135deg,#2e7bff,#8a4dff)}.st-card.d{background:linear-gradient(135deg,#00c2a8,#2e7bff)}
+.st-seg{margin:0 0 12px}
+.st-chart{padding:14px;margin-bottom:12px}.st-t{font-weight:700;font-size:13px;margin-bottom:10px}
+.bars{display:flex;align-items:flex-end;gap:4px;height:130px;direction:ltr}
+.bars.week{gap:8px}
+.bar-c{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px;min-width:0}
+.bar-c i{display:block;width:100%;max-width:34px;border-radius:7px 7px 3px 3px;min-height:2px;opacity:.9}
+.bar-c.today i{opacity:1;box-shadow:0 0 0 2px var(--accent-soft)}
+.bar-c .bv{font-size:10px;font-weight:700;color:var(--muted);height:13px;line-height:13px}
+.bar-c small{font-size:9.5px;color:var(--muted);height:12px;white-space:nowrap}
+.st-meta{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:4px;padding:4px 6px 16px}

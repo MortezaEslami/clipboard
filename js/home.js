@@ -16,7 +16,7 @@ function langPicker() {
   const menu = h('div', { class: 'flag-menu' }, flags.map(([k, f, n]) => h('button', { class: 'flag' + (k === lang ? ' on' : ''), title: n, 'aria-label': n, onclick: () => { if (k !== lang) setLang(k); else menu.classList.remove('open'); } }, f)));
   globe.addEventListener('click', (e) => { e.stopPropagation(); menu.classList.toggle('open'); });
   document.addEventListener('click', () => menu.classList.remove('open'));
-  return h('div', { class: 'lang-pick' }, h('small', { class: 'ver' }, 'v1.5.0'), globe, menu);
+  return h('div', { class: 'lang-pick' }, h('small', { class: 'ver' }, 'v1.5.1'), globe, menu);
 }
 
 export function renderHome(root, nav) {
@@ -68,11 +68,11 @@ export function renderHome(root, nav) {
 
   // ---- week streak dots
   const days = lastDays(7);
-  root.append(h('div', { class: 'card weekdots' }, h('div', { class: 'wd-row' }, days.map((d, i) => {
+  root.append(h('div', { class: 'card weekdots', onclick: () => nav('stats') }, h('div', { class: 'wd-row' }, days.map((d, i) => {
     const dt = new Date(d.k + 'T12:00:00');
-    return h('div', { class: 'wd' + (d.r ? ' on' : '') + (i === 6 ? ' today' : '') },
-      h('span', { class: 'dot', html: d.r ? ic('flame') : '' }), h('small', null, WD[dt.getDay()]));
-  })), h('div', { class: 'wk-l' }, st >= 2 ? t('{0} روز پشت‌سرهم 🔥', fa(st)) : t('هر روز چند کارت مرور کن تا زنجیره بسازی'))));
+    return h('div', { class: 'wd' + (d.on ? ' on' : '') + (i === 6 ? ' today' : '') },
+      h('span', { class: 'dot', html: d.on ? ic('flame') : '' }), h('small', null, WD[dt.getDay()]));
+  })), h('div', { class: 'wk-l' }, st >= 2 ? t('{0} روز پشت‌سرهم 🔥', fa(st)) : t('هر روز چند کارت مرور کن تا زنجیره بسازی')), h('div', { class: 'wk-more' }, '📊 ' + t('آمار کامل') + ' ›')));
 
   // ---- stats
   const statEls = [];
