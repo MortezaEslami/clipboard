@@ -16,7 +16,7 @@ function langPicker() {
   const menu = h('div', { class: 'flag-menu' }, flags.map(([k, f, n]) => h('button', { class: 'flag' + (k === lang ? ' on' : ''), title: n, 'aria-label': n, onclick: () => { if (k !== lang) setLang(k); else menu.classList.remove('open'); } }, f)));
   globe.addEventListener('click', (e) => { e.stopPropagation(); menu.classList.toggle('open'); });
   document.addEventListener('click', () => menu.classList.remove('open'));
-  return h('div', { class: 'lang-pick' }, h('small', { class: 'ver' }, 'v1.4.6'), globe, menu);
+  return h('div', { class: 'lang-pick' }, h('small', { class: 'ver' }, 'v1.5.0'), globe, menu);
 }
 
 export function renderHome(root, nav) {
@@ -78,6 +78,7 @@ export function renderHome(root, nav) {
   const statEls = [];
   const mk = (n, label, icon, color) => { const b = h('b', { class: 'num' }, fa(0)); statEls.push([b, n]); return h('div', { class: `card stat s-${color}` }, h('div', { class: 'si', html: ic(icon) }), b, h('div', { class: 'sl' }, label)); };
   root.append(h('div', { class: 'stats' }, mk(S.vocab.size, t('واژگان'), 'book', 'indigo'), mk(today, t('مرور امروز'), 'zap', 'amber'), mk(S.marks.size, t('مارک'), 'bookmark', 'rose')));
+  if (S.vocab.size >= 3) root.append(h('button', { class: 'game-card', onclick: () => nav('game') }, h('span', { class: 'gc-ic' }, '🎮'), h('span', { class: 'gc-t' }, h('b', null, t('بازی جفت‌یابی')), h('small', null, t('با بازی، واژه‌هایت را سرگرم‌کننده تمرین کن')))));
   statEls.forEach(([el, n]) => countUp(el, n, { fmt: fa }));
 
   // ---- continue

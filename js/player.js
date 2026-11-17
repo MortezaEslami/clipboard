@@ -62,7 +62,9 @@ export async function renderPlayer(root, lessonId, opts = {}) {
   const nowTr = h('div', { class: 'n-tr' });
   const peekBtn = h('button', { class: 'icon-btn sm', onclick: peek, html: ic('eye'), 'aria-label': t('نگاه سریع') });
   const nowMark = h('button', { class: 'icon-btn sm', onclick: () => cur >= 0 && openMarkSheet(cur), html: ic('bookmark'), 'aria-label': t('مارک') });
-  const now = h('div', { class: 'pl-now' }, h('div', { class: 'n-body' }, nowDe, nowTr), h('div', { class: 'n-act' }, peekBtn, nowMark));
+  const i1Btn = h('button', { class: 'icon-btn sm i1btn', onclick: toggleI1, html: ic('sparkle'), 'aria-label': t('فقط جمله‌های i+1') });
+  const micBtn = h('button', { class: 'icon-btn sm', onclick: openShadow, html: ic('mic'), 'aria-label': t('تمرین تلفظ') });
+  const now = h('div', { class: 'pl-now' }, h('div', { class: 'n-body' }, nowDe, nowTr), h('div', { class: 'n-act' }, micBtn, i1Btn, peekBtn, nowMark));
 
   const list = h('div', { class: 'pl-list' });
   const rowEls = [], trEls = [], noteEls = [], mkEls = [];
@@ -79,14 +81,16 @@ export async function renderPlayer(root, lessonId, opts = {}) {
     list.append(row);
   });
 
+  const covEl = h('small', { class: 'cov' });
   const topbar = h('div', { class: 'pl-top' },
     h('button', { class: 'icon-btn', onclick: () => opts.nav('home'), html: ic('back'), 'aria-label': t('بازگشت') }),
-    h('div', { class: 'ttl' }, h('b', null, lesson.title), h('small', null, lesson.sub || '')),
+    h('div', { class: 'ttl' }, h('b', null, lesson.title), h('small', null, lesson.sub || ''), covEl),
     h('button', { class: 'icon-btn', onclick: openMore, html: ic('more'), 'aria-label': t('بیشتر') }));
 
   const player = h('div', { class: 'player' }, topbar, stage,
     h('div', { class: 'pl-bar' }, tmCur, seek, tmDur), ctl, chips, now, list);
   root.append(player);
+  setTimeout(() => computeI1(), 0);
 
   // ---------- helpers
   function wordsNode(text) {
@@ -388,6 +392,80 @@ export async function renderPlayer(root, lessonId, opts = {}) {
   function repaintWords() {
     refreshKnown();
     list.querySelectorAll('.t-de').forEach((el, i) => { el.replaceChildren(wordsNode(cues[i].de)); });
+    computeI1();
+  }
+
+  // ---------- i+1 (sentences with exactly one unknown word) and lesson coverage
+  function tokKnown(tk) {
+    const n = norm(tk.t); if (known.has(n)) return true;
+    const hit = lookup(tk.t); return !!(hit && hit.lemma && known.has(norm(hit.lemma)));
+  }
+  function computeI1() {
+    const uniq = new Map(); let n1 = 0;
+    cues.forEach((c, i) => {
+      const row = rowEls[i]; if (!row || row.classList.contains('sec')) return;
+      let unk = 0;
+      tokenize(c.de).forEach((tk) => { if (!tk.w) return; const k = tokKnown(tk); uniq.set(norm(tk.t), k); if (!k) unk++; });
+      const on = unk === 1; row.classList.toggle('i1', on); if (on) n1++;
+    });
+    const total = uniq.size; let kn = 0; uniq.forEach((k) => { if (k) kn++; });
+    const pct = total ? Math.round((kn / total) * 100) : 0;
+    covEl.textContent = total ? t('با {0}٪ از واژه‌های این درس آشنایی', fa(pct)) + (n1 ? ' · ✨ ' + fa(n1) : '') : '';
+  }
+  function toggleI1() {
+    const on = list.classList.toggle('only-i1'); i1Btn.classList.toggle('on', on);
+    toast(on ? t('جمله‌های i+1: فقط یک واژهٔ ناشناخته دارند') : t('همهٔ جمله‌ها'));
+  }
+
+  // ---------- shadowing: listen, record yourself, compare (+ speech score where the browser supports it)
+  function openShadow() {
+    if (video && !video.paused) video.pause();
+    const i = cur >= 0 ? cur : 0; const c = cues[i];
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const loc = { de: 'de-DE', en: 'en-US', fr: 'fr-FR', es: 'es-ES', it: 'it-IT', tr: 'tr-TR' }[lang] || lang;
+    let rec = null, chunks = [], url = null, stream = null, recog = null, timer = null, transcript = '';
+    const sent = h('div', { class: 'sh-sent de' }, c.de);
+    const score = h('div', { class: 'sh-score' });
+    const hint = h('div', { class: 'sh-hint' }, t('جمله را گوش بده، بعد ضبط کن و دوباره تکرارش کن؛ آخر صدای خودت را با اصل مقایسه کن.'));
+    const origBtn = h('button', { class: 'btn sec', onclick: () => { setCur(i); replayCue(); } }, h('span', { html: ic('vol') }), ' ', t('جملهٔ اصلی'));
+    const recBtn = h('button', { class: 'btn rec-btn' }, h('span', { html: ic('mic') }), ' ', t('ضبط'));
+    const mineBtn = h('button', { class: 'btn sec', style: { display: 'none' }, onclick: () => { if (url) new Audio(url).play(); } }, h('span', { html: ic('play') }), ' ', t('صدای خودت'));
+    const body = h('div', { class: 'sh-shadow' }, sent, hint, h('div', { class: 'sh-row' }, origBtn, recBtn, mineBtn), score);
+    const sh = openSheet({ title: t('تمرین تلفظ'), body, onClose: cleanup });
+    function cleanup() { try { clearTimeout(timer); rec && rec.state !== 'inactive' && rec.stop(); recog && recog.stop(); stream && stream.getTracks().forEach((x) => x.stop()); } catch (e) { /* ignore */ } if (url) URL.revokeObjectURL(url); }
+    function showScore() {
+      const want = tokenize(c.de).filter((tk) => tk.w).map((tk) => tk.t);
+      const got = new Set(norm(transcript).split(' ').filter(Boolean));
+      let ok = 0;
+      const spans = want.map((w) => { const hit = got.has(norm(w)); if (hit) ok++; return h('span', { class: hit ? 'ok' : 'miss' }, w + ' '); });
+      const pct = want.length ? Math.round((ok / want.length) * 100) : 0;
+      score.replaceChildren(h('div', { class: 'pct' }, t('شباهت تلفظ: {0}٪', fa(pct))), h('div', { class: 'de words' }, spans));
+      if (pct >= 80) { sfx('done'); confetti(innerWidth / 2, innerHeight * 0.6, { n: 40 }); } else sfx('good');
+    }
+    async function start() {
+      try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+      catch (e) { toast(t('اجازهٔ میکروفون داده نشد')); return; }
+      chunks = []; transcript = ''; score.replaceChildren();
+      rec = new MediaRecorder(stream);
+      rec.ondataavailable = (e) => e.data.size && chunks.push(e.data);
+      rec.onstop = () => {
+        stream.getTracks().forEach((x) => x.stop());
+        if (url) URL.revokeObjectURL(url);
+        url = URL.createObjectURL(new Blob(chunks, { type: rec.mimeType || 'audio/webm' }));
+        mineBtn.style.display = ''; recBtn.classList.remove('on'); recBtn.replaceChildren(h('span', { html: ic('mic') }), ' ', t('ضبط'));
+        if (!SR) toast(t('ضبط شد؛ حالا مقایسه کن'));
+        else setTimeout(() => { if (transcript) showScore(); else score.replaceChildren(h('div', { class: 'sh-hint' }, t('ضبط شد؛ حالا مقایسه کن'))); }, 600);
+      };
+      if (SR) {
+        try { recog = new SR(); recog.lang = loc; recog.interimResults = false; recog.maxAlternatives = 3;
+          recog.onresult = (e) => { transcript = [...e.results].map((r) => r[0].transcript).join(' '); };
+          recog.start(); } catch (e) { recog = null; }
+      }
+      rec.start(); recBtn.classList.add('on'); recBtn.replaceChildren(h('span', { html: ic('pausebar') }), ' ', t('توقف'));
+      timer = setTimeout(stop, Math.max(3000, (c.e - c.s) * 1000 + 3500));
+    }
+    function stop() { clearTimeout(timer); try { rec && rec.state !== 'inactive' && rec.stop(); recog && recog.stop(); } catch (e) { /* ignore */ } }
+    recBtn.addEventListener('click', () => { if (rec && rec.state === 'recording') stop(); else start(); });
   }
 
   function openMore() {
@@ -428,7 +506,7 @@ export async function renderPlayer(root, lessonId, opts = {}) {
   document.addEventListener('keydown', onKey);
 
   // ---------- init
-  document.body.classList.add('noTabs');
+  
   setMode(mode);
   cues.forEach((_, i) => paintRowMark(i));
   updateButtons(); renderNow();

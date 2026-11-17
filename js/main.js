@@ -7,6 +7,7 @@ import { renderPlayer } from './player.js';
 import { renderReview } from './review.js';
 import { renderVocab } from './vocab.js';
 import { renderMarks } from './marks.js';
+import { renderGame } from './game.js';
 import { renderSettings } from './settings.js';
 
 const view = document.getElementById('view');
@@ -33,8 +34,9 @@ async function render() {
       view.classList.add('full'); key = '';
       const c = await renderPlayer(view, name.slice(2), { nav, ...opts });
       if (my !== seq) { c && c(); return; } cleanup = c;
+    } else if (name === 'game') { renderGame(view, nav); key = 'review';
     } else if (name === 'review') {
-      view.classList.add('full'); key = '';
+      view.classList.add('full'); key = 'review';
       const c = await renderReview(view, { nav, ...opts });
       if (my !== seq) { c && c(); return; } cleanup = c;
     } else if (name === 'vocab') renderVocab(view, nav);
