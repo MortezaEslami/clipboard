@@ -21,11 +21,11 @@ export async function renderReview(root, { lesson = null, nav } = {}) {
   if (!total) { wrap.append(topbar(0, 0), h('div', { class: 'rv-body' }, emptyState())); return () => document.body.classList.remove('noTabs'); }
   next();
 
-  function topbar(d, t) {
+  function topbar(d, tot) {
     return h('div', { class: 'rv-top' },
       h('button', { class: 'icon-btn', onclick: () => nav('home'), html: ic('x'), 'aria-label': t('بستن') }),
-      h('div', { class: 'bar' }, h('i', { style: { width: t ? `${(d / t) * 100}%` : '0%' } })),
-      h('div', { class: 'cnt num' }, combo >= 3 ? h('span', { class: 'combo' }, '🔥×' + fa(combo)) : null, t ? t('{0} مانده', fa(queue.length)) : ''));
+      h('div', { class: 'bar' }, h('i', { style: { width: tot ? `${(d / tot) * 100}%` : '0%' } })),
+      h('div', { class: 'cnt num' }, combo >= 3 ? h('span', { class: 'combo' }, '🔥×' + fa(combo)) : null, tot ? t('{0} مانده', fa(queue.length)) : ''));
   }
   function emptyState() {
     const c = counts();
@@ -101,8 +101,8 @@ export async function renderReview(root, { lesson = null, nav } = {}) {
   }
   function transNode(v) {
     const c = v.ctx; if (!c) return null;
-    const t = mean() === 'en' ? c.en || c.fa : c.fa || c.en;
-    return t ? h('div', { class: 'rv-tr ' + (c.fa && t === c.fa ? 'fa' : 'en') }, t) : null;
+    const tx = mean() === 'en' ? c.en || c.fa : c.fa || c.en;
+    return tx ? h('div', { class: 'rv-tr ' + (c.fa && tx === c.fa ? 'fa' : 'en') }, tx) : null;
   }
 
   async function clipNode(v, autoplay) {
@@ -150,7 +150,7 @@ export async function renderReview(root, { lesson = null, nav } = {}) {
       clipBox = await clipNode(v, true);
       body.append(clipBox);
       const s = sentenceNode(v, { blank: true }); if (s) body.append(s);
-      const t = transNode(v); if (t) body.append(t);
+      const tn = transNode(v); if (tn) body.append(tn);
       if (!clipBox.playClip) body.append(h('div', { class: 'rv-actions' }, h('button', { class: 'btn sec sm', onclick: () => speak(v.ctx.de.replace(v.form, '…'), undefined, vlang(v)), html: ic('vol') + ' ' + t('بشنو') })));
     }
 
@@ -175,9 +175,9 @@ export async function renderReview(root, { lesson = null, nav } = {}) {
       }
       body.append(h('div', { class: 'hr' }));
       const extra = [];
-      if (kind === 'de2m') { extra.push(...meanings(v)); const t = transNode(v); if (t) extra.push(t); }
-      else if (kind === 'm2de') { extra.push(h('div', { class: 'rv-word' }, v.de), h('div', { class: 'rv-actions' }, h('button', { class: 'btn sec sm', onclick: () => speak(v.de, undefined, vlang(v)), html: ic('vol') + ' ' + t('تلفظ') }))); const s = sentenceNode(v); if (s) extra.push(s); const t = transNode(v); if (t) extra.push(t); }
-      else { extra.push(h('div', { class: 'rv-word', style: { fontSize: '30px' } }, v.de)); extra.push(...meanings(v)); const s = sentenceNode(v); if (s) extra.push(s); const t = transNode(v); if (t) extra.push(t); }
+      if (kind === 'de2m') { extra.push(...meanings(v)); const tn = transNode(v); if (tn) extra.push(tn); }
+      else if (kind === 'm2de') { extra.push(h('div', { class: 'rv-word' }, v.de), h('div', { class: 'rv-actions' }, h('button', { class: 'btn sec sm', onclick: () => speak(v.de, undefined, vlang(v)), html: ic('vol') + ' ' + t('تلفظ') }))); const s = sentenceNode(v); if (s) extra.push(s); const tn = transNode(v); if (tn) extra.push(tn); }
+      else { extra.push(h('div', { class: 'rv-word', style: { fontSize: '30px' } }, v.de)); extra.push(...meanings(v)); const s = sentenceNode(v); if (s) extra.push(s); const tn = transNode(v); if (tn) extra.push(tn); }
       // for clip card replace blanked sentence
       if (kind === 'clip') body.querySelectorAll('.rv-sent').forEach((e) => e.remove());
       body.append(...extra);

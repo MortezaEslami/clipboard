@@ -102,12 +102,12 @@ export async function renderSettings(root, nav) {
         h('button', { class: 'btn sec sm', onclick: () => out('klipp-backup.json', JSON.stringify(exportAll()), 'application/json') }, h('span', { html: ic('down') }), t('پشتیبان کامل')),
         h('button', { class: 'btn sec sm', onclick: () => out('klipp-vocab.csv', vocabCSV(), 'text/csv') }, h('span', { html: ic('down') }), t('لغت‌ها (CSV)')),
         h('button', { class: 'btn ghost sm', onclick: () => impFile.click() }, h('span', { html: ic('up') }), t('انتخاب فایل')),
-        h('button', { class: 'btn ghost sm', onclick: async () => { const t = JSON.stringify(exportAll()); ta.value = t; toast((await copyText(t)) ? t('پشتیبان کپی شد') : t('متن در کادر است')); } }, t('کپی پشتیبان'))),
+        h('button', { class: 'btn ghost sm', onclick: async () => { const js = JSON.stringify(exportAll()); ta.value = js; toast((await copyText(js)) ? t('پشتیبان کپی شد') : t('متن در کادر است')); } }, t('کپی پشتیبان'))),
       ta,
       h('button', { class: 'btn block', style: { marginTop: '10px' }, onclick: async () => {
-        const t = ta.value.trim(); if (!t) { toast(t('چیزی برای وارد کردن نیست')); return; }
+        const txt = ta.value.trim(); if (!txt) { toast(t('چیزی برای وارد کردن نیست')); return; }
         try {
-          if (t.startsWith('{')) { await importAll(JSON.parse(t)); toast(t('پشتیبان وارد شد ✓')); } else { toast(t('{0} لغت وارد شد', fa(importCSV(t)))); }
+          if (txt.startsWith('{')) { await importAll(JSON.parse(txt)); toast(t('پشتیبان وارد شد ✓')); } else { toast(t('{0} لغت وارد شد', fa(importCSV(txt)))); }
           ta.value = '';
         } catch (e) { toast(e.message || t('فرمت نامعتبر')); }
       } }, t('وارد کردن')),
@@ -118,5 +118,5 @@ export async function renderSettings(root, nav) {
       for (const s of ['vocab', 'cards', 'marks', 'progress']) { await DB.clear(s); S[s].clear(); }
       S.days = {}; await DB.put('meta', { id: 'days', v: {} }); toast(t('پاک شد')); nav('home');
     } }, t('پاک کردن')))),
-    h('div', { style: { textAlign: 'center', color: 'var(--muted)', fontSize: '12px', padding: '20px 0 6px' } }, 'Clipboard · v1.4 — Nicos Weg & Momente'));
+    h('div', { style: { textAlign: 'center', color: 'var(--muted)', fontSize: '12px', padding: '20px 0 6px' } }, 'Clipboard · v1.4.1 — Nicos Weg & Momente'));
 }

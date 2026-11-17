@@ -110,9 +110,9 @@ export async function renderPlayer(root, lessonId, opts = {}) {
     return r;
   }
   function paintRowTr(i) {
-    const t = trFor(cues[i]); const el = trEls[i];
-    el.textContent = t ? t.text : '';
-    el.className = 't-tr ' + (t ? t.cls : '');
+    const tr = trFor(cues[i]); const el = trEls[i];
+    el.textContent = tr ? tr.text : '';
+    el.className = 't-tr ' + (tr ? tr.cls : '');
   }
   function paintRowMark(i) {
     const m = S.marks.get(markId(lessonId, i));
@@ -130,8 +130,8 @@ export async function renderPlayer(root, lessonId, opts = {}) {
     if (cur < 0) { nowDe.append(h('span', { class: 'hint fa', style: { fontFamily: 'var(--f-fa)' } }, t('پخش را شروع کن یا روی یک جمله بزن'))); renderOvl(); return; }
     const c = cues[cur];
     nowDe.append(wordsNode(c.de));
-    const t = trFor(c);
-    if (t) { nowTr.textContent = t.text; nowTr.className = 'n-tr ' + t.cls; }
+    const tr = trFor(c);
+    if (tr) { nowTr.textContent = tr.text; nowTr.className = 'n-tr ' + tr.cls; }
     const m = S.marks.get(markId(lessonId, cur));
     nowMark.style.color = m ? `var(--m-${m.color})` : '';
     renderOvl();
@@ -139,9 +139,9 @@ export async function renderPlayer(root, lessonId, opts = {}) {
   function renderOvl() {
     ovl.replaceChildren(); ovl.className = 'ovl';
     if (cur < 0 || mode === 'none' || mode === 'orig') return;
-    const c = cues[cur]; const t = trFor(c);
+    const c = cues[cur]; const tr = trFor(c);
     ovl.append(h('div', { class: 'o-de de' }, c.de));
-    if (t) ovl.append(h('div', { class: 'o-tr ' + t.cls }, t.text));
+    if (tr) ovl.append(h('div', { class: 'o-tr ' + tr.cls }, tr.text));
     ovl.classList.add('has');
     if (course.mask) { ovl.style.height = `${(1 - S.settings.maskTop) * 100}%`; ovl.style.top = 'auto'; }
     else { ovl.classList.add('plain'); ovl.style.height = ''; }
