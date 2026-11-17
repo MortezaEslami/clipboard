@@ -129,7 +129,7 @@ export function findVocab(de) {
 export function vocabCards(v) { return Object.keys(KINDS).map((k) => S.cards.get(cardId(v.id, k))).filter(Boolean); }
 
 export function addVocab({ de, fa, en, form, ctx, kinds }) {
-  const v = { id: uid(), de: de.trim(), fa: (fa || '').trim(), en: (en || '').trim(), form: (form || de).trim(), ctx: ctx || null, created: Date.now() };
+  const v = { id: uid(), de: de.trim(), fa: (fa || '').trim(), en: (en || '').trim(), form: (form || de).trim(), ctx: ctx || null, created: Date.now(), upd: Date.now() };
   const ks = kinds || activeKinds(!!ctx);
   v.kinds = ks;
   S.vocab.set(v.id, v); DB.put('vocab', v);
@@ -153,11 +153,12 @@ export function syncCards(v) {
     }
   }
 }
-export function saveVocab(v) { S.vocab.set(v.id, v); DB.put('vocab', v); syncCards(v); }
+export function saveVocab(v) { v.upd = Date.now(); S.vocab.set(v.id, v); DB.put('vocab', v); syncCards(v); }
 export function deleteVocab(id) {
   const v = S.vocab.get(id); if (!v) return;
   Object.keys(KINDS).forEach((k) => { S.cards.delete(cardId(id, k)); DB.del('cards', cardId(id, k)); });
   S.vocab.delete(id); DB.del('vocab', id);
+  tomb(id);
 }
 export const todayReviews = () => (S.days[dayKey()] || {}).r || 0;
 export function vocabLevel(v) {
@@ -173,7 +174,8 @@ export function setMark(lesson, cue, i, color, note) {
   const m = { id: markId(lesson, i), lesson, i, s: cue.s, e: cue.e, de: cue.de, en: cue.en || '', fa: cue.fa || '', color, note: note || '', t: Date.now() };
   S.marks.set(m.id, m); DB.put('marks', m); return m;
 }
-export function removeMark(lesson, i) { S.marks.delete(markId(lesson, i)); DB.del('marks', markId(lesson, i)); }
+export function removeMark(lesson, i) { S.marks.delete(markId(lesson, i)); DB.del('marks', markId(lesson, i)); tomb(markId(lesson, i)); }
+export function tomb(id) { S.settings.tomb = S.settings.tomb || {}; S.settings.tomb[id] = Date.now(); saveSettings(); }
 
 // ---------- progress
 export function saveProgress(id, pos, dur) {

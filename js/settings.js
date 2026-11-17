@@ -1,4 +1,5 @@
-import { t, lang, setLang } from './i18n.js';
+import { getToken, setToken, lastSync, syncNow } from './sync.js';
+import { t, lang, locale, setLang } from './i18n.js';
 import { S, saveSettings, exportAll, importAll, vocabCSV, importCSV } from './state.js';
 import * as Videos from './videos.js';
 import * as DB from './db.js';
@@ -96,6 +97,30 @@ export async function renderSettings(root, nav) {
   impFile.addEventListener('change', async () => { const f = impFile.files[0]; if (f) { ta.value = await f.text(); toast(t('فایل خوانده شد؛ «وارد کردن» را بزن')); } });
   document.body.append(impFile); setTimeout(() => impFile.remove(), 900000);
   const out = (name, text, mime) => { if (download(name, text, mime)) toast(t('فایل ساخته شد')); else { ta.value = text; toast(t('دانلود ممکن نبود؛ متن در کادر پایین است')); } };
+  const syncStatus = h('div', { class: 'sync-st' });
+  const tokIn = h('input', { class: 'input', type: 'password', placeholder: t('توکن GitHub'), value: getToken(), autocomplete: 'off' });
+  const paintSync = () => { const l = lastSync(); syncStatus.textContent = l ? t('آخرین همگام‌سازی: {0}', new Date(l).toLocaleString(locale)) : t('هنوز همگام‌سازی نشده'); };
+  paintSync();
+  const doSync = async () => {
+    setToken(tokIn.value);
+    if (!getToken()) { toast(t('توکن درست نیست')); return; }
+    syncBtn.disabled = true;
+    try { const n = await syncNow(); paintSync(); toast(t('همگام‌سازی شد ✓')); if (n) { root.replaceChildren(); renderSettings(root, nav); } }
+    catch (e) { toast(e.message || t('اتصال به GitHub ناموفق بود')); }
+    syncBtn.disabled = false;
+  };
+  const syncBtn = h('button', { class: 'btn', onclick: doSync }, t('همگام‌سازی الان'));
+  root.append(h('div', { class: 'sect-t' }, t('☁️ همگام‌سازی بین دستگاه‌ها')),
+    h('div', { class: 'card', style: { padding: '14px 16px' } },
+      h('div', { class: 'sync-help' }, t('واژه‌ها، کارت‌ها، مارک‌ها، پیشرفت و آمار روی یک Gist خصوصی در GitHub خودت ذخیره می‌شود. روی هر دو دستگاه (اپ و وب) همان توکن را وارد کن.')),
+      h('div', { class: 'sync-help' }, t('توکن را از github.com/settings/tokens بساز: Generate new token (classic) و فقط تیک gist را بزن.')),
+      h('div', { class: 'sync-help' }, t('کلیپ‌ها همگام نمی‌شوند؛ آن‌ها را روی هر دستگاه جدا اضافه کن.')),
+      tokIn,
+      h('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap', margin: '10px 0 6px' } },
+        h('button', { class: 'btn sec sm', onclick: () => { setToken(tokIn.value); toast(t('ذخیره شد ✓')); } }, t('ذخیره توکن')),
+        syncBtn,
+        h('button', { class: 'btn ghost sm', onclick: () => { setToken(''); tokIn.value = ''; paintSync(); } }, t('قطع اتصال'))),
+      syncStatus));
   root.append(h('div', { class: 'sect-t' }, t('💾 پشتیبان و انتقال')),
     h('div', { class: 'card', style: { padding: '14px 16px' } },
       h('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '12px' } },
@@ -118,5 +143,5 @@ export async function renderSettings(root, nav) {
       for (const s of ['vocab', 'cards', 'marks', 'progress']) { await DB.clear(s); S[s].clear(); }
       S.days = {}; await DB.put('meta', { id: 'days', v: {} }); toast(t('پاک شد')); nav('home');
     } }, t('پاک کردن')))),
-    h('div', { style: { textAlign: 'center', color: 'var(--muted)', fontSize: '12px', padding: '20px 0 6px' } }, 'Clipboard · v1.5.1 — Nicos Weg & Momente'));
+    h('div', { style: { textAlign: 'center', color: 'var(--muted)', fontSize: '12px', padding: '20px 0 6px' } }, 'Clipboard · v1.6.0 — Nicos Weg & Momente'));
 }

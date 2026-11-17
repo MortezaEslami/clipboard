@@ -16,7 +16,7 @@ function langPicker() {
   const menu = h('div', { class: 'flag-menu' }, flags.map(([k, f, n]) => h('button', { class: 'flag' + (k === lang ? ' on' : ''), title: n, 'aria-label': n, onclick: () => { if (k !== lang) setLang(k); else menu.classList.remove('open'); } }, f)));
   globe.addEventListener('click', (e) => { e.stopPropagation(); menu.classList.toggle('open'); });
   document.addEventListener('click', () => menu.classList.remove('open'));
-  return h('div', { class: 'lang-pick' }, h('small', { class: 'ver' }, 'v1.5.1'), globe, menu);
+  return h('div', { class: 'lang-pick' }, h('small', { class: 'ver' }, 'v1.6.0'), globe, menu);
 }
 
 export function renderHome(root, nav) {

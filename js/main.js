@@ -9,6 +9,7 @@ import { renderVocab } from './vocab.js';
 import { renderMarks } from './marks.js';
 import { renderGame } from './game.js';
 import { renderStats } from './stats.js';
+import { getToken, syncNow, lastSync } from './sync.js';
 import { renderSettings } from './settings.js';
 
 const view = document.getElementById('view');
@@ -74,6 +75,8 @@ function applyTheme() {
     applyTheme();
     window.addEventListener('hashchange', render);
     await render();
+    const bg = () => { if (getToken() && Date.now() - lastSync() > 60000) syncNow().then((n) => { if (n && !document.querySelector('.player,.rv')) render(); }).catch(() => {}); };
+    bg(); document.addEventListener('visibilitychange', () => { if (document.hidden) { if (getToken()) syncNow().catch(() => {}); } else bg(); });
     if (!window.KlippApp && 'serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
       navigator.serviceWorker.register('sw.js').catch(() => {});
     }
