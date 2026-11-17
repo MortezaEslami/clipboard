@@ -25,7 +25,7 @@ export function renderMarks(root, nav) {
     const rows = all.filter((m) => (filter.color === 'all' || m.color === filter.color) && (filter.lesson === 'all' || m.lesson === filter.lesson));
     list.replaceChildren();
     if (!rows.length) {
-      list.append(h('div', { class: 'empty' }, h('div', { html: ic('bookmark') }), h('b', null, all.length ? t('مارکی با این فیلتر نیست') : t('هنوز مارکی نداری')),
+      list.append(h('div', { class: 'empty' }, h('div', { html: ic('bookmark') }), h('b', null, all.length ? t('مارکی با این فیلتر نیست') : t('هنوز مارکی نگذاشته‌ای')),
         all.length ? '' : t('داخل پلیر آیکون نشانک کنار هر جمله را بزن و یکی از چهار رنگ را انتخاب کن.')));
       return;
     }

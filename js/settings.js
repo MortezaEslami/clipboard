@@ -25,7 +25,7 @@ export async function renderSettings(root, nav) {
   async function addFiles(files) {
     const items = []; const skipped = [];
     [...files].forEach((f) => { const id = Videos.matchLesson(f.name, S.lessons); (id ? items : skipped).push({ f, id }); });
-    if (!items.length) { toast(t('اسم فایل‌ها به هیچ درسی نخورد')); status.textContent = t('شناخته نشد:') + ' ' + skipped.slice(0, 3).map((x) => x.f.name).join(t('،') + ' '); return; }
+    if (!items.length) { toast(t('اسم فایل‌ها با هیچ درسی جور درنیامد')); status.textContent = t('شناخته نشد:') + ' ' + skipped.slice(0, 3).map((x) => x.f.name).join(t('،') + ' '); return; }
     prog.style.display = 'block'; let ok = 0;
     for (let i = 0; i < items.length; i++) {
       status.textContent = t('در حال افزودن {0} از {1} — {2}', fa(i + 1), fa(items.length), S.lessonMap.get(items[i].id).title);
@@ -59,7 +59,7 @@ export async function renderSettings(root, nav) {
   const u = await Videos.usage();
   if (u.quota) vbox.append(h('div', { style: { padding: '10px 16px', fontSize: '12.5px', color: 'var(--muted)', borderTop: '1px solid var(--line)' } }, t('حافظه مصرفی اپ: {0} از {1}', fmtSize(u.used), fmtSize(u.quota))));
   if (Videos.supported() && !(await Videos.isPersisted())) {
-    vbox.append(row(t('محافظت از داده‌ها'), t('جلوی پاک‌شدن ویدیوها و لغت‌ها را بگیر'), h('button', { class: 'btn sec sm', onclick: async () => toast((await Videos.persist()) ? t('محافظت فعال شد ✓') : t('مرورگر قبول نکرد؛ اپ را نصب کن (Add to Home screen)')) }, t('فعال‌سازی'))));
+    vbox.append(row(t('محافظت از داده‌ها'), t('جلوی پاک‌شدن ویدیوها و واژه‌ها را بگیر'), h('button', { class: 'btn sec sm', onclick: async () => toast((await Videos.persist()) ? t('محافظت فعال شد؛ خیالت راحت 😌') : t('مرورگر اجازه نداد؛ اپ را نصب کن (Add to Home screen)')) }, t('فعال‌سازی'))));
   }
 
   // ---------- display
@@ -82,12 +82,12 @@ export async function renderSettings(root, nav) {
       row(t('کارت جدید در روز'), null, nInp),
       row(t('میزان یادآوری هدف'), t('بالاتر = مرور بیشتر'), h('div', { style: { display: 'flex', alignItems: 'center', gap: '8px' } }, rInp, rVal)),
       row(t('هدف مرور روزانه'), t('برای حلقهٔ رنگی صفحهٔ خانه'), seg([['10', fa(10)], ['15', fa(15)], ['25', fa(25)], ['40', fa(40)]], String(S.settings.dailyGoal || 15), (k) => { S.settings.dailyGoal = +k; saveSettings(); })),
-      row(t('صدای جلوه‌ها'), t('صدای کوتاه موقع مرور و افزودن لغت'), sw(S.settings.sound !== false, (v) => { S.settings.sound = v; saveSettings(); })),
+      row(t('صدای جلوه‌ها'), t('صدای کوتاه موقع مرور و افزودن واژه'), sw(S.settings.sound !== false, (v) => { S.settings.sound = v; saveSettings(); })),
       row(t('لرزش (هپتیک)'), null, sw(S.settings.haptics !== false, (v) => { S.settings.haptics = v; saveSettings(); })),
       row(t('پخش خودکار کلیپ صحنه'), null, sw(S.settings.autoplayClip, (v) => { S.settings.autoplayClip = v; saveSettings(); })),
       row(t('تایپ کردن پاسخ'), t('برای کارت‌های «معنی ← آلمانی» و شنیداری'), sw(S.settings.typing, (v) => { S.settings.typing = v; saveSettings(); }))),
-    h('div', { class: 'sect-t' }, t('🃏 نوع کارت‌های لغتِ جدید')),
-    h('div', { class: 'card' }, ...[['de2m', t('آلمانی ← معنی'), null], ['m2de', t('معنی ← آلمانی'), null], ['clip', t('شنیداری + جای خالی'), t('کلیپ همان صحنه؛ برای لغت‌های ذخیره‌شده از ویدیو')]]
+    h('div', { class: 'sect-t' }, t('🃏 نوع کارت‌های واژهِ جدید')),
+    h('div', { class: 'card' }, ...[['de2m', t('آلمانی ← معنی'), null], ['m2de', t('معنی ← آلمانی'), null], ['clip', t('شنیداری + جای خالی'), t('کلیپ همان صحنه؛ برای واژه‌های ذخیره‌شده از ویدیو')]]
       .map(([k, l, s]) => row(l, s, sw(S.settings.kinds[k], (v) => { S.settings.kinds[k] = v; if (!Object.values(S.settings.kinds).some(Boolean)) S.settings.kinds.de2m = true; saveSettings(); })))));
 
   // ---------- backup
@@ -100,23 +100,23 @@ export async function renderSettings(root, nav) {
     h('div', { class: 'card', style: { padding: '14px 16px' } },
       h('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '12px' } },
         h('button', { class: 'btn sec sm', onclick: () => out('klipp-backup.json', JSON.stringify(exportAll()), 'application/json') }, h('span', { html: ic('down') }), t('پشتیبان کامل')),
-        h('button', { class: 'btn sec sm', onclick: () => out('klipp-vocab.csv', vocabCSV(), 'text/csv') }, h('span', { html: ic('down') }), t('لغت‌ها (CSV)')),
+        h('button', { class: 'btn sec sm', onclick: () => out('klipp-vocab.csv', vocabCSV(), 'text/csv') }, h('span', { html: ic('down') }), t('واژگان (CSV)')),
         h('button', { class: 'btn ghost sm', onclick: () => impFile.click() }, h('span', { html: ic('up') }), t('انتخاب فایل')),
-        h('button', { class: 'btn ghost sm', onclick: async () => { const js = JSON.stringify(exportAll()); ta.value = js; toast((await copyText(js)) ? t('پشتیبان کپی شد') : t('متن در کادر است')); } }, t('کپی پشتیبان'))),
+        h('button', { class: 'btn ghost sm', onclick: async () => { const js = JSON.stringify(exportAll()); ta.value = js; toast((await copyText(js)) ? t('پشتیبان کپی شد') : t('متن را در کادر پایین می‌بینی')); } }, t('کپی پشتیبان'))),
       ta,
       h('button', { class: 'btn block', style: { marginTop: '10px' }, onclick: async () => {
-        const txt = ta.value.trim(); if (!txt) { toast(t('چیزی برای وارد کردن نیست')); return; }
+        const txt = ta.value.trim(); if (!txt) { toast(t('چیزی برای وارد کردن پیدا نشد')); return; }
         try {
-          if (txt.startsWith('{')) { await importAll(JSON.parse(txt)); toast(t('پشتیبان وارد شد ✓')); } else { toast(t('{0} لغت وارد شد', fa(importCSV(txt)))); }
+          if (txt.startsWith('{')) { await importAll(JSON.parse(txt)); toast(t('پشتیبان وارد شد ✓')); } else { toast(t('{0} واژه وارد شد', fa(importCSV(txt)))); }
           ta.value = '';
         } catch (e) { toast(e.message || t('فرمت نامعتبر')); }
       } }, t('وارد کردن')),
       h('div', { style: { fontSize: '12.5px', color: 'var(--muted)', marginTop: '10px', lineHeight: 1.7 } }, t('CSV برای Anki/Quizlet: ستون‌های de, fa, en (و اختیاری sentence_de). جداکننده: کاما، سمی‌کالن یا تب.'))),
     h('div', { class: 'sect-t' }, t('⚠️ خطر')),
-    h('div', { class: 'card' }, row(t('پاک‌کردن لغت‌ها و پیشرفت'), t('ویدیوها پاک نمی‌شوند'), h('button', { class: 'btn danger sm', onclick: async () => {
-      if (!(await confirmSheet({ title: t('پاک‌کردن همه چیز؟'), text: t('لغت‌ها، کارت‌ها، مارک‌ها و پیشرفت پاک می‌شود. پیشنهاد: اول پشتیبان بگیر.'), okText: t('پاک کن'), danger: true }))) return;
+    h('div', { class: 'card' }, row(t('پاک‌کردن واژه‌ها و پیشرفت'), t('ویدیوها پاک نمی‌شوند'), h('button', { class: 'btn danger sm', onclick: async () => {
+      if (!(await confirmSheet({ title: t('مطمئنی می‌خواهی همه‌چیز را پاک کنی؟'), text: t('واژه‌ها، کارت‌ها، مارک‌ها و پیشرفتت پاک می‌شود. بهتر است اول یک پشتیبان بگیری.'), okText: t('پاک کن'), danger: true }))) return;
       for (const s of ['vocab', 'cards', 'marks', 'progress']) { await DB.clear(s); S[s].clear(); }
       S.days = {}; await DB.put('meta', { id: 'days', v: {} }); toast(t('پاک شد')); nav('home');
     } }, t('پاک کردن')))),
-    h('div', { style: { textAlign: 'center', color: 'var(--muted)', fontSize: '12px', padding: '20px 0 6px' } }, 'Clipboard · v1.4.1 — Nicos Weg & Momente'));
+    h('div', { style: { textAlign: 'center', color: 'var(--muted)', fontSize: '12px', padding: '20px 0 6px' } }, 'Clipboard · v1.4.6 — Nicos Weg & Momente'));
 }

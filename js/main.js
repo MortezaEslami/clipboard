@@ -11,7 +11,7 @@ import { renderSettings } from './settings.js';
 
 const view = document.getElementById('view');
 const tabsEl = document.getElementById('tabs');
-const TABS = [['home', t('خانه'), 'home'], ['review', t('مرور'), 'zap'], ['vocab', t('لغت‌ها'), 'book'], ['marks', t('مارک‌ها'), 'bookmark'], ['settings', t('تنظیمات'), 'settings']];
+const TABS = [['home', t('خانه'), 'home'], ['review', t('مرور'), 'zap'], ['vocab', t('واژگان'), 'book'], ['marks', t('مارک‌ها'), 'bookmark'], ['settings', t('تنظیمات'), 'settings']];
 let cleanup = null, pending = {}, seq = 0;
 
 export function nav(name, opts) {

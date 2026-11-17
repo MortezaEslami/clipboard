@@ -4,13 +4,13 @@ import { uid, dayKey, norm, LANG_NAMES, fa } from './util.js';
 import { newCard, schedule } from './fsrs.js';
 
 export const MARKS = [
-  { id: 'yellow', name: t('لغت جدید') },
+  { id: 'yellow', name: t('واژه جدید') },
   { id: 'blue', name: t('گرامر') },
   { id: 'green', name: t('عبارت خوب') },
   { id: 'red', name: t('دوباره گوش بده') },
 ];
 export const KINDS = {
-  de2m: { name: t('آلمانی ← معنی'), short: t('لغت') },
+  de2m: { name: t('آلمانی ← معنی'), short: t('واژه') },
   m2de: { name: t('معنی ← آلمانی'), short: t('برعکس') },
   clip: { name: t('شنیداری + جای خالی'), short: t('شنیداری') },
 };
@@ -240,7 +240,7 @@ export function exportAll() {
   return { app: 'klipp', v: 1, t: Date.now(), settings: S.settings, days: S.days, vocab: [...S.vocab.values()], cards: [...S.cards.values()], marks: [...S.marks.values()], progress: [...S.progress.values()], custom: S.lessons.filter((l) => l.custom).map((l) => ({ lesson: l, cues: S.cues.get(l.id) || [] })) };
 }
 export async function importAll(o) {
-  if (!o || o.app !== 'klipp') throw new Error(t('فایل پشتیبان معتبر نیست'));
+  if (!o || o.app !== 'klipp') throw new Error(t('این فایل پشتیبان درست به نظر نمی‌رسد'));
   (o.vocab || []).forEach((v) => S.vocab.set(v.id, v));
   (o.cards || []).forEach((c) => S.cards.set(c.id, c));
   (o.marks || []).forEach((m) => S.marks.set(m.id, m));

@@ -251,7 +251,7 @@ export async function renderPlayer(root, lessonId, opts = {}) {
     updateButtons(); tick();
   });
   video.addEventListener('error', () => {
-    showNoVideo(t('این ویدیو روی این دستگاه پخش نشد'), t('فرمت یا کدک پشتیبانی نمی‌شود. فایل mp4 (H.264) را انتخاب کن.'), true);
+    showNoVideo(t('اوه! این ویدیو روی این دستگاه پخش نشد 😕'), t('فرمت یا کدک پشتیبانی نمی‌شود. فایل mp4 (H.264) را انتخاب کن.'), true);
   });
   seek.addEventListener('input', () => { video.currentTime = +seek.value; handled = -1; updateTimeUi(+seek.value); });
   list.addEventListener('touchstart', () => { userScroll = performance.now(); }, { passive: true });
@@ -277,7 +277,7 @@ export async function renderPlayer(root, lessonId, opts = {}) {
       const url = await Videos.getURL(lessonId);
       if (url) { novideo.style.display = 'none'; video.src = url; return; }
     }
-    showNoVideo(t('ویدیوی این درس هنوز اضافه نشده'), t('فایل را یک‌بار انتخاب کن تا برای همیشه (و آفلاین) در اپ بماند.'), false);
+    showNoVideo(t('ویدیوی این درس را هنوز اضافه نکرده‌ای'), t('فایل را یک‌بار انتخاب کن تا برای همیشه (و آفلاین) در اپ بماند.'), false);
   }
   function pickFile() {
     const inp = h('input', { type: 'file', accept: 'video/*,.mkv,.mp4,.webm,.mov', style: { display: 'none' } });
@@ -287,7 +287,7 @@ export async function renderPlayer(root, lessonId, opts = {}) {
       try {
         await Videos.save(lessonId, f, (p) => { const el = novideo.querySelector('#cp'); if (el) el.style.width = `${Math.round(p * 100)}%`; });
         await attach();
-      } catch (e) { showNoVideo(t('ذخیره ویدیو انجام نشد'), t('فضای دستگاه کافی نیست یا مرورگر اجازه نداد.'), true); }
+      } catch (e) { showNoVideo(t('نتوانستم ویدیو را ذخیره کنم'), t('جای دستگاه کافی نیست یا مرورگر اجازه نداد؛ کمی فضا باز کن و دوباره امتحان کن.'), true); }
     });
     document.body.append(inp); inp.click(); setTimeout(() => inp.remove(), 60000);
   }
@@ -318,7 +318,7 @@ export async function renderPlayer(root, lessonId, opts = {}) {
     tokenize(c.de).forEach((tk) => { if (tk.w) toks.push({ t: tk.t, a: pos, b: pos + tk.t.length }); pos += tk.t.length; });
     let a = toks.findIndex((x) => x.t === word); if (a < 0) a = 0; let b = a;
     const wasPlaying = !video.paused; if (wasPlaying) video.pause();
-    const deIn = h('input', { class: 'input de', dir: 'ltr', placeholder: t('لغت یا عبارت') });
+    const deIn = h('input', { class: 'input de', dir: 'ltr', placeholder: t('واژه یا عبارت') });
     const faIn = h('input', { class: 'input fa', placeholder: t('معنی فارسی') });
     const enIn = h('input', { class: 'input en', dir: 'ltr', placeholder: 'English meaning' });
     const hint = h('div', { style: { fontSize: '12.5px', color: 'var(--muted)', margin: '-8px 0 12px' } });
@@ -350,31 +350,31 @@ export async function renderPlayer(root, lessonId, opts = {}) {
       hint.textContent = g && g.lemma && norm(g.lemma) !== norm(text) ? t('در جمله: {0}', text) : '';
       hint.className = 'de';
       hint.style.fontFamily = 'var(--f-de)';
-      saveBtn.textContent = existing ? t('به‌روزرسانی لغت') : t('ذخیره در لغت‌ها');
+      saveBtn.textContent = existing ? t('به‌روزرسانی واژه') : t('ذخیره در واژه‌ها');
       delBtn.style.display = existing ? '' : 'none';
     }
-    deIn.addEventListener('input', () => { existing = findVocab(deIn.value); saveBtn.textContent = existing ? t('به‌روزرسانی لغت') : t('ذخیره در لغت‌ها'); delBtn.style.display = existing ? '' : 'none'; });
+    deIn.addEventListener('input', () => { existing = findVocab(deIn.value); saveBtn.textContent = existing ? t('به‌روزرسانی واژه') : t('ذخیره در واژه‌ها'); delBtn.style.display = existing ? '' : 'none'; });
     refresh();
 
     saveBtn.addEventListener('click', () => {
-      const de = deIn.value.trim(); if (!de) { toast(t('لغت را وارد کن')); return; }
+      const de = deIn.value.trim(); if (!de) { toast(t('واژه را وارد کن')); return; }
       const ctx = { lesson: lessonId, lang, i, s: c.s, e: c.e, de: c.de, en: c.en || '', fa: c.fa || '' };
       const ex = findVocab(de);
-      if (ex) { ex.fa = faIn.value.trim(); ex.en = enIn.value.trim(); if (!ex.ctx) ex.ctx = ctx; saveVocab(ex); toast(t('لغت به‌روز شد')); }
-      else { addVocab({ de, fa: faIn.value, en: enIn.value, form: selText(), ctx }); toast(t('به لغت‌ها اضافه شد ✓ +۳ XP')); sfx('add'); buzz(20); confetti(innerWidth / 2, innerHeight * 0.62, { n: 36, power: .8 }); }
+      if (ex) { ex.fa = faIn.value.trim(); ex.en = enIn.value.trim(); if (!ex.ctx) ex.ctx = ctx; saveVocab(ex); toast(t('واژه به‌روز شد')); }
+      else { addVocab({ de, fa: faIn.value, en: enIn.value, form: selText(), ctx }); toast(t('به واژه‌هایت اضافه شد ✓ +۳ XP')); sfx('add'); buzz(20); confetti(innerWidth / 2, innerHeight * 0.62, { n: 36, power: .8 }); }
       if (!S.marks.has(markId(lessonId, i))) { setMark(lessonId, c, i, 'yellow', ''); paintRowMark(i); }
       refreshKnown(); repaintWords(); renderNow(); sh.close();
     });
     delBtn.addEventListener('click', async () => {
       const ex = findVocab(deIn.value); if (!ex) return;
-      if (await confirmSheet({ title: t('حذف لغت'), text: t('«{0}» و کارت‌هایش حذف شود؟', ex.de), okText: t('حذف'), danger: true })) { deleteVocab(ex.id); refreshKnown(); repaintWords(); toast(t('حذف شد')); sh.close(); }
+      if (await confirmSheet({ title: t('حذف واژه'), text: t('«{0}» و کارت‌هایش حذف شود؟', ex.de), okText: t('حذف'), danger: true })) { deleteVocab(ex.id); refreshKnown(); repaintWords(); toast(t('حذف شد')); sh.close(); }
     });
 
     const sh = openSheet({
-      title: t('افزودن به لغت‌ها'),
+      title: t('افزودن به واژه‌ها'),
       body: [
         h('div', { class: 'sent' }, h('div', { class: 's-de de' }, c.de), c.fa || c.en ? h('div', { class: 's-tr ' + (c.fa ? 'fa' : 'en') }, c.fa || c.en) : null),
-        h('div', { style: { fontSize: '12.5px', color: 'var(--muted)', fontWeight: 700, marginBottom: '6px' } }, t('کلمه‌ها را بزن تا عبارت بسازی')),
+        h('div', { style: { fontSize: '12.5px', color: 'var(--muted)', fontWeight: 700, marginBottom: '6px' } }, t('واژه‌ها را بزن تا عبارت بسازی')),
         chipsEl,
         h('div', { class: 'field' }, h('label', null, LN), h('div', { style: { display: 'flex', gap: '8px' } }, deIn, h('button', { class: 'icon-btn', style: { background: 'var(--bg2)' }, html: ic('vol'), onclick: () => speak(deIn.value || selText(), undefined, lang), 'aria-label': t('تلفظ') }))),
         hint,
@@ -401,7 +401,7 @@ export async function renderPlayer(root, lessonId, opts = {}) {
     }
     body.push(h('div', { style: { display: 'flex', gap: '10px', flexWrap: 'wrap' } },
       h('button', { class: 'btn sec', onclick: () => { sh.close(); pickFile(); } }, t('تعویض فایل ویدیو')),
-      Videos.has(lessonId) ? h('button', { class: 'btn danger', onclick: async () => { if (await confirmSheet({ title: t('حذف ویدیو'), text: t('فایل این درس از حافظه اپ پاک شود؟ (لغت‌ها و مارک‌ها می‌مانند)'), okText: t('حذف'), danger: true })) { await Videos.remove(lessonId); video.removeAttribute('src'); video.load(); attach(); sh.close(); } } }, t('حذف ویدیو از اپ')) : null));
+      Videos.has(lessonId) ? h('button', { class: 'btn danger', onclick: async () => { if (await confirmSheet({ title: t('حذف ویدیو'), text: t('فایل این درس از حافظه اپ پاک شود؟ (واژه‌ها و مارک‌ها می‌مانند)'), okText: t('حذف'), danger: true })) { await Videos.remove(lessonId); video.removeAttribute('src'); video.load(); attach(); sh.close(); } } }, t('حذف ویدیو از اپ')) : null));
     const sh = openSheet({ title: t('تنظیمات پلیر'), body });
   }
 

@@ -45,7 +45,7 @@ svg.ic{width:1.25em;height:1.25em;stroke:currentColor;fill:none;stroke-width:2;s
 svg.ic.fill{fill:currentColor;stroke:none}
 
 #app{height:100%;display:flex;flex-direction:column;max-width:760px;margin:0 auto;position:relative}
-#view{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 16px calc(var(--tabh) + 28px + env(safe-area-inset-bottom));scroll-behavior:smooth}
+#view{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 16px calc(var(--tabh) + 28px + env(safe-area-inset-bottom))}
 #view.full{padding:0}
 
 /* tab bar */
@@ -211,7 +211,7 @@ textarea.input{resize:vertical;min-height:70px}
 .w{border-radius:6px;padding:0 1px;cursor:pointer;transition:background .12s}
 .w:active,.w.sel{background:color-mix(in srgb,var(--m-yellow) 45%,transparent)}
 .w.known{border-bottom:2px solid color-mix(in srgb,var(--m-yellow) 70%,transparent)}
-.pl-list{flex:1;overflow-y:auto;padding:4px 12px calc(20px + env(safe-area-inset-bottom));scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
+.pl-list{flex:1;overflow-y:auto;padding:4px 12px calc(20px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
 .row{direction:ltr;display:flex;gap:10px;padding:10px 10px;border-radius:14px;cursor:pointer;position:relative;border-inline-start:4px solid transparent;margin-bottom:2px}
 .row.cur{background:var(--accent-soft)}
 .row .tm{font-size:11.5px;color:var(--muted);font-feature-settings:"tnum";min-width:34px;padding-top:4px;direction:ltr;font-family:var(--f-de)}

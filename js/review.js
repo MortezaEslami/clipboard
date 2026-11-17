@@ -30,8 +30,8 @@ export async function renderReview(root, { lesson = null, nav } = {}) {
   function emptyState() {
     const c = counts();
     return h('div', { class: 'empty', style: { margin: 'auto' } }, h('div', { class: 'mascot-big', html: mascot(lesson ? 'think' : 'cheer', 120) }),
-      h('b', null, lesson ? t('کارتی برای این درس نیست') : t('برای الان کارتی نمانده! 🎉')),
-      c.fresh ? h('div', null, t('{0} کارت جدید هم هست', fa(c.fresh))) : h('div', null, t('از داخل ویدیو روی کلمه‌ها بزن تا لغت اضافه شود.')),
+      h('b', null, lesson ? t('کارتی برای این درس نیست') : t('فعلاً کارتی برای مرور نمانده، آفرین! 🎉')),
+      c.fresh ? h('div', null, t('{0} کارت جدید هم هست', fa(c.fresh))) : h('div', null, t('از داخل ویدیو روی واژه‌ها بزن تا واژه اضافه شود.')),
       h('div', { style: { marginTop: '16px', display: 'flex', gap: '8px', justifyContent: 'center' } },
         c.fresh && !lesson ? h('button', { class: 'btn sec', onclick: () => { queue = buildQueue({ extraNew: true }); wrap.replaceChildren(); if (queue.length) { next(); } } }, t('کارت جدید بیشتر')) : null,
         h('button', { class: 'btn', onclick: () => nav('home') }, t('برگشت'))));
@@ -56,7 +56,7 @@ export async function renderReview(root, { lesson = null, nav } = {}) {
     wrap.replaceChildren(topbar(1, 1), h('div', { class: 'rv-body' }, h('div', { class: 'rv-done' },
       h('div', { class: 'mascot-big', html: mascot('cheer', 140) }),
       h('h2', null, levelUp ? t('سطح {0}: {1} 🎊', fa(lv.level), lv.name) : t('مرور تمام شد!')),
-      h('p', { style: { color: 'var(--muted)', margin: '2px 0 14px' } }, again ? t('{0} بار «دوباره» داشتی؛ طبیعی است، همین‌ها را بهتر یاد می‌گیری', fa(again)) : t('بی‌نقص بود، حتی یک بار هم «دوباره» نزدی!')),
+      h('p', { style: { color: 'var(--muted)', margin: '2px 0 14px' } }, again ? t('{0} بار «دوباره» داشتی؛ طبیعی است، همین‌ها را بهتر یاد می‌گیری', fa(again)) : t('بی‌نقص بودی! حتی یک بار هم «دوباره» نزدی 🎯')),
       h('div', { class: 'res-grid' },
         h('div', { class: 'res xp' }, xpEl, h('small', null, t('XP امروز'))),
         h('div', { class: 'res ok' }, h('b', { class: 'num' }, fa(acc) + t('٪')), h('small', null, t('دقت'))),
@@ -107,7 +107,7 @@ export async function renderReview(root, { lesson = null, nav } = {}) {
 
   async function clipNode(v, autoplay) {
     const c = v.ctx;
-    if (!c || !c.lesson || !Videos.has(c.lesson)) return h('div', { class: 'rv-clip noclip' }, h('div', null, h('div', { html: ic('film') }), h('small', null, t('ویدیوی این درس در اپ نیست'))));
+    if (!c || !c.lesson || !Videos.has(c.lesson)) return h('div', { class: 'rv-clip noclip' }, h('div', null, h('div', { html: ic('film') }), h('small', null, t('ویدیوی این درس هنوز در اپ نیست'))));
     const course = S.courses.find((x) => x.id === S.lessonMap.get(c.lesson).course);
     const url = await Videos.getURL(c.lesson);
     const video = h('video', { playsinline: '', preload: 'auto', src: url });

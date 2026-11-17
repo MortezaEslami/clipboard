@@ -6,22 +6,22 @@ const LV = [t('جدید'), t('در حال یادگیری'), t('نسبتاً مس
 let filter = { q: '', lv: 'all', lesson: 'all' };
 
 export function renderVocab(root, nav) {
-  const head = h('div', { class: 'page-h' }, h('div', null, h('h1', null, t('لغت‌ها')), h('div', { class: 'sub', id: 'vsub' })),
+  const head = h('div', { class: 'page-h' }, h('div', null, h('h1', null, t('واژگان')), h('div', { class: 'sub', id: 'vsub' })),
     h('button', { class: 'btn sec sm', onclick: () => nav('review'), html: ic('cards') + ' ' + t('مرور') }));
-  const q = h('input', { class: 'input', placeholder: t('جستجو در لغت‌ها…'), value: filter.q });
+  const q = h('input', { class: 'input', placeholder: t('جستجو در واژه‌ها…'), value: filter.q });
   q.addEventListener('input', () => { filter.q = q.value; paint(); });
   const search = h('div', { class: 'search' }, h('span', { html: ic('search') }), q);
   const lvChips = h('div', { class: 'chips' });
   const lessonSel = h('select', { class: 'input', style: { marginBottom: '10px' } });
   const list = h('div');
-  const fab = h('button', { class: 'fab', onclick: () => openEdit(null), html: ic('plus'), 'aria-label': t('افزودن لغت') });
+  const fab = h('button', { class: 'fab', onclick: () => openEdit(null), html: ic('plus'), 'aria-label': t('افزودن واژه') });
   root.append(head, search, lvChips, lessonSel, list, fab);
 
   lessonSel.addEventListener('change', () => { filter.lesson = lessonSel.value; paint(); });
 
   function paint() {
     const all = [...S.vocab.values()].sort((a, b) => b.created - a.created);
-    document.getElementById('vsub').textContent = t('{0} لغت', fa(all.length));
+    document.getElementById('vsub').textContent = t('{0} واژه', fa(all.length));
     const levels = [['all', t('همه')], [0, LV[0]], [1, LV[1]], [2, LV[2]], [3, LV[3]]];
     lvChips.replaceChildren(...levels.map(([k, l]) => {
       const n = k === 'all' ? all.length : all.filter((v) => vocabLevel(v) === k).length;
@@ -36,8 +36,8 @@ export function renderVocab(root, nav) {
       && (!qq || norm(v.de).includes(qq) || norm(v.fa).includes(qq) || norm(v.en).includes(qq)));
     list.replaceChildren();
     if (!rows.length) {
-      list.append(h('div', { class: 'empty' }, h('div', { html: ic('book') }), h('b', null, all.length ? t('چیزی پیدا نشد') : t('هنوز لغتی نداری')),
-        all.length ? '' : t('داخل پلیر روی هر کلمه‌ای بزن و «ذخیره در لغت‌ها» را بزن. یا با دکمه + دستی اضافه کن.')));
+      list.append(h('div', { class: 'empty' }, h('div', { html: ic('book') }), h('b', null, all.length ? t('چیزی پیدا نشد') : t('هنوز واژه‌ای نداری؛ بیا با هم شروع کنیم ✨')),
+        all.length ? '' : t('داخل پلیر روی هر واژه‌ای بزن و «ذخیره در واژه‌ها» را بزن. یا با دکمه + دستی اضافه کن.')));
       return;
     }
     rows.forEach((v) => {
@@ -55,7 +55,7 @@ export function renderVocab(root, nav) {
 
   function openEdit(v) {
     const isNew = !v;
-    const deIn = h('input', { class: 'input de', dir: 'ltr', value: v ? v.de : '', placeholder: t('لغت یا عبارت آلمانی') });
+    const deIn = h('input', { class: 'input de', dir: 'ltr', value: v ? v.de : '', placeholder: t('واژه یا عبارت آلمانی') });
     const faIn = h('input', { class: 'input fa', value: v ? v.fa : '', placeholder: t('معنی فارسی') });
     const enIn = h('input', { class: 'input en', dir: 'ltr', value: v ? v.en : '', placeholder: 'English meaning' });
     const kinds = new Set(v ? v.kinds : activeKinds(false));
@@ -77,20 +77,20 @@ export function renderVocab(root, nav) {
       h('div', { class: 'field' }, h('label', null, 'English'), enIn),
       h('div', { class: 'field' }, h('label', null, t('نوع کارت‌ها')), kindRow));
     const acts = h('div', { style: { display: 'flex', gap: '10px', flexWrap: 'wrap' } });
-    const sh = openSheet({ title: isNew ? t('لغت جدید') : t('ویرایش لغت'), body, actions: acts });
+    const sh = openSheet({ title: isNew ? t('واژه جدید') : t('ویرایش واژه'), body, actions: acts });
     if (!isNew) {
-      acts.append(h('button', { class: 'btn danger', onclick: async () => { if (await confirmSheet({ title: t('حذف لغت'), text: t('«{0}» و کارت‌هایش حذف شود؟', v.de), okText: t('حذف'), danger: true })) { deleteVocab(v.id); sh.close(); paint(); toast(t('حذف شد')); } }, html: ic('trash') }));
+      acts.append(h('button', { class: 'btn danger', onclick: async () => { if (await confirmSheet({ title: t('حذف واژه'), text: t('«{0}» و کارت‌هایش حذف شود؟', v.de), okText: t('حذف'), danger: true })) { deleteVocab(v.id); sh.close(); paint(); toast(t('حذف شد')); } }, html: ic('trash') }));
       if (hasCtx) acts.append(h('button', { class: 'btn sec', onclick: () => { sh.close(); nav('p-' + v.ctx.lesson, { startAt: v.ctx.s, loop: true }); }, html: ic('film') + ' ' + t('صحنه') }));
     }
     acts.append(h('button', { class: 'btn block', style: { flex: 1 }, onclick: () => {
-      const de = deIn.value.trim(); if (!de) { toast(t('لغت را وارد کن')); return; }
+      const de = deIn.value.trim(); if (!de) { toast(t('واژه را وارد کن')); return; }
       if (isNew) {
-        if (findVocab(de)) { toast(t('این لغت قبلاً هست')); return; }
+        if (findVocab(de)) { toast(t('این واژه را قبلاً داشتی')); return; }
         addVocab({ de, fa: faIn.value, en: enIn.value, kinds: [...kinds] });
       } else {
         v.de = de; v.fa = faIn.value.trim(); v.en = enIn.value.trim(); v.kinds = [...kinds]; saveVocab(v);
       }
-      sh.close(); paint(); toast(t('ذخیره شد'));
+      sh.close(); paint(); toast(t('ذخیره شد ✓'));
     } }, t('ذخیره')));
   }
 

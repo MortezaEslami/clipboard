@@ -17,7 +17,7 @@ export function openAddClip({ onDone } = {}) {
   };
   const [vi, vb] = picker('video/*,.mkv,.mp4,.webm,.mov', (f) => { video = f; if (!title.value) title.value = f.name.replace(/\.[^.]+$/, '').replace(/[._]+/g, ' '); }, t('انتخاب ویدیو'), 'film');
   const [si, sb] = picker('.srt,.vtt,.ass,.ssa,.txt', (f) => { subMain = f; }, t('زیرنویس اصلی (SRT / VTT / ASS)'), 'note');
-  const [ti, tb] = picker('.srt,.vtt,.ass,.ssa,.txt', (f) => { subTr = f; }, t('زیرنویس ترجمه (اختیاری)'), 'note');
+  const [ti, tb] = picker('.srt,.vtt,.ass,.ssa,.txt', (f) => { subTr = f; }, t('زیرنویس برگردان (اختیاری)'), 'note');
   const chipRow = (opts, get, set) => {
     const el = h('div', { class: 'chips' });
     const paint = () => { el.replaceChildren(...opts.map(([k, l]) => h('button', { class: 'chip' + (get() === k ? ' on' : ''), onclick: () => { set(k); paint(); } }, l))); };
@@ -29,11 +29,11 @@ export function openAddClip({ onDone } = {}) {
   const sh = openSheet({
     title: t('📥 افزودن کلیپ خودم'),
     body: [
-      h('div', { class: 'note-box', style: { marginBottom: '12px' } }, t('ویدیو را از گوشی انتخاب کن و فایل زیرنویسش را هم بده. می‌توانی هر زبانی بگذاری. اگر زیرنویس ترجمه (مثلاً فارسی) هم داری، کنارش نشان داده می‌شود.')),
+      h('div', { class: 'note-box', style: { marginBottom: '12px' } }, t('ویدیو را از گوشی انتخاب کن و فایل زیرنویسش را هم بده. می‌توانی هر زبانی بگذاری. اگر زیرنویس برگردان (مثلاً فارسی) هم داری، کنارش نشان داده می‌شود.')),
       h('div', { class: 'field' }, h('label', null, t('زبان ویدیو')), chipRow(langs, () => lang, (k) => { lang = k; })),
       h('div', { class: 'field' }, h('label', null, t('اسم')), title),
       vi, vb, si, sb,
-      h('div', { class: 'field', style: { marginTop: '10px' } }, h('label', null, t('زبان زیرنویس ترجمه')), chipRow([['fa', t('فارسی')], ['en', 'English']], () => tlang, (k) => { tlang = k; })),
+      h('div', { class: 'field', style: { marginTop: '10px' } }, h('label', null, t('زبان زیرنویس برگردان')), chipRow([['fa', t('فارسی')], ['en', 'English']], () => tlang, (k) => { tlang = k; })),
       ti, tb, prog,
     ],
     actions: go,
@@ -43,7 +43,7 @@ export function openAddClip({ onDone } = {}) {
     go.disabled = true;
     try {
       const main = parseSubs(await readText(subMain));
-      if (!main.length) { toast(t('از این فایل زیرنویسی خوانده نشد')); go.disabled = false; return; }
+      if (!main.length) { toast(t('از این فایل زیرنویسی پیدا نکردم')); go.disabled = false; return; }
       const trans = subTr ? parseSubs(await readText(subTr)) : null;
       const cues = merge(main, trans).filter((c) => c.t.replace(/[^\p{L}]/gu, '').length >= 2).map((c) => ({
         s: Math.round(c.s * 100) / 100, e: Math.round(c.e * 100) / 100, de: c.t, en: tlang === 'en' ? c.x : '', fa: tlang === 'fa' ? c.x : '',
