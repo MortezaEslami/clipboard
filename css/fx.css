@@ -305,3 +305,5 @@ html[lang=fa] body,html[lang=fa] button,html[lang=fa] input,html[lang=fa] textar
 .qz-opt{border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:16px;padding:14px;font-size:16px;font-weight:700;cursor:pointer;direction:ltr;text-align:start}
 .qz-opt.ok{background:linear-gradient(135deg,#00d084,#00b36b);color:#fff;border-color:#00b36b}
 .qz-opt.bad{background:#ffe3e9;border-color:#ff3860;animation:shake .38s}
+
+.pill.seen{background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok);font-size:10.5px;padding:1px 7px}

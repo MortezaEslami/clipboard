@@ -56,7 +56,8 @@ async function merge(r) {
   for (const [id, m] of [...S.marks]) if (gone(id, m)) { S.marks.delete(id); dels.push(['marks', id]); }
   for (const p of r.progress || []) {
     const l = S.progress.get(p.id);
-    if (!l || (p.t || 0) > (l.t || 0)) { S.progress.set(p.id, p); putP.push(p); }
+    if (!l || (p.t || 0) > (l.t || 0)) { S.progress.set(p.id, { ...p, done: Math.max(p.done || 0, (l && l.done) || 0) }); putP.push(S.progress.get(p.id)); }
+    else if ((p.done || 0) > (l.done || 0)) { l.done = p.done; putP.push(l); }
   }
   for (const [k, v] of Object.entries(r.days || {})) {
     const c = S.days[k];

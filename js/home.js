@@ -1,5 +1,5 @@
 import { t, locale, lang, setLang } from './i18n.js';
-import { S, counts, streak, lastDays, lessonProgress, levelInfo, todayReviews } from './state.js';
+import { S, counts, streak, lastDays, lessonProgress, lessonDone, levelInfo, todayReviews } from './state.js';
 import * as Videos from './videos.js';
 import { h, ic, fa, fmtTime } from './util.js';
 import { openAddClip } from './addclip.js';
@@ -16,7 +16,7 @@ function langPicker() {
   const menu = h('div', { class: 'flag-menu' }, flags.map(([k, f, n]) => h('button', { class: 'flag' + (k === lang ? ' on' : ''), title: n, 'aria-label': n, onclick: () => { if (k !== lang) setLang(k); else menu.classList.remove('open'); } }, f)));
   globe.addEventListener('click', (e) => { e.stopPropagation(); menu.classList.toggle('open'); });
   document.addEventListener('click', () => menu.classList.remove('open'));
-  return h('div', { class: 'lang-pick' }, h('small', { class: 'ver' }, 'v1.7.0'), globe, menu);
+  return h('div', { class: 'lang-pick' }, h('small', { class: 'ver' }, 'v1.7.1'), globe, menu);
 }
 
 export function renderHome(root, nav) {
@@ -123,6 +123,7 @@ export function renderHome(root, nav) {
         h('div', { class: 'mid' }, h('b', null, l.title), h('small', null, l.sub || ''),
           h('div', { class: 'meta' },
             has ? null : h('span', { class: 'pill warn' }, t('بدون ویدیو')),
+            lessonDone(l.id) ? h('span', { class: 'pill seen', title: t('{0} بار کامل دیده شده', fa(lessonDone(l.id))) }, '▶ ' + fa(lessonDone(l.id)) + '×') : null,
             vCount[l.id] ? h('span', { class: 'pill acc' }, t('{0} واژه', fa(vCount[l.id]))) : null,
             mCount[l.id] ? h('span', { class: 'pill' }, t('{0} مارک', fa(mCount[l.id]))) : null),
           p > 0.02 && p <= 0.9 ? h('div', { class: 'prog' }, h('i', { style: { width: `${p * 100}%` } })) : null),

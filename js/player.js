@@ -1,5 +1,5 @@
 import { t } from './i18n.js';
-import { addWatch, flushDays, S, MARKS, loadCues, loadGlossary, lookup as lookupDE, findVocab, addVocab, saveVocab, deleteVocab, setMark, removeMark, markId, saveProgress, saveSettings, KINDS, vocabLevel } from './state.js';
+import { addWatch, flushDays, S, MARKS, loadCues, loadGlossary, lookup as lookupDE, findVocab, addVocab, saveVocab, deleteVocab, setMark, removeMark, markId, saveProgress, addDone, saveSettings, KINDS, vocabLevel } from './state.js';
 import { confetti, sfx, buzz } from './fx.js';
 import * as Videos from './videos.js';
 import { h, ic, icon, fmtTime, tokenize, norm, openSheet, toast, speak, fa, confirmSheet, LANG_NAMES } from './util.js';
@@ -241,7 +241,7 @@ export async function renderPlayer(root, lessonId, opts = {}) {
   }
   video.addEventListener('play', () => { playing = true; updateButtons(); cancelAnimationFrame(raf); raf = requestAnimationFrame(tick); });
   video.addEventListener('pause', () => { playing = false; updateButtons(); saveProgress(lessonId, video.currentTime, dur); });
-  video.addEventListener('ended', () => { playing = false; updateButtons(); saveProgress(lessonId, dur, dur); });
+  video.addEventListener('ended', () => { playing = false; updateButtons(); addDone(lessonId, dur); });
   video.addEventListener('seeked', () => { if (video.paused) tick(); });
   video.addEventListener('timeupdate', () => { if (video.paused) tick(); });
   video.addEventListener('loadedmetadata', () => {

@@ -183,6 +183,12 @@ export function saveProgress(id, pos, dur) {
   p.pos = pos; p.max = Math.max(p.max, pos); if (dur) p.dur = dur; p.t = Date.now();
   S.progress.set(id, p); DB.put('progress', p);
 }
+export function addDone(id, dur) {
+  const p = S.progress.get(id) || { id, pos: 0, max: 0, dur: dur || 0 };
+  p.done = (p.done || 0) + 1; p.pos = dur || p.pos; p.max = Math.max(p.max, dur || 0); if (dur) p.dur = dur; p.t = Date.now();
+  S.progress.set(id, p); DB.put('progress', p);
+}
+export const lessonDone = (id) => (S.progress.get(id) || {}).done || 0;
 export function lessonProgress(id) {
   const p = S.progress.get(id); if (!p || !p.dur) return 0;
   return Math.min(1, p.max / p.dur);
