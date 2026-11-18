@@ -157,6 +157,14 @@ function loadVoices() { try { voices = speechSynthesis.getVoices(); } catch (e) 
 try { loadVoices(); speechSynthesis.addEventListener('voiceschanged', loadVoices); } catch (e) { /* no tts */ }
 export const LANG_NAMES = { en: 'English', fr: 'Français', es: 'Español', tr: 'Türkçe', it: 'Italiano', ar: t('العربية'), de: 'Deutsch' };
 const LOCALE = { de: 'de-DE', en: 'en-US', fr: 'fr-FR', es: 'es-ES', tr: 'tr-TR', it: 'it-IT', ar: 'ar-SA' };
+// voice quality: prefer "Natural/Online/Neural/Premium/Enhanced" voices over the compact default
+const voiceScore = (v) => { const n = v.name.toLowerCase(); let s = 0;
+  if (/natural|online/.test(n)) s += 100; if (/neural|premium|siri/.test(n)) s += 90; if (/enhanced|erweitert|wavenet|studio/.test(n)) s += 70;
+  if (/google/.test(n)) s += 40; if (/de[-_]de/i.test(v.lang)) s += 8; if (!v.localService) s += 5; return s; };
+export function voicesFor(l = 'de') { if (!voices.length) loadVoices(); return voices.filter((x) => x.lang.toLowerCase().startsWith(l)).sort((a, b) => voiceScore(b) - voiceScore(a)); }
+export const savedVoice = () => { try { return localStorage.getItem('lc-voice') || ''; } catch (e) { return ''; } };
+export function setVoice(name) { try { name ? localStorage.setItem('lc-voice', name) : localStorage.removeItem('lc-voice'); } catch (e) { /* ignore */ } }
+export function pickVoice(l = 'de') { const list = voicesFor(l); const s = l === 'de' ? savedVoice() : ''; return (s && list.find((x) => x.name === s)) || list[0] || null; }
 export const vlang = (v) => (v && v.ctx && v.ctx.lang) || 'de';
 // Text-to-speech that survives Chrome/Android quirks:
 //  - utterances are kept referenced (otherwise onend may never fire),
@@ -176,7 +184,7 @@ export function speak(text, rate = 0.9, lang = 'de', onend = null) {
     const u = new SpeechSynthesisUtterance(text);
     const loc = LOCALE[lang] || lang;
     u.lang = loc; u.rate = rate;
-    const v = voices.find((x) => x.lang.replace('_', '-').toLowerCase() === loc.toLowerCase()) || voices.find((x) => x.lang.toLowerCase().startsWith(lang));
+    const v = pickVoice(lang);
     if (v) u.voice = v;
     let fin = false; let wd = 0;
     const finish = () => { if (fin) return; fin = true; clearTimeout(wd); keepU.delete(u); if (onend && id === spkId) onend(); };

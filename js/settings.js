@@ -3,7 +3,7 @@ import { t, lang, locale, setLang } from './i18n.js';
 import { S, saveSettings, exportAll, importAll, vocabCSV, importCSV } from './state.js';
 import * as Videos from './videos.js';
 import * as DB from './db.js';
-import { h, ic, fa, toast, download, copyText, confirmSheet } from './util.js';
+import { h, ic, fa, toast, download, copyText, confirmSheet, speak, voicesFor, savedVoice, setVoice, ttsOK } from './util.js';
 
 const sw = (on, fn) => { const el = h('button', { class: 'switch' + (on ? ' on' : ''), role: 'switch', 'aria-checked': on, onclick: () => { el.classList.toggle('on'); fn(el.classList.contains('on')); } }); return el; };
 const fmtSize = (b) => (b > 1e9 ? t('{0} گیگابایت', fa((b / 1e9).toFixed(1))) : t('{0} مگابایت', fa(Math.round(b / 1e6))));
@@ -71,6 +71,17 @@ export async function renderSettings(root, nav) {
       row(t('زبان برنامه'), null, seg([['fa', 'فارسی'], ['en', 'English'], ['de', 'Deutsch']], lang, (k) => setLang(k))),
       row(t('اندازه‌ی متن'), null, seg([['0.92', 'A−'], ['1', 'A'], ['1.12', 'A+'], ['1.25', 'A++']], String(S.settings.fontScale || 1), (k) => { S.settings.fontScale = +k; saveSettings(); document.documentElement.style.zoom = String(k); })),
       row(t('ظاهر'), null, seg([['auto', t('خودکار')], ['light', t('روشن')], ['dark', t('تیره')]], S.settings.theme, (k) => { S.settings.theme = k; saveSettings(); document.documentElement.dataset.theme = k; }))));
+
+  // ---------- voice
+  if (ttsOK()) {
+    const vSel = h('select', { class: 'input', style: { maxWidth: '210px', minHeight: '40px' } });
+    const fillV = () => { const l = voicesFor('de'); const cur = savedVoice(); vSel.replaceChildren(h('option', { value: '' }, t('خودکار (بهترین)')), ...l.map((v) => h('option', { value: v.name }, v.name + (/natural|online|neural|premium|enhanced/i.test(v.name) ? ' ★' : '')))); vSel.value = l.some((v) => v.name === cur) ? cur : ''; };
+    fillV(); try { speechSynthesis.addEventListener('voiceschanged', fillV); } catch (e) { /* ignore */ }
+    vSel.addEventListener('change', () => { setVoice(vSel.value); speak('Guten Tag! Ich lerne Deutsch.', 0.9, 'de'); });
+    root.append(h('div', { class: 'sect-t' }, t('🔊 صدای آلمانی')),
+      h('div', { class: 'card' }, row(t('صدا'), t('صدای‌های ★ طبیعی‌ترند؛ در Edge صدای Natural و در مک صدای Premium/Enhanced را نصب کن'), vSel),
+        row(t('امتحان صدا'), null, h('button', { class: 'btn sm', onclick: () => speak('Guten Tag! Ich lerne Deutsch.', 0.9, 'de') }, '▶'))));
+  }
 
   // ---------- review
   const nInp = h('input', { class: 'input', type: 'number', min: 0, max: 100, value: S.settings.newPerDay, style: { width: '84px', textAlign: 'center', minHeight: '40px' } });
