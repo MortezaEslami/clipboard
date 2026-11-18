@@ -8,7 +8,7 @@ import { h, ic, fa, fmtIvl, norm, speak, tokenize, toast, vlang } from './util.j
 const RATE = [null, t('دوباره'), t('سخت'), t('خوب'), t('آسان')];
 
 export async function renderReview(root, { lesson = null, nav } = {}) {
-  document.body.classList.add('noTabs');
+
   let queue = buildQueue({ lesson });
   const total = queue.length;
   let done = 0, again = 0, combo = 0, bestCombo = 0, sessionXP = 0, cleanup = () => {};
@@ -34,7 +34,9 @@ export async function renderReview(root, { lesson = null, nav } = {}) {
       c.fresh ? h('div', null, t('{0} کارت جدید هم هست', fa(c.fresh))) : h('div', null, t('از داخل ویدیو روی واژه‌ها بزن تا واژه اضافه شود.')),
       h('div', { style: { marginTop: '16px', display: 'flex', gap: '8px', justifyContent: 'center' } },
         c.fresh && !lesson ? h('button', { class: 'btn sec', onclick: () => { queue = buildQueue({ extraNew: true }); wrap.replaceChildren(); if (queue.length) { next(); } } }, t('کارت جدید بیشتر')) : null,
-        h('button', { class: 'btn', onclick: () => nav('home') }, t('برگشت'))));
+        h('button', { class: 'btn', onclick: () => nav('home') }, t('برگشت'))),
+      lesson ? null : h('div', { class: 'practice-alt' }, h('small', null, t('یا یک تمرین دیگر:')),
+        h('div', { class: 'chips', style: { justifyContent: 'center', flexWrap: 'wrap' } }, [['✍️', t('دیکته'), 'dictation'], ['🧩', t('جای‌خالی'), 'cloze'], ['⚡', t('تست واژه'), 'wordtest'], ['📖', t('داستان‌ها'), 'stories']].map(([e, n, k]) => h('button', { class: 'chip', onclick: () => nav(k) }, e + ' ' + n)))));
   }
 
   function next() {

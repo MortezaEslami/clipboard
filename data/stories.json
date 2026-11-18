@@ -1,661 +1,1909 @@
 [
-{
-"id": "max",
-"emoji": "🐶",
-"level": "A1",
-"color": "#ff9a3d,#ff4f81",
-"title": {
-"de": "Max, der kleine Hund",
-"fa": "مکس، سگ کوچولو",
-"en": "Max, the little dog"
-},
-"s": [
-{
-"de": "Das ist Max.",
-"fa": "این مکس است.",
-"en": "This is Max."
-},
-{
-"de": "Max ist ein kleiner Hund.",
-"fa": "مکس یک سگ کوچک است.",
-"en": "Max is a small dog."
-},
-{
-"de": "Er ist braun und hat große Ohren.",
-"fa": "او قهوه‌ای است و گوش‌های بزرگی دارد.",
-"en": "He is brown and has big ears."
-},
-{
-"de": "Max liebt seinen roten Ball.",
-"fa": "مکس توپ قرمزش را خیلی دوست دارد.",
-"en": "Max loves his red ball."
-},
-{
-"de": "Heute spielt er im Garten.",
-"fa": "امروز او در باغ بازی می‌کند.",
-"en": "Today he plays in the garden."
-},
-{
-"de": "Plötzlich ist der Ball weg!",
-"fa": "ناگهان توپ گم می‌شود!",
-"en": "Suddenly the ball is gone!"
-},
-{
-"de": "Wo ist der Ball?",
-"fa": "توپ کجاست؟",
-"en": "Where is the ball?"
-},
-{
-"de": "Max sucht unter dem Tisch.",
-"fa": "مکس زیر میز می‌گردد.",
-"en": "Max looks under the table."
-},
-{
-"de": "Er sucht hinter dem Haus.",
-"fa": "او پشت خانه می‌گردد.",
-"en": "He looks behind the house."
-},
-{
-"de": "Da kommt Lisa.",
-"fa": "لیزا می‌آید.",
-"en": "Here comes Lisa."
-},
-{
-"de": "Lisa hat den Ball. „Hier ist dein Ball, Max!“",
-"fa": "توپ پیش لیزا است. «این توپ توست، مکس!»",
-"en": "Lisa has the ball. “Here is your ball, Max!”"
-},
-{
-"de": "Max ist glücklich und sagt: „Wau, wau!“",
-"fa": "مکس خوشحال است و می‌گوید: «واف، واف!»",
-"en": "Max is happy and says: “Woof, woof!”"
-}
-],
-"q": [
-{
-"q": {
-"de": "Wie ist Max?",
-"fa": "مکس چه جوری است؟",
-"en": "What is Max like?"
-},
-"o": [
-"Er ist ein kleiner Hund.",
-"Er ist eine große Katze.",
-"Er ist ein braunes Pferd."
-],
-"a": 0
-},
-{
-"q": {
-"de": "Wer hat den Ball?",
-"fa": "توپ پیش کیست؟",
-"en": "Who has the ball?"
-},
-"o": [
-"Lisa",
-"Das Haus",
-"Der Garten"
-],
-"a": 0
-},
-{
-"q": {
-"de": "Wo spielt Max heute?",
-"fa": "مکس امروز کجا بازی می‌کند؟",
-"en": "Where does Max play today?"
-},
-"o": [
-"Im Garten",
-"In der Schule",
-"Im Auto"
-],
-"a": 0
-}
-]
-},
-{
-"id": "berlin",
-"emoji": "🚇",
-"level": "A1",
-"color": "#2e7bff,#8a4dff",
-"title": {
-"de": "Annas Tag in Berlin",
-"fa": "روز آنا در برلین",
-"en": "Anna’s day in Berlin"
-},
-"s": [
-{
-"de": "Anna wohnt in Berlin.",
-"fa": "آنا در برلین زندگی می‌کند.",
-"en": "Anna lives in Berlin."
-},
-{
-"de": "Heute ist Samstag.",
-"fa": "امروز شنبه است.",
-"en": "Today is Saturday."
-},
-{
-"de": "Anna hat frei.",
-"fa": "آنا امروز کار ندارد.",
-"en": "Anna has the day off."
-},
-{
-"de": "Zuerst geht sie zum Bäcker.",
-"fa": "اول به نانوایی می‌رود.",
-"en": "First she goes to the baker."
-},
-{
-"de": "Sie kauft zwei Brötchen und einen Kaffee.",
-"fa": "او دو نان کوچک و یک قهوه می‌خرد.",
-"en": "She buys two rolls and a coffee."
-},
-{
-"de": "Dann fährt sie mit der U-Bahn zum Park.",
-"fa": "بعد با مترو به پارک می‌رود.",
-"en": "Then she takes the subway to the park."
-},
-{
-"de": "Im Park scheint die Sonne.",
-"fa": "در پارک خورشید می‌تابد.",
-"en": "The sun is shining in the park."
-},
-{
-"de": "Anna sitzt auf einer Bank und isst ihr Brötchen.",
-"fa": "آنا روی نیمکت می‌نشیند و نانش را می‌خورد.",
-"en": "Anna sits on a bench and eats her roll."
-},
-{
-"de": "Ein Vogel kommt und will auch ein Stück.",
-"fa": "یک پرنده می‌آید و او هم یک تکه می‌خواهد.",
-"en": "A bird comes and wants a piece too."
-},
-{
-"de": "Anna lacht und gibt dem Vogel ein bisschen Brot.",
-"fa": "آنا می‌خندد و کمی نان به پرنده می‌دهد.",
-"en": "Anna laughs and gives the bird a little bread."
-},
-{
-"de": "Am Abend ist sie müde, aber glücklich.",
-"fa": "عصر خسته است، اما خوشحال.",
-"en": "In the evening she is tired but happy."
-}
-],
-"q": [
-{
-"q": {
-"de": "Wohin geht Anna zuerst?",
-"fa": "آنا اول کجا می‌رود؟",
-"en": "Where does Anna go first?"
-},
-"o": [
-"Zum Bäcker",
-"Zum Park",
-"Zur Schule"
-],
-"a": 0
-},
-{
-"q": {
-"de": "Wie fährt Anna zum Park?",
-"fa": "آنا چطور به پارک می‌رود؟",
-"en": "How does Anna get to the park?"
-},
-"o": [
-"Mit der U-Bahn",
-"Mit dem Auto",
-"Zu Fuß"
-],
-"a": 0
-},
-{
-"q": {
-"de": "Wer will auch Brot?",
-"fa": "چه کسی هم نان می‌خواهد؟",
-"en": "Who also wants bread?"
-},
-"o": [
-"Ein Vogel",
-"Ein Hund",
-"Ein Kind"
-],
-"a": 0
-}
-]
-},
-{
-"id": "katze",
-"emoji": "🐱",
-"level": "A1",
-"color": "#00c2a8,#2e7bff",
-"title": {
-"de": "Die Katze und der Fisch",
-"fa": "گربه و ماهی",
-"en": "The cat and the fish"
-},
-"s": [
-{
-"de": "Mimi ist eine Katze.",
-"fa": "میمی یک گربه است.",
-"en": "Mimi is a cat."
-},
-{
-"de": "Sie ist weiß und sehr hungrig.",
-"fa": "او سفید و خیلی گرسنه است.",
-"en": "She is white and very hungry."
-},
-{
-"de": "In der Küche liegt ein großer Fisch auf dem Tisch.",
-"fa": "در آشپزخانه یک ماهی بزرگ روی میز است.",
-"en": "In the kitchen a big fish lies on the table."
-},
-{
-"de": "Mimi springt auf den Stuhl.",
-"fa": "میمی روی صندلی می‌پرد.",
-"en": "Mimi jumps onto the chair."
-},
-{
-"de": "Dann springt sie auf den Tisch.",
-"fa": "بعد روی میز می‌پرد.",
-"en": "Then she jumps onto the table."
-},
-{
-"de": "Sie nimmt den Fisch und läuft weg.",
-"fa": "او ماهی را برمی‌دارد و فرار می‌کند.",
-"en": "She takes the fish and runs away."
-},
-{
-"de": "Herr Braun kommt in die Küche.",
-"fa": "آقای براون به آشپزخانه می‌آید.",
-"en": "Mr. Braun comes into the kitchen."
-},
-{
-"de": "„Wo ist mein Fisch?“, ruft er.",
-"fa": "او فریاد می‌زند: «ماهی من کجاست؟»",
-"en": "“Where is my fish?” he calls."
-},
-{
-"de": "Er sieht Mimi im Garten.",
-"fa": "او میمی را در باغ می‌بیند.",
-"en": "He sees Mimi in the garden."
-},
-{
-"de": "Mimi isst den Fisch und schaut ihn an.",
-"fa": "میمی ماهی را می‌خورد و به او نگاه می‌کند.",
-"en": "Mimi eats the fish and looks at him."
-},
-{
-"de": "Herr Braun lacht: „Du bist eine freche Katze!“",
-"fa": "آقای براون می‌خندد: «تو گربهٔ بازیگوشی هستی!»",
-"en": "Mr. Braun laughs: “You are a cheeky cat!”"
-}
-],
-"q": [
-{
-"q": {
-"de": "Was ist Mimi?",
-"fa": "میمی چیست؟",
-"en": "What is Mimi?"
-},
-"o": [
-"Eine Katze",
-"Ein Hund",
-"Ein Vogel"
-],
-"a": 0
-},
-{
-"q": {
-"de": "Wohin springt Mimi zuerst?",
-"fa": "میمی اول کجا می‌پرد؟",
-"en": "Where does Mimi jump first?"
-},
-"o": [
-"Auf den Stuhl",
-"Auf den Tisch",
-"In den Garten"
-],
-"a": 0
-},
-{
-"q": {
-"de": "Wo isst Mimi den Fisch?",
-"fa": "میمی ماهی را کجا می‌خورد؟",
-"en": "Where does Mimi eat the fish?"
-},
-"o": [
-"Im Garten",
-"In der Küche",
-"Im Bett"
-],
-"a": 0
-}
-]
-},
-{
-"id": "cafe",
-"emoji": "☕",
-"level": "A1",
-"color": "#ff5f9e,#ff9a3d",
-"title": {
-"de": "Im Café",
-"fa": "در کافه",
-"en": "At the café"
-},
-"s": [
-{
-"de": "Tom ist im Café.",
-"fa": "تام در کافه است.",
-"en": "Tom is in the café."
-},
-{
-"de": "Er möchte einen Kaffee und ein Stück Kuchen.",
-"fa": "او یک قهوه و یک تکه کیک می‌خواهد.",
-"en": "He would like a coffee and a piece of cake."
-},
-{
-"de": "Die Kellnerin fragt: „Was möchten Sie?“",
-"fa": "پیشخدمت می‌پرسد: «چه میل دارید؟»",
-"en": "The waitress asks: “What would you like?”"
-},
-{
-"de": "Tom sagt: „Einen Kaffee mit Milch, bitte.“",
-"fa": "تام می‌گوید: «یک قهوه با شیر، لطفاً.»",
-"en": "Tom says: “A coffee with milk, please.”"
-},
-{
-"de": "„Und ein Stück Apfelkuchen.“",
-"fa": "«و یک تکه کیک سیب.»",
-"en": "“And a piece of apple cake.”"
-},
-{
-"de": "„Das macht vier Euro fünfzig“, sagt die Kellnerin.",
-"fa": "پیشخدمت می‌گوید: «می‌شود چهار یورو و پنجاه سنت.»",
-"en": "“That is four euros fifty,” says the waitress."
-},
-{
-"de": "Tom bezahlt und setzt sich ans Fenster.",
-"fa": "تام پول می‌دهد و کنار پنجره می‌نشیند.",
-"en": "Tom pays and sits down by the window."
-},
-{
-"de": "Da kommt Sara. Sie ist seine Freundin.",
-"fa": "سارا می‌آید. او دوست تام است.",
-"en": "Here comes Sara. She is his friend."
-},
-{
-"de": "„Hallo Tom! Ist hier noch frei?“",
-"fa": "«سلام تام! اینجا خالی است؟»",
-"en": "“Hello Tom! Is this seat free?”"
-},
-{
-"de": "„Ja, natürlich! Setz dich!“",
-"fa": "«بله، البته! بنشین!»",
-"en": "“Yes, of course! Sit down!”"
-},
-{
-"de": "Sie trinken zusammen Kaffee und sprechen viel.",
-"fa": "آن‌ها با هم قهوه می‌نوشند و زیاد حرف می‌زنند.",
-"en": "They drink coffee together and talk a lot."
-}
-],
-"q": [
-{
-"q": {
-"de": "Was bestellt Tom?",
-"fa": "تام چه سفارش می‌دهد؟",
-"en": "What does Tom order?"
-},
-"o": [
-"Kaffee und Kuchen",
-"Tee und Brot",
-"Wasser und Pizza"
-],
-"a": 0
-},
-{
-"q": {
-"de": "Wie viel kostet es?",
-"fa": "چقدر می‌شود؟",
-"en": "How much is it?"
-},
-"o": [
-"Vier Euro fünfzig",
-"Zehn Euro",
-"Zwei Euro"
-],
-"a": 0
-},
-{
-"q": {
-"de": "Wer kommt ins Café?",
-"fa": "چه کسی به کافه می‌آید؟",
-"en": "Who comes into the café?"
-},
-"o": [
-"Sara",
-"Lisa",
-"Max"
-],
-"a": 0
-}
-]
-},
-{
-"id": "geschenk",
-"emoji": "🎁",
-"level": "A1",
-"color": "#8a4dff,#ff4f81",
-"title": {
-"de": "Ein Geschenk für Papa",
-"fa": "یک هدیه برای بابا",
-"en": "A gift for Dad"
-},
-"s": [
-{
-"de": "Morgen hat Papa Geburtstag.",
-"fa": "فردا تولد بابا است.",
-"en": "Tomorrow is Dad’s birthday."
-},
-{
-"de": "Lena möchte ein Geschenk kaufen.",
-"fa": "لنا می‌خواهد یک هدیه بخرد.",
-"en": "Lena wants to buy a gift."
-},
-{
-"de": "Sie geht in die Stadt.",
-"fa": "او به شهر می‌رود.",
-"en": "She goes into town."
-},
-{
-"de": "Zuerst schaut sie im Buchladen.",
-"fa": "اول در کتاب‌فروشی نگاه می‌کند.",
-"en": "First she looks in the bookshop."
-},
-{
-"de": "Aber Papa liest nicht gern.",
-"fa": "اما بابا کتاب خواندن را دوست ندارد.",
-"en": "But Dad does not like reading."
-},
-{
-"de": "Dann sieht sie einen Laden mit Tassen.",
-"fa": "بعد مغازه‌ای پر از فنجان می‌بیند.",
-"en": "Then she sees a shop with cups."
-},
-{
-"de": "Eine Tasse mit einer Katze – das ist perfekt!",
-"fa": "یک فنجان با نقش گربه – عالی است!",
-"en": "A cup with a cat on it – that is perfect!"
-},
-{
-"de": "Papa liebt Katzen und Kaffee.",
-"fa": "بابا گربه و قهوه را دوست دارد.",
-"en": "Dad loves cats and coffee."
-},
-{
-"de": "Lena bezahlt die Tasse und geht nach Hause.",
-"fa": "لنا پول فنجان را می‌دهد و به خانه می‌رود.",
-"en": "Lena pays for the cup and goes home."
-},
-{
-"de": "Am Abend packt sie das Geschenk ein.",
-"fa": "عصر هدیه را کادو می‌کند.",
-"en": "In the evening she wraps the gift."
-},
-{
-"de": "Sie ist schon sehr gespannt.",
-"fa": "او خیلی مشتاق است.",
-"en": "She is already very excited."
-}
-],
-"q": [
-{
-"q": {
-"de": "Wer hat morgen Geburtstag?",
-"fa": "فردا تولد کیست؟",
-"en": "Whose birthday is it tomorrow?"
-},
-"o": [
-"Papa",
-"Lena",
-"Mama"
-],
-"a": 0
-},
-{
-"q": {
-"de": "Was kauft Lena?",
-"fa": "لنا چه می‌خرد؟",
-"en": "What does Lena buy?"
-},
-"o": [
-"Eine Tasse",
-"Ein Buch",
-"Eine Katze"
-],
-"a": 0
-},
-{
-"q": {
-"de": "Was liebt Papa?",
-"fa": "بابا چه چیزی را دوست دارد؟",
-"en": "What does Dad love?"
-},
-"o": [
-"Katzen und Kaffee",
-"Bücher und Tee",
-"Hunde und Wasser"
-],
-"a": 0
-}
-]
-},
-{
-"id": "regen",
-"emoji": "☔",
-"level": "A1",
-"color": "#5b3df5,#00c2a8",
-"title": {
-"de": "Der Regen",
-"fa": "باران",
-"en": "The rain"
-},
-"s": [
-{
-"de": "Es regnet heute stark.",
-"fa": "امروز شدید باران می‌بارد.",
-"en": "It is raining hard today."
-},
-{
-"de": "Paul hat keinen Regenschirm.",
-"fa": "پل چتر ندارد.",
-"en": "Paul has no umbrella."
-},
-{
-"de": "Er läuft schnell zur Bushaltestelle.",
-"fa": "او تند به ایستگاه اتوبوس می‌دود.",
-"en": "He runs quickly to the bus stop."
-},
-{
-"de": "Dort steht eine junge Frau.",
-"fa": "آنجا یک زن جوان ایستاده است.",
-"en": "A young woman is standing there."
-},
-{
-"de": "Sie hat einen gelben Regenschirm.",
-"fa": "او یک چتر زرد دارد.",
-"en": "She has a yellow umbrella."
-},
-{
-"de": "„Du bist nass!“, sagt sie.",
-"fa": "او می‌گوید: «تو خیسی!»",
-"en": "“You are wet!” she says."
-},
-{
-"de": "„Komm unter meinen Regenschirm!“",
-"fa": "«بیا زیر چترم!»",
-"en": "“Come under my umbrella!”"
-},
-{
-"de": "„Danke! Ich heiße Paul.“",
-"fa": "«ممنون! اسم من پل است.»",
-"en": "“Thanks! My name is Paul.”"
-},
-{
-"de": "„Ich heiße Mia.“",
-"fa": "«اسم من میا است.»",
-"en": "“My name is Mia.”"
-},
-{
-"de": "Der Bus kommt, und sie fahren zusammen.",
-"fa": "اتوبوس می‌آید و آن‌ها با هم می‌روند.",
-"en": "The bus comes and they ride together."
-},
-{
-"de": "Am Samstag trinken Paul und Mia zusammen einen Kaffee.",
-"fa": "شنبه پل و میا با هم قهوه می‌نوشند.",
-"en": "On Saturday Paul and Mia have a coffee together."
-}
-],
-"q": [
-{
-"q": {
-"de": "Wie ist das Wetter?",
-"fa": "هوا چطور است؟",
-"en": "How is the weather?"
-},
-"o": [
-"Es regnet.",
-"Die Sonne scheint.",
-"Es schneit."
-],
-"a": 0
-},
-{
-"q": {
-"de": "Welche Farbe hat der Regenschirm?",
-"fa": "چتر چه رنگی است؟",
-"en": "What colour is the umbrella?"
-},
-"o": [
-"Gelb",
-"Rot",
-"Blau"
-],
-"a": 0
-},
-{
-"q": {
-"de": "Wie heißt die Frau?",
-"fa": "اسم آن زن چیست؟",
-"en": "What is the woman called?"
-},
-"o": [
-"Mia",
-"Lena",
-"Anna"
-],
-"a": 0
-}
-]
-}
+ {
+  "id": "max",
+  "emoji": "🐶",
+  "level": "A1",
+  "color": "#ff9a3d,#ff4f81",
+  "title": {
+   "de": "Max, der kleine Hund",
+   "fa": "مکس، سگ کوچولو",
+   "en": "Max, the little dog"
+  },
+  "s": [
+   {
+    "de": "Das ist Max.",
+    "fa": "این مکس است.",
+    "en": "This is Max."
+   },
+   {
+    "de": "Max ist ein kleiner Hund.",
+    "fa": "مکس یک سگ کوچک است.",
+    "en": "Max is a small dog."
+   },
+   {
+    "de": "Er ist braun und hat große Ohren.",
+    "fa": "او قهوه‌ای است و گوش‌های بزرگی دارد.",
+    "en": "He is brown and has big ears."
+   },
+   {
+    "de": "Max liebt seinen roten Ball.",
+    "fa": "مکس توپ قرمزش را خیلی دوست دارد.",
+    "en": "Max loves his red ball."
+   },
+   {
+    "de": "Heute spielt er im Garten.",
+    "fa": "امروز او در باغ بازی می‌کند.",
+    "en": "Today he plays in the garden."
+   },
+   {
+    "de": "Plötzlich ist der Ball weg!",
+    "fa": "ناگهان توپ گم می‌شود!",
+    "en": "Suddenly the ball is gone!"
+   },
+   {
+    "de": "Wo ist der Ball?",
+    "fa": "توپ کجاست؟",
+    "en": "Where is the ball?"
+   },
+   {
+    "de": "Max sucht unter dem Tisch.",
+    "fa": "مکس زیر میز می‌گردد.",
+    "en": "Max looks under the table."
+   },
+   {
+    "de": "Er sucht hinter dem Haus.",
+    "fa": "او پشت خانه می‌گردد.",
+    "en": "He looks behind the house."
+   },
+   {
+    "de": "Da kommt Lisa.",
+    "fa": "لیزا می‌آید.",
+    "en": "Here comes Lisa."
+   },
+   {
+    "de": "Lisa hat den Ball. „Hier ist dein Ball, Max!“",
+    "fa": "توپ پیش لیزا است. «این توپ توست، مکس!»",
+    "en": "Lisa has the ball. “Here is your ball, Max!”"
+   },
+   {
+    "de": "Max ist glücklich und sagt: „Wau, wau!“",
+    "fa": "مکس خوشحال است و می‌گوید: «واف، واف!»",
+    "en": "Max is happy and says: “Woof, woof!”"
+   }
+  ],
+  "q": [
+   {
+    "q": {
+     "de": "Wie ist Max?",
+     "fa": "مکس چه جوری است؟",
+     "en": "What is Max like?"
+    },
+    "o": [
+     "Er ist ein kleiner Hund.",
+     "Er ist eine große Katze.",
+     "Er ist ein braunes Pferd."
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Wer hat den Ball?",
+     "fa": "توپ پیش کیست؟",
+     "en": "Who has the ball?"
+    },
+    "o": [
+     "Lisa",
+     "Das Haus",
+     "Der Garten"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Wo spielt Max heute?",
+     "fa": "مکس امروز کجا بازی می‌کند؟",
+     "en": "Where does Max play today?"
+    },
+    "o": [
+     "Im Garten",
+     "In der Schule",
+     "Im Auto"
+    ],
+    "a": 0
+   }
+  ]
+ },
+ {
+  "id": "berlin",
+  "emoji": "🚇",
+  "level": "A1",
+  "color": "#2e7bff,#8a4dff",
+  "title": {
+   "de": "Annas Tag in Berlin",
+   "fa": "روز آنا در برلین",
+   "en": "Anna’s day in Berlin"
+  },
+  "s": [
+   {
+    "de": "Anna wohnt in Berlin.",
+    "fa": "آنا در برلین زندگی می‌کند.",
+    "en": "Anna lives in Berlin."
+   },
+   {
+    "de": "Heute ist Samstag.",
+    "fa": "امروز شنبه است.",
+    "en": "Today is Saturday."
+   },
+   {
+    "de": "Anna hat frei.",
+    "fa": "آنا امروز کار ندارد.",
+    "en": "Anna has the day off."
+   },
+   {
+    "de": "Zuerst geht sie zum Bäcker.",
+    "fa": "اول به نانوایی می‌رود.",
+    "en": "First she goes to the baker."
+   },
+   {
+    "de": "Sie kauft zwei Brötchen und einen Kaffee.",
+    "fa": "او دو نان کوچک و یک قهوه می‌خرد.",
+    "en": "She buys two rolls and a coffee."
+   },
+   {
+    "de": "Dann fährt sie mit der U-Bahn zum Park.",
+    "fa": "بعد با مترو به پارک می‌رود.",
+    "en": "Then she takes the subway to the park."
+   },
+   {
+    "de": "Im Park scheint die Sonne.",
+    "fa": "در پارک خورشید می‌تابد.",
+    "en": "The sun is shining in the park."
+   },
+   {
+    "de": "Anna sitzt auf einer Bank und isst ihr Brötchen.",
+    "fa": "آنا روی نیمکت می‌نشیند و نانش را می‌خورد.",
+    "en": "Anna sits on a bench and eats her roll."
+   },
+   {
+    "de": "Ein Vogel kommt und will auch ein Stück.",
+    "fa": "یک پرنده می‌آید و او هم یک تکه می‌خواهد.",
+    "en": "A bird comes and wants a piece too."
+   },
+   {
+    "de": "Anna lacht und gibt dem Vogel ein bisschen Brot.",
+    "fa": "آنا می‌خندد و کمی نان به پرنده می‌دهد.",
+    "en": "Anna laughs and gives the bird a little bread."
+   },
+   {
+    "de": "Am Abend ist sie müde, aber glücklich.",
+    "fa": "عصر خسته است، اما خوشحال.",
+    "en": "In the evening she is tired but happy."
+   }
+  ],
+  "q": [
+   {
+    "q": {
+     "de": "Wohin geht Anna zuerst?",
+     "fa": "آنا اول کجا می‌رود؟",
+     "en": "Where does Anna go first?"
+    },
+    "o": [
+     "Zum Bäcker",
+     "Zum Park",
+     "Zur Schule"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Wie fährt Anna zum Park?",
+     "fa": "آنا چطور به پارک می‌رود؟",
+     "en": "How does Anna get to the park?"
+    },
+    "o": [
+     "Mit der U-Bahn",
+     "Mit dem Auto",
+     "Zu Fuß"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Wer will auch Brot?",
+     "fa": "چه کسی هم نان می‌خواهد؟",
+     "en": "Who also wants bread?"
+    },
+    "o": [
+     "Ein Vogel",
+     "Ein Hund",
+     "Ein Kind"
+    ],
+    "a": 0
+   }
+  ]
+ },
+ {
+  "id": "katze",
+  "emoji": "🐱",
+  "level": "A1",
+  "color": "#00c2a8,#2e7bff",
+  "title": {
+   "de": "Die Katze und der Fisch",
+   "fa": "گربه و ماهی",
+   "en": "The cat and the fish"
+  },
+  "s": [
+   {
+    "de": "Mimi ist eine Katze.",
+    "fa": "میمی یک گربه است.",
+    "en": "Mimi is a cat."
+   },
+   {
+    "de": "Sie ist weiß und sehr hungrig.",
+    "fa": "او سفید و خیلی گرسنه است.",
+    "en": "She is white and very hungry."
+   },
+   {
+    "de": "In der Küche liegt ein großer Fisch auf dem Tisch.",
+    "fa": "در آشپزخانه یک ماهی بزرگ روی میز است.",
+    "en": "In the kitchen a big fish lies on the table."
+   },
+   {
+    "de": "Mimi springt auf den Stuhl.",
+    "fa": "میمی روی صندلی می‌پرد.",
+    "en": "Mimi jumps onto the chair."
+   },
+   {
+    "de": "Dann springt sie auf den Tisch.",
+    "fa": "بعد روی میز می‌پرد.",
+    "en": "Then she jumps onto the table."
+   },
+   {
+    "de": "Sie nimmt den Fisch und läuft weg.",
+    "fa": "او ماهی را برمی‌دارد و فرار می‌کند.",
+    "en": "She takes the fish and runs away."
+   },
+   {
+    "de": "Herr Braun kommt in die Küche.",
+    "fa": "آقای براون به آشپزخانه می‌آید.",
+    "en": "Mr. Braun comes into the kitchen."
+   },
+   {
+    "de": "„Wo ist mein Fisch?“, ruft er.",
+    "fa": "او فریاد می‌زند: «ماهی من کجاست؟»",
+    "en": "“Where is my fish?” he calls."
+   },
+   {
+    "de": "Er sieht Mimi im Garten.",
+    "fa": "او میمی را در باغ می‌بیند.",
+    "en": "He sees Mimi in the garden."
+   },
+   {
+    "de": "Mimi isst den Fisch und schaut ihn an.",
+    "fa": "میمی ماهی را می‌خورد و به او نگاه می‌کند.",
+    "en": "Mimi eats the fish and looks at him."
+   },
+   {
+    "de": "Herr Braun lacht: „Du bist eine freche Katze!“",
+    "fa": "آقای براون می‌خندد: «تو گربهٔ بازیگوشی هستی!»",
+    "en": "Mr. Braun laughs: “You are a cheeky cat!”"
+   }
+  ],
+  "q": [
+   {
+    "q": {
+     "de": "Was ist Mimi?",
+     "fa": "میمی چیست؟",
+     "en": "What is Mimi?"
+    },
+    "o": [
+     "Eine Katze",
+     "Ein Hund",
+     "Ein Vogel"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Wohin springt Mimi zuerst?",
+     "fa": "میمی اول کجا می‌پرد؟",
+     "en": "Where does Mimi jump first?"
+    },
+    "o": [
+     "Auf den Stuhl",
+     "Auf den Tisch",
+     "In den Garten"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Wo isst Mimi den Fisch?",
+     "fa": "میمی ماهی را کجا می‌خورد؟",
+     "en": "Where does Mimi eat the fish?"
+    },
+    "o": [
+     "Im Garten",
+     "In der Küche",
+     "Im Bett"
+    ],
+    "a": 0
+   }
+  ]
+ },
+ {
+  "id": "cafe",
+  "emoji": "☕",
+  "level": "A1",
+  "color": "#ff5f9e,#ff9a3d",
+  "title": {
+   "de": "Im Café",
+   "fa": "در کافه",
+   "en": "At the café"
+  },
+  "s": [
+   {
+    "de": "Tom ist im Café.",
+    "fa": "تام در کافه است.",
+    "en": "Tom is in the café."
+   },
+   {
+    "de": "Er möchte einen Kaffee und ein Stück Kuchen.",
+    "fa": "او یک قهوه و یک تکه کیک می‌خواهد.",
+    "en": "He would like a coffee and a piece of cake."
+   },
+   {
+    "de": "Die Kellnerin fragt: „Was möchten Sie?“",
+    "fa": "پیشخدمت می‌پرسد: «چه میل دارید؟»",
+    "en": "The waitress asks: “What would you like?”"
+   },
+   {
+    "de": "Tom sagt: „Einen Kaffee mit Milch, bitte.“",
+    "fa": "تام می‌گوید: «یک قهوه با شیر، لطفاً.»",
+    "en": "Tom says: “A coffee with milk, please.”"
+   },
+   {
+    "de": "„Und ein Stück Apfelkuchen.“",
+    "fa": "«و یک تکه کیک سیب.»",
+    "en": "“And a piece of apple cake.”"
+   },
+   {
+    "de": "„Das macht vier Euro fünfzig“, sagt die Kellnerin.",
+    "fa": "پیشخدمت می‌گوید: «می‌شود چهار یورو و پنجاه سنت.»",
+    "en": "“That is four euros fifty,” says the waitress."
+   },
+   {
+    "de": "Tom bezahlt und setzt sich ans Fenster.",
+    "fa": "تام پول می‌دهد و کنار پنجره می‌نشیند.",
+    "en": "Tom pays and sits down by the window."
+   },
+   {
+    "de": "Da kommt Sara. Sie ist seine Freundin.",
+    "fa": "سارا می‌آید. او دوست تام است.",
+    "en": "Here comes Sara. She is his friend."
+   },
+   {
+    "de": "„Hallo Tom! Ist hier noch frei?“",
+    "fa": "«سلام تام! اینجا خالی است؟»",
+    "en": "“Hello Tom! Is this seat free?”"
+   },
+   {
+    "de": "„Ja, natürlich! Setz dich!“",
+    "fa": "«بله، البته! بنشین!»",
+    "en": "“Yes, of course! Sit down!”"
+   },
+   {
+    "de": "Sie trinken zusammen Kaffee und sprechen viel.",
+    "fa": "آن‌ها با هم قهوه می‌نوشند و زیاد حرف می‌زنند.",
+    "en": "They drink coffee together and talk a lot."
+   }
+  ],
+  "q": [
+   {
+    "q": {
+     "de": "Was bestellt Tom?",
+     "fa": "تام چه سفارش می‌دهد؟",
+     "en": "What does Tom order?"
+    },
+    "o": [
+     "Kaffee und Kuchen",
+     "Tee und Brot",
+     "Wasser und Pizza"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Wie viel kostet es?",
+     "fa": "چقدر می‌شود؟",
+     "en": "How much is it?"
+    },
+    "o": [
+     "Vier Euro fünfzig",
+     "Zehn Euro",
+     "Zwei Euro"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Wer kommt ins Café?",
+     "fa": "چه کسی به کافه می‌آید؟",
+     "en": "Who comes into the café?"
+    },
+    "o": [
+     "Sara",
+     "Lisa",
+     "Max"
+    ],
+    "a": 0
+   }
+  ]
+ },
+ {
+  "id": "geschenk",
+  "emoji": "🎁",
+  "level": "A1",
+  "color": "#8a4dff,#ff4f81",
+  "title": {
+   "de": "Ein Geschenk für Papa",
+   "fa": "یک هدیه برای بابا",
+   "en": "A gift for Dad"
+  },
+  "s": [
+   {
+    "de": "Morgen hat Papa Geburtstag.",
+    "fa": "فردا تولد بابا است.",
+    "en": "Tomorrow is Dad’s birthday."
+   },
+   {
+    "de": "Lena möchte ein Geschenk kaufen.",
+    "fa": "لنا می‌خواهد یک هدیه بخرد.",
+    "en": "Lena wants to buy a gift."
+   },
+   {
+    "de": "Sie geht in die Stadt.",
+    "fa": "او به شهر می‌رود.",
+    "en": "She goes into town."
+   },
+   {
+    "de": "Zuerst schaut sie im Buchladen.",
+    "fa": "اول در کتاب‌فروشی نگاه می‌کند.",
+    "en": "First she looks in the bookshop."
+   },
+   {
+    "de": "Aber Papa liest nicht gern.",
+    "fa": "اما بابا کتاب خواندن را دوست ندارد.",
+    "en": "But Dad does not like reading."
+   },
+   {
+    "de": "Dann sieht sie einen Laden mit Tassen.",
+    "fa": "بعد مغازه‌ای پر از فنجان می‌بیند.",
+    "en": "Then she sees a shop with cups."
+   },
+   {
+    "de": "Eine Tasse mit einer Katze – das ist perfekt!",
+    "fa": "یک فنجان با نقش گربه – عالی است!",
+    "en": "A cup with a cat on it – that is perfect!"
+   },
+   {
+    "de": "Papa liebt Katzen und Kaffee.",
+    "fa": "بابا گربه و قهوه را دوست دارد.",
+    "en": "Dad loves cats and coffee."
+   },
+   {
+    "de": "Lena bezahlt die Tasse und geht nach Hause.",
+    "fa": "لنا پول فنجان را می‌دهد و به خانه می‌رود.",
+    "en": "Lena pays for the cup and goes home."
+   },
+   {
+    "de": "Am Abend packt sie das Geschenk ein.",
+    "fa": "عصر هدیه را کادو می‌کند.",
+    "en": "In the evening she wraps the gift."
+   },
+   {
+    "de": "Sie ist schon sehr gespannt.",
+    "fa": "او خیلی مشتاق است.",
+    "en": "She is already very excited."
+   }
+  ],
+  "q": [
+   {
+    "q": {
+     "de": "Wer hat morgen Geburtstag?",
+     "fa": "فردا تولد کیست؟",
+     "en": "Whose birthday is it tomorrow?"
+    },
+    "o": [
+     "Papa",
+     "Lena",
+     "Mama"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Was kauft Lena?",
+     "fa": "لنا چه می‌خرد؟",
+     "en": "What does Lena buy?"
+    },
+    "o": [
+     "Eine Tasse",
+     "Ein Buch",
+     "Eine Katze"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Was liebt Papa?",
+     "fa": "بابا چه چیزی را دوست دارد؟",
+     "en": "What does Dad love?"
+    },
+    "o": [
+     "Katzen und Kaffee",
+     "Bücher und Tee",
+     "Hunde und Wasser"
+    ],
+    "a": 0
+   }
+  ]
+ },
+ {
+  "id": "regen",
+  "emoji": "☔",
+  "level": "A1",
+  "color": "#5b3df5,#00c2a8",
+  "title": {
+   "de": "Der Regen",
+   "fa": "باران",
+   "en": "The rain"
+  },
+  "s": [
+   {
+    "de": "Es regnet heute stark.",
+    "fa": "امروز شدید باران می‌بارد.",
+    "en": "It is raining hard today."
+   },
+   {
+    "de": "Paul hat keinen Regenschirm.",
+    "fa": "پل چتر ندارد.",
+    "en": "Paul has no umbrella."
+   },
+   {
+    "de": "Er läuft schnell zur Bushaltestelle.",
+    "fa": "او تند به ایستگاه اتوبوس می‌دود.",
+    "en": "He runs quickly to the bus stop."
+   },
+   {
+    "de": "Dort steht eine junge Frau.",
+    "fa": "آنجا یک زن جوان ایستاده است.",
+    "en": "A young woman is standing there."
+   },
+   {
+    "de": "Sie hat einen gelben Regenschirm.",
+    "fa": "او یک چتر زرد دارد.",
+    "en": "She has a yellow umbrella."
+   },
+   {
+    "de": "„Du bist nass!“, sagt sie.",
+    "fa": "او می‌گوید: «تو خیسی!»",
+    "en": "“You are wet!” she says."
+   },
+   {
+    "de": "„Komm unter meinen Regenschirm!“",
+    "fa": "«بیا زیر چترم!»",
+    "en": "“Come under my umbrella!”"
+   },
+   {
+    "de": "„Danke! Ich heiße Paul.“",
+    "fa": "«ممنون! اسم من پل است.»",
+    "en": "“Thanks! My name is Paul.”"
+   },
+   {
+    "de": "„Ich heiße Mia.“",
+    "fa": "«اسم من میا است.»",
+    "en": "“My name is Mia.”"
+   },
+   {
+    "de": "Der Bus kommt, und sie fahren zusammen.",
+    "fa": "اتوبوس می‌آید و آن‌ها با هم می‌روند.",
+    "en": "The bus comes and they ride together."
+   },
+   {
+    "de": "Am Samstag trinken Paul und Mia zusammen einen Kaffee.",
+    "fa": "شنبه پل و میا با هم قهوه می‌نوشند.",
+    "en": "On Saturday Paul and Mia have a coffee together."
+   }
+  ],
+  "q": [
+   {
+    "q": {
+     "de": "Wie ist das Wetter?",
+     "fa": "هوا چطور است؟",
+     "en": "How is the weather?"
+    },
+    "o": [
+     "Es regnet.",
+     "Die Sonne scheint.",
+     "Es schneit."
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Welche Farbe hat der Regenschirm?",
+     "fa": "چتر چه رنگی است؟",
+     "en": "What colour is the umbrella?"
+    },
+    "o": [
+     "Gelb",
+     "Rot",
+     "Blau"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Wie heißt die Frau?",
+     "fa": "اسم آن زن چیست؟",
+     "en": "What is the woman called?"
+    },
+    "o": [
+     "Mia",
+     "Lena",
+     "Anna"
+    ],
+    "a": 0
+   }
+  ]
+ },
+ {
+  "id": "einkaufen",
+  "emoji": "🛒",
+  "level": "A1",
+  "color": "#00c2a8,#2e7bff",
+  "title": {
+   "de": "Beim Einkaufen",
+   "fa": "موقع خرید",
+   "en": "Shopping"
+  },
+  "s": [
+   {
+    "de": "Heute geht Nina einkaufen.",
+    "fa": "امروز نینا می‌رود خرید.",
+    "en": "Today Nina goes shopping."
+   },
+   {
+    "de": "Sie braucht Brot, Milch und Äpfel.",
+    "fa": "او نان، شیر و سیب لازم دارد.",
+    "en": "She needs bread, milk and apples."
+   },
+   {
+    "de": "Im Supermarkt ist es sehr voll.",
+    "fa": "در سوپرمارکت خیلی شلوغ است.",
+    "en": "The supermarket is very crowded."
+   },
+   {
+    "de": "Zuerst kauft sie ein Brot.",
+    "fa": "اول یک نان می‌خرد.",
+    "en": "First she buys a loaf of bread."
+   },
+   {
+    "de": "Dann nimmt sie zwei Liter Milch.",
+    "fa": "بعد دو لیتر شیر برمی‌دارد.",
+    "en": "Then she takes two litres of milk."
+   },
+   {
+    "de": "Die Äpfel sind rot und süß.",
+    "fa": "سیب‌ها قرمز و شیرین‌اند.",
+    "en": "The apples are red and sweet."
+   },
+   {
+    "de": "Nina fragt: „Was kostet ein Kilo?“",
+    "fa": "نینا می‌پرسد: «کیلویی چند است؟»",
+    "en": "Nina asks: “How much is a kilo?”"
+   },
+   {
+    "de": "Der Verkäufer sagt: „Zwei Euro.“",
+    "fa": "فروشنده می‌گوید: «دو یورو.»",
+    "en": "The seller says: “Two euros.”"
+   },
+   {
+    "de": "An der Kasse bezahlt sie mit Karte.",
+    "fa": "پای صندوق با کارت پرداخت می‌کند.",
+    "en": "At the checkout she pays by card."
+   },
+   {
+    "de": "Dann geht sie mit der Tasche nach Hause.",
+    "fa": "بعد با کیفش به خانه می‌رود.",
+    "en": "Then she goes home with her bag."
+   }
+  ],
+  "q": [
+   {
+    "q": {
+     "de": "Was kauft Nina nicht?",
+     "fa": "نینا چه چیزی نمی‌خرد؟",
+     "en": "What does Nina not buy?"
+    },
+    "o": [
+     "Fisch",
+     "Brot",
+     "Milch"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Wie sind die Äpfel?",
+     "fa": "سیب‌ها چه‌طورند؟",
+     "en": "What are the apples like?"
+    },
+    "o": [
+     "Rot und süß",
+     "Grün und sauer",
+     "Klein und gelb"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Wie bezahlt Nina?",
+     "fa": "نینا چه‌طور پرداخت می‌کند؟",
+     "en": "How does Nina pay?"
+    },
+    "o": [
+     "Mit Karte",
+     "Mit Bargeld",
+     "Mit dem Handy"
+    ],
+    "a": 0
+   }
+  ]
+ },
+ {
+  "id": "arzt",
+  "emoji": "🩺",
+  "level": "A1",
+  "color": "#ff4f81,#8a4dff",
+  "title": {
+   "de": "Beim Arzt",
+   "fa": "پیش دکتر",
+   "en": "At the doctor's"
+  },
+  "s": [
+   {
+    "de": "Tom ist heute krank.",
+    "fa": "تام امروز مریض است.",
+    "en": "Tom is ill today."
+   },
+   {
+    "de": "Er hat Kopfschmerzen und Fieber.",
+    "fa": "او سردرد و تب دارد.",
+    "en": "He has a headache and a fever."
+   },
+   {
+    "de": "Er ruft die Arztpraxis an.",
+    "fa": "او به مطب زنگ می‌زند.",
+    "en": "He calls the doctor's office."
+   },
+   {
+    "de": "Um zehn Uhr hat er einen Termin.",
+    "fa": "ساعت ده وقت دارد.",
+    "en": "He has an appointment at ten o'clock."
+   },
+   {
+    "de": "Im Wartezimmer sitzen viele Leute.",
+    "fa": "در اتاق انتظار آدم‌های زیادی نشسته‌اند.",
+    "en": "Many people are sitting in the waiting room."
+   },
+   {
+    "de": "Die Ärztin fragt: „Was fehlt Ihnen?“",
+    "fa": "دکتر می‌پرسد: «چه مشکلی دارید؟»",
+    "en": "The doctor asks: “What's wrong?”"
+   },
+   {
+    "de": "Tom sagt: „Mir ist kalt und der Hals tut weh.“",
+    "fa": "تام می‌گوید: «سردم است و گلویم درد می‌کند.»",
+    "en": "Tom says: “I'm cold and my throat hurts.”"
+   },
+   {
+    "de": "Die Ärztin sagt: „Sie müssen im Bett bleiben.“",
+    "fa": "دکتر می‌گوید: «باید در تخت بمانید.»",
+    "en": "The doctor says: “You must stay in bed.”"
+   },
+   {
+    "de": "Sie gibt ihm ein Rezept.",
+    "fa": "او به تام نسخه می‌دهد.",
+    "en": "She gives him a prescription."
+   },
+   {
+    "de": "In der Apotheke holt Tom seine Medizin.",
+    "fa": "تام در داروخانه داروهایش را می‌گیرد.",
+    "en": "At the pharmacy Tom gets his medicine."
+   }
+  ],
+  "q": [
+   {
+    "q": {
+     "de": "Was hat Tom?",
+     "fa": "تام چه مشکلی دارد؟",
+     "en": "What is wrong with Tom?"
+    },
+    "o": [
+     "Kopfschmerzen und Fieber",
+     "Bauchschmerzen",
+     "Einen kaputten Arm"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Um wie viel Uhr hat er einen Termin?",
+     "fa": "ساعت چند وقت دارد؟",
+     "en": "At what time is his appointment?"
+    },
+    "o": [
+     "Um zehn Uhr",
+     "Um acht Uhr",
+     "Um zwölf Uhr"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Wohin geht Tom nach dem Arzt?",
+     "fa": "تام بعد از دکتر کجا می‌رود؟",
+     "en": "Where does Tom go after the doctor?"
+    },
+    "o": [
+     "In die Apotheke",
+     "In die Schule",
+     "Ins Kino"
+    ],
+    "a": 0
+   }
+  ]
+ },
+ {
+  "id": "familie",
+  "emoji": "👨‍👩‍👧",
+  "level": "A1",
+  "color": "#ff9a3d,#ff5f9e",
+  "title": {
+   "de": "Meine Familie",
+   "fa": "خانواده‌ی من",
+   "en": "My family"
+  },
+  "s": [
+   {
+    "de": "Ich heiße Sara und bin zehn Jahre alt.",
+    "fa": "اسم من سارا است و ده ساله‌ام.",
+    "en": "My name is Sara and I am ten years old."
+   },
+   {
+    "de": "Meine Familie ist nicht groß.",
+    "fa": "خانواده‌ی من بزرگ نیست.",
+    "en": "My family is not big."
+   },
+   {
+    "de": "Ich habe einen Vater und eine Mutter.",
+    "fa": "من یک پدر و یک مادر دارم.",
+    "en": "I have a father and a mother."
+   },
+   {
+    "de": "Mein Vater arbeitet im Krankenhaus.",
+    "fa": "پدرم در بیمارستان کار می‌کند.",
+    "en": "My father works in a hospital."
+   },
+   {
+    "de": "Meine Mutter ist Lehrerin.",
+    "fa": "مادرم معلم است.",
+    "en": "My mother is a teacher."
+   },
+   {
+    "de": "Ich habe auch einen kleinen Bruder.",
+    "fa": "من یک برادر کوچک هم دارم.",
+    "en": "I also have a little brother."
+   },
+   {
+    "de": "Er heißt Ali und ist fünf.",
+    "fa": "اسمش علی است و پنج‌ساله است.",
+    "en": "His name is Ali and he is five."
+   },
+   {
+    "de": "Am Sonntag besuchen wir die Oma.",
+    "fa": "یکشنبه به دیدن مادربزرگ می‌رویم.",
+    "en": "On Sunday we visit Grandma."
+   },
+   {
+    "de": "Sie kocht immer Suppe für uns.",
+    "fa": "او همیشه برای ما سوپ می‌پزد.",
+    "en": "She always cooks soup for us."
+   },
+   {
+    "de": "Ich liebe meine Familie sehr!",
+    "fa": "من خانواده‌ام را خیلی دوست دارم!",
+    "en": "I love my family very much!"
+   }
+  ],
+  "q": [
+   {
+    "q": {
+     "de": "Wie alt ist Sara?",
+     "fa": "سارا چند ساله است؟",
+     "en": "How old is Sara?"
+    },
+    "o": [
+     "Zehn",
+     "Fünf",
+     "Zwölf"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Was ist Saras Mutter von Beruf?",
+     "fa": "شغل مادر سارا چیست؟",
+     "en": "What does Sara's mother do?"
+    },
+    "o": [
+     "Lehrerin",
+     "Ärztin",
+     "Köchin"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Wen besuchen sie am Sonntag?",
+     "fa": "یکشنبه به دیدن چه کسی می‌روند؟",
+     "en": "Whom do they visit on Sunday?"
+    },
+    "o": [
+     "Die Oma",
+     "Den Onkel",
+     "Die Lehrerin"
+    ],
+    "a": 0
+   }
+  ]
+ },
+ {
+  "id": "morgen",
+  "emoji": "⏰",
+  "level": "A1",
+  "color": "#2e7bff,#00c2a8",
+  "title": {
+   "de": "Mein Tag",
+   "fa": "روز من",
+   "en": "My day"
+  },
+  "s": [
+   {
+    "de": "Um sieben Uhr klingelt mein Wecker.",
+    "fa": "ساعت هفت زنگ ساعتم به صدا درمی‌آید.",
+    "en": "At seven o'clock my alarm clock rings."
+   },
+   {
+    "de": "Ich stehe auf und dusche kalt.",
+    "fa": "بلند می‌شوم و با آب سرد دوش می‌گیرم.",
+    "en": "I get up and take a cold shower."
+   },
+   {
+    "de": "Zum Frühstück esse ich ein Ei und Brot.",
+    "fa": "برای صبحانه تخم‌مرغ و نان می‌خورم.",
+    "en": "For breakfast I eat an egg and bread."
+   },
+   {
+    "de": "Dazu trinke ich einen Tee.",
+    "fa": "با آن یک چای می‌نوشم.",
+    "en": "With it I drink a tea."
+   },
+   {
+    "de": "Um acht Uhr fahre ich mit dem Bus zur Arbeit.",
+    "fa": "ساعت هشت با اتوبوس به سر کار می‌روم.",
+    "en": "At eight o'clock I take the bus to work."
+   },
+   {
+    "de": "Ich arbeite bis fünf Uhr.",
+    "fa": "تا ساعت پنج کار می‌کنم.",
+    "en": "I work until five o'clock."
+   },
+   {
+    "de": "Mittags esse ich mit meinen Kollegen.",
+    "fa": "ظهر با همکارانم غذا می‌خورم.",
+    "en": "At noon I eat with my colleagues."
+   },
+   {
+    "de": "Am Abend koche ich Nudeln.",
+    "fa": "عصر ماکارونی می‌پزم.",
+    "en": "In the evening I cook pasta."
+   },
+   {
+    "de": "Danach sehe ich ein bisschen fern.",
+    "fa": "بعد کمی تلویزیون تماشا می‌کنم.",
+    "en": "Afterwards I watch a little TV."
+   },
+   {
+    "de": "Um elf Uhr gehe ich ins Bett.",
+    "fa": "ساعت یازده به رختخواب می‌روم.",
+    "en": "At eleven o'clock I go to bed."
+   }
+  ],
+  "q": [
+   {
+    "q": {
+     "de": "Wann klingelt der Wecker?",
+     "fa": "زنگ ساعت کی به صدا درمی‌آید؟",
+     "en": "When does the alarm clock ring?"
+    },
+    "o": [
+     "Um sieben Uhr",
+     "Um sechs Uhr",
+     "Um acht Uhr"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Wie fährt die Person zur Arbeit?",
+     "fa": "این شخص چه‌طور به سر کار می‌رود؟",
+     "en": "How does the person get to work?"
+    },
+    "o": [
+     "Mit dem Bus",
+     "Mit dem Auto",
+     "Zu Fuß"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Was kocht die Person am Abend?",
+     "fa": "این شخص عصر چه می‌پزد؟",
+     "en": "What does the person cook in the evening?"
+    },
+    "o": [
+     "Nudeln",
+     "Suppe",
+     "Reis"
+    ],
+    "a": 0
+   }
+  ]
+ },
+ {
+  "id": "zug",
+  "emoji": "🚆",
+  "level": "A1",
+  "color": "#5b3df5,#ff4f81",
+  "title": {
+   "de": "Im Zug nach München",
+   "fa": "در قطار به مونیخ",
+   "en": "On the train to Munich"
+  },
+  "s": [
+   {
+    "de": "Lea fährt heute nach München.",
+    "fa": "لئا امروز به مونیخ می‌رود.",
+    "en": "Lea is going to Munich today."
+   },
+   {
+    "de": "Sie steht am Bahnhof und wartet auf den Zug.",
+    "fa": "او در ایستگاه ایستاده و منتظر قطار است.",
+    "en": "She is standing at the station waiting for the train."
+   },
+   {
+    "de": "Der Zug hat zehn Minuten Verspätung.",
+    "fa": "قطار ده دقیقه تأخیر دارد.",
+    "en": "The train is ten minutes late."
+   },
+   {
+    "de": "Endlich kommt der Zug an Gleis drei.",
+    "fa": "بالاخره قطار به خط سه می‌رسد.",
+    "en": "Finally the train arrives at platform three."
+   },
+   {
+    "de": "Lea sucht ihren Platz am Fenster.",
+    "fa": "لئا صندلی‌اش کنار پنجره را پیدا می‌کند.",
+    "en": "Lea looks for her seat by the window."
+   },
+   {
+    "de": "Neben ihr sitzt ein netter alter Mann.",
+    "fa": "کنارش یک پیرمرد مهربان نشسته است.",
+    "en": "A nice old man is sitting next to her."
+   },
+   {
+    "de": "Er fragt: „Fahren Sie auch bis München?“",
+    "fa": "او می‌پرسد: «شما هم تا مونیخ می‌روید؟»",
+    "en": "He asks: “Are you also going to Munich?”"
+   },
+   {
+    "de": "„Ja“, sagt Lea, „und Sie?“",
+    "fa": "لئا می‌گوید: «بله، و شما؟»",
+    "en": "“Yes,” says Lea, “and you?”"
+   },
+   {
+    "de": "Die Fahrt dauert vier Stunden.",
+    "fa": "سفر چهار ساعت طول می‌کشد.",
+    "en": "The journey takes four hours."
+   },
+   {
+    "de": "Lea liest ein Buch und trinkt Kaffee.",
+    "fa": "لئا کتاب می‌خواند و قهوه می‌نوشد.",
+    "en": "Lea reads a book and drinks coffee."
+   }
+  ],
+  "q": [
+   {
+    "q": {
+     "de": "Wohin fährt Lea?",
+     "fa": "لئا کجا می‌رود؟",
+     "en": "Where is Lea going?"
+    },
+    "o": [
+     "Nach München",
+     "Nach Berlin",
+     "Nach Hamburg"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Warum muss Lea warten?",
+     "fa": "چرا لئا باید صبر کند؟",
+     "en": "Why does Lea have to wait?"
+    },
+    "o": [
+     "Der Zug hat Verspätung",
+     "Sie hat kein Ticket",
+     "Der Bahnhof ist zu"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Wie lange dauert die Fahrt?",
+     "fa": "سفر چقدر طول می‌کشد؟",
+     "en": "How long does the trip take?"
+    },
+    "o": [
+     "Vier Stunden",
+     "Zwei Stunden",
+     "Zehn Stunden"
+    ],
+    "a": 0
+   }
+  ]
+ },
+ {
+  "id": "geburtstag",
+  "emoji": "🎂",
+  "level": "A1",
+  "color": "#ff5f9e,#ff9a3d",
+  "title": {
+   "de": "Annas Geburtstag",
+   "fa": "تولد آنا",
+   "en": "Anna's birthday"
+  },
+  "s": [
+   {
+    "de": "Heute ist Annas Geburtstag.",
+    "fa": "امروز تولد آنا است.",
+    "en": "Today is Anna's birthday."
+   },
+   {
+    "de": "Sie wird neun Jahre alt.",
+    "fa": "او نه ساله می‌شود.",
+    "en": "She is turning nine."
+   },
+   {
+    "de": "Ihre Mutter backt einen Schokoladenkuchen.",
+    "fa": "مادرش یک کیک شکلاتی می‌پزد.",
+    "en": "Her mother bakes a chocolate cake."
+   },
+   {
+    "de": "Der Kuchen hat neun Kerzen.",
+    "fa": "کیک نه شمع دارد.",
+    "en": "The cake has nine candles."
+   },
+   {
+    "de": "Am Nachmittag kommen die Freunde.",
+    "fa": "بعدازظهر دوستانش می‌آیند.",
+    "en": "In the afternoon her friends come."
+   },
+   {
+    "de": "Alle singen ein Lied für Anna.",
+    "fa": "همه برای آنا آهنگی می‌خوانند.",
+    "en": "Everyone sings a song for Anna."
+   },
+   {
+    "de": "Anna pustet die Kerzen aus.",
+    "fa": "آنا شمع‌ها را فوت می‌کند.",
+    "en": "Anna blows out the candles."
+   },
+   {
+    "de": "Sie bekommt viele Geschenke.",
+    "fa": "او هدیه‌های زیادی می‌گیرد.",
+    "en": "She gets many presents."
+   },
+   {
+    "de": "Das schönste Geschenk ist ein Fahrrad.",
+    "fa": "قشنگ‌ترین هدیه یک دوچرخه است.",
+    "en": "The best present is a bicycle."
+   },
+   {
+    "de": "Anna ist sehr glücklich und sagt: „Danke!“",
+    "fa": "آنا خیلی خوشحال است و می‌گوید: «ممنون!»",
+    "en": "Anna is very happy and says: “Thank you!”"
+   }
+  ],
+  "q": [
+   {
+    "q": {
+     "de": "Wie alt wird Anna?",
+     "fa": "آنا چند ساله می‌شود؟",
+     "en": "How old is Anna turning?"
+    },
+    "o": [
+     "Neun",
+     "Zehn",
+     "Sieben"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Was backt die Mutter?",
+     "fa": "مادر چه می‌پزد؟",
+     "en": "What does the mother bake?"
+    },
+    "o": [
+     "Einen Schokoladenkuchen",
+     "Ein Brot",
+     "Kekse"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Was ist das schönste Geschenk?",
+     "fa": "قشنگ‌ترین هدیه چیست؟",
+     "en": "What is the best present?"
+    },
+    "o": [
+     "Ein Fahrrad",
+     "Ein Buch",
+     "Ein Hund"
+    ],
+    "a": 0
+   }
+  ]
+ },
+ {
+  "id": "wohnung",
+  "emoji": "🏠",
+  "level": "A1",
+  "color": "#00c2a8,#8a4dff",
+  "title": {
+   "de": "Die neue Wohnung",
+   "fa": "آپارتمان تازه",
+   "en": "The new flat"
+  },
+  "s": [
+   {
+    "de": "Karim hat eine neue Wohnung in Berlin.",
+    "fa": "کریم یک آپارتمان تازه در برلین دارد.",
+    "en": "Karim has a new flat in Berlin."
+   },
+   {
+    "de": "Sie ist klein, aber sehr hell.",
+    "fa": "کوچک است ولی خیلی روشن.",
+    "en": "It is small but very bright."
+   },
+   {
+    "de": "Es gibt ein Wohnzimmer, ein Schlafzimmer und eine Küche.",
+    "fa": "یک اتاق نشیمن، یک اتاق خواب و یک آشپزخانه دارد.",
+    "en": "There is a living room, a bedroom and a kitchen."
+   },
+   {
+    "de": "Im Wohnzimmer steht ein grünes Sofa.",
+    "fa": "در اتاق نشیمن یک کاناپه‌ی سبز هست.",
+    "en": "In the living room there is a green sofa."
+   },
+   {
+    "de": "Die Küche hat einen Tisch und zwei Stühle.",
+    "fa": "آشپزخانه یک میز و دو صندلی دارد.",
+    "en": "The kitchen has a table and two chairs."
+   },
+   {
+    "de": "Karim hängt Bilder an die Wand.",
+    "fa": "کریم تابلوها را به دیوار می‌زند.",
+    "en": "Karim hangs pictures on the wall."
+   },
+   {
+    "de": "Die Nachbarin klingelt an der Tür.",
+    "fa": "همسایه زنگ در را می‌زند.",
+    "en": "The neighbour rings the doorbell."
+   },
+   {
+    "de": "Sie bringt einen Kuchen und sagt: „Willkommen!“",
+    "fa": "او یک کیک می‌آورد و می‌گوید: «خوش آمدید!»",
+    "en": "She brings a cake and says: “Welcome!”"
+   },
+   {
+    "de": "Sie trinken zusammen Kaffee.",
+    "fa": "با هم قهوه می‌نوشند.",
+    "en": "They drink coffee together."
+   },
+   {
+    "de": "Karim fühlt sich schon zu Hause.",
+    "fa": "کریم همین حالا احساس می‌کند در خانه است.",
+    "en": "Karim already feels at home."
+   }
+  ],
+  "q": [
+   {
+    "q": {
+     "de": "Wie ist die Wohnung?",
+     "fa": "آپارتمان چه‌طور است؟",
+     "en": "What is the flat like?"
+    },
+    "o": [
+     "Klein und hell",
+     "Groß und dunkel",
+     "Alt und laut"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Welche Farbe hat das Sofa?",
+     "fa": "کاناپه چه رنگی است؟",
+     "en": "What colour is the sofa?"
+    },
+    "o": [
+     "Grün",
+     "Rot",
+     "Blau"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Was bringt die Nachbarin?",
+     "fa": "همسایه چه می‌آورد؟",
+     "en": "What does the neighbour bring?"
+    },
+    "o": [
+     "Einen Kuchen",
+     "Einen Stuhl",
+     "Blumen"
+    ],
+    "a": 0
+   }
+  ]
+ },
+ {
+  "id": "restaurant",
+  "emoji": "🍽️",
+  "level": "A1",
+  "color": "#ff4f81,#ff9a3d",
+  "title": {
+   "de": "Im Restaurant",
+   "fa": "در رستوران",
+   "en": "At the restaurant"
+  },
+  "s": [
+   {
+    "de": "Am Samstag gehen Jan und Mia ins Restaurant.",
+    "fa": "شنبه یان و میا به رستوران می‌روند.",
+    "en": "On Saturday Jan and Mia go to a restaurant."
+   },
+   {
+    "de": "Der Kellner bringt die Speisekarte.",
+    "fa": "گارسون منو را می‌آورد.",
+    "en": "The waiter brings the menu."
+   },
+   {
+    "de": "Mia möchte eine Suppe und einen Salat.",
+    "fa": "میا یک سوپ و یک سالاد می‌خواهد.",
+    "en": "Mia would like a soup and a salad."
+   },
+   {
+    "de": "Jan nimmt ein Schnitzel mit Kartoffeln.",
+    "fa": "یان یک شنیتسل با سیب‌زمینی می‌گیرد.",
+    "en": "Jan has a schnitzel with potatoes."
+   },
+   {
+    "de": "Zu trinken bestellen sie Wasser und Saft.",
+    "fa": "برای نوشیدنی آب و آبمیوه سفارش می‌دهند.",
+    "en": "To drink they order water and juice."
+   },
+   {
+    "de": "Das Essen schmeckt sehr gut.",
+    "fa": "غذا خیلی خوشمزه است.",
+    "en": "The food tastes very good."
+   },
+   {
+    "de": "Zum Nachtisch gibt es ein Eis.",
+    "fa": "برای دسر بستنی هست.",
+    "en": "For dessert there is ice cream."
+   },
+   {
+    "de": "Jan fragt: „Die Rechnung, bitte!“",
+    "fa": "یان می‌گوید: «صورت‌حساب، لطفاً!»",
+    "en": "Jan asks: “The bill, please!”"
+   },
+   {
+    "de": "Es kostet vierzig Euro.",
+    "fa": "چهل یورو می‌شود.",
+    "en": "It costs forty euros."
+   },
+   {
+    "de": "Sie geben zwei Euro Trinkgeld und gehen nach Hause.",
+    "fa": "دو یورو انعام می‌دهند و به خانه می‌روند.",
+    "en": "They give a two-euro tip and go home."
+   }
+  ],
+  "q": [
+   {
+    "q": {
+     "de": "Was isst Jan?",
+     "fa": "یان چه می‌خورد؟",
+     "en": "What does Jan eat?"
+    },
+    "o": [
+     "Ein Schnitzel",
+     "Eine Suppe",
+     "Einen Salat"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Was trinken sie?",
+     "fa": "آن‌ها چه می‌نوشند؟",
+     "en": "What do they drink?"
+    },
+    "o": [
+     "Wasser und Saft",
+     "Kaffee und Tee",
+     "Bier und Wein"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Wie viel kostet das Essen?",
+     "fa": "غذا چقدر می‌شود؟",
+     "en": "How much does the meal cost?"
+    },
+    "o": [
+     "Vierzig Euro",
+     "Vierzehn Euro",
+     "Vierhundert Euro"
+    ],
+    "a": 0
+   }
+  ]
+ },
+ {
+  "id": "park",
+  "emoji": "🌳",
+  "level": "A1",
+  "color": "#00c2a8,#2e7bff",
+  "title": {
+   "de": "Im Park",
+   "fa": "در پارک",
+   "en": "In the park"
+  },
+  "s": [
+   {
+    "de": "Es ist Sonntag und die Sonne scheint.",
+    "fa": "یکشنبه است و آفتاب می‌تابد.",
+    "en": "It is Sunday and the sun is shining."
+   },
+   {
+    "de": "Familie Weber geht im Park spazieren.",
+    "fa": "خانواده‌ی وبر در پارک قدم می‌زند.",
+    "en": "The Weber family goes for a walk in the park."
+   },
+   {
+    "de": "Die Kinder laufen zum See.",
+    "fa": "بچه‌ها به سمت دریاچه می‌دوند.",
+    "en": "The children run to the lake."
+   },
+   {
+    "de": "Auf dem Wasser schwimmen drei Enten.",
+    "fa": "روی آب سه اردک شنا می‌کنند.",
+    "en": "Three ducks are swimming on the water."
+   },
+   {
+    "de": "Der Vater kauft ein Eis für jedes Kind.",
+    "fa": "پدر برای هر بچه یک بستنی می‌خرد.",
+    "en": "The father buys an ice cream for each child."
+   },
+   {
+    "de": "Die Mutter sitzt auf einer Bank und liest.",
+    "fa": "مادر روی یک نیمکت نشسته و کتاب می‌خواند.",
+    "en": "The mother sits on a bench and reads."
+   },
+   {
+    "de": "Ein Hund läuft schnell zu den Kindern.",
+    "fa": "یک سگ تند به سمت بچه‌ها می‌دود.",
+    "en": "A dog runs quickly to the children."
+   },
+   {
+    "de": "Die Kinder lachen und spielen mit ihm.",
+    "fa": "بچه‌ها می‌خندند و با او بازی می‌کنند.",
+    "en": "The children laugh and play with it."
+   },
+   {
+    "de": "Am Abend sind alle müde, aber glücklich.",
+    "fa": "عصر همه خسته‌اند ولی خوشحال.",
+    "en": "In the evening everyone is tired but happy."
+   },
+   {
+    "de": "Sie fahren mit dem Fahrrad nach Hause.",
+    "fa": "با دوچرخه به خانه می‌روند.",
+    "en": "They cycle home."
+   }
+  ],
+  "q": [
+   {
+    "q": {
+     "de": "Wie ist das Wetter?",
+     "fa": "هوا چه‌طور است؟",
+     "en": "What is the weather like?"
+    },
+    "o": [
+     "Die Sonne scheint",
+     "Es regnet",
+     "Es schneit"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Wie viele Enten sind auf dem Wasser?",
+     "fa": "چند اردک روی آب هست؟",
+     "en": "How many ducks are on the water?"
+    },
+    "o": [
+     "Drei",
+     "Zwei",
+     "Fünf"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Was macht die Mutter?",
+     "fa": "مادر چه می‌کند؟",
+     "en": "What does the mother do?"
+    },
+    "o": [
+     "Sie liest",
+     "Sie schwimmt",
+     "Sie kocht"
+    ],
+    "a": 0
+   }
+  ]
+ },
+ {
+  "id": "handy",
+  "emoji": "📱",
+  "level": "A1",
+  "color": "#8a4dff,#00c2a8",
+  "title": {
+   "de": "Das verlorene Handy",
+   "fa": "گوشی گم‌شده",
+   "en": "The lost phone"
+  },
+  "s": [
+   {
+    "de": "Paul sucht sein Handy.",
+    "fa": "پاول دنبال گوشی‌اش می‌گردد.",
+    "en": "Paul is looking for his phone."
+   },
+   {
+    "de": "Es ist nicht auf dem Tisch.",
+    "fa": "روی میز نیست.",
+    "en": "It is not on the table."
+   },
+   {
+    "de": "Es ist nicht in der Tasche.",
+    "fa": "در کیف نیست.",
+    "en": "It is not in the bag."
+   },
+   {
+    "de": "Paul ruft seine Schwester an.",
+    "fa": "پاول به خواهرش زنگ می‌زند.",
+    "en": "Paul calls his sister."
+   },
+   {
+    "de": "„Hast du mein Handy gesehen?“, fragt er.",
+    "fa": "می‌پرسد: «گوشی‌ام را دیده‌ای؟»",
+    "en": "“Have you seen my phone?” he asks."
+   },
+   {
+    "de": "„Nein“, sagt sie, „aber ich rufe es an.“",
+    "fa": "او می‌گوید: «نه، ولی من به آن زنگ می‌زنم.»",
+    "en": "“No,” she says, “but I'll call it.”"
+   },
+   {
+    "de": "Plötzlich hört Paul ein Geräusch.",
+    "fa": "ناگهان پاول صدایی می‌شنود.",
+    "en": "Suddenly Paul hears a noise."
+   },
+   {
+    "de": "Das Handy klingelt unter dem Sofa!",
+    "fa": "گوشی زیر کاناپه زنگ می‌خورد!",
+    "en": "The phone is ringing under the sofa!"
+   },
+   {
+    "de": "Paul lacht und sagt: „Danke, Lena!“",
+    "fa": "پاول می‌خندد و می‌گوید: «ممنون، لنا!»",
+    "en": "Paul laughs and says: “Thank you, Lena!”"
+   },
+   {
+    "de": "Jetzt legt er das Handy immer auf den Tisch.",
+    "fa": "حالا او گوشی را همیشه روی میز می‌گذارد.",
+    "en": "Now he always puts the phone on the table."
+   }
+  ],
+  "q": [
+   {
+    "q": {
+     "de": "Was sucht Paul?",
+     "fa": "پاول دنبال چه می‌گردد؟",
+     "en": "What is Paul looking for?"
+    },
+    "o": [
+     "Sein Handy",
+     "Seinen Schlüssel",
+     "Sein Buch"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Wen ruft Paul an?",
+     "fa": "پاول به چه کسی زنگ می‌زند؟",
+     "en": "Whom does Paul call?"
+    },
+    "o": [
+     "Seine Schwester",
+     "Seinen Bruder",
+     "Seine Mutter"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Wo ist das Handy?",
+     "fa": "گوشی کجاست؟",
+     "en": "Where is the phone?"
+    },
+    "o": [
+     "Unter dem Sofa",
+     "Auf dem Tisch",
+     "In der Tasche"
+    ],
+    "a": 0
+   }
+  ]
+ },
+ {
+  "id": "sport",
+  "emoji": "⚽",
+  "level": "A1",
+  "color": "#2e7bff,#ff4f81",
+  "title": {
+   "de": "Tom macht Sport",
+   "fa": "تام ورزش می‌کند",
+   "en": "Tom does sport"
+  },
+  "s": [
+   {
+    "de": "Tom liebt Sport.",
+    "fa": "تام ورزش را دوست دارد.",
+    "en": "Tom loves sport."
+   },
+   {
+    "de": "Am Montag spielt er Fußball mit Freunden.",
+    "fa": "دوشنبه با دوستانش فوتبال بازی می‌کند.",
+    "en": "On Monday he plays football with friends."
+   },
+   {
+    "de": "Am Mittwoch geht er schwimmen.",
+    "fa": "چهارشنبه به شنا می‌رود.",
+    "en": "On Wednesday he goes swimming."
+   },
+   {
+    "de": "Am Freitag fährt er Fahrrad im Wald.",
+    "fa": "جمعه در جنگل دوچرخه‌سواری می‌کند.",
+    "en": "On Friday he rides his bike in the forest."
+   },
+   {
+    "de": "Am Wochenende ruht er sich aus.",
+    "fa": "آخر هفته استراحت می‌کند.",
+    "en": "At the weekend he rests."
+   },
+   {
+    "de": "Sport macht ihn stark und fit.",
+    "fa": "ورزش او را قوی و سرحال می‌کند.",
+    "en": "Sport makes him strong and fit."
+   },
+   {
+    "de": "Er trinkt viel Wasser und isst gesund.",
+    "fa": "او آب زیاد می‌نوشد و سالم می‌خورد.",
+    "en": "He drinks a lot of water and eats healthily."
+   },
+   {
+    "de": "Heute gewinnt seine Mannschaft das Spiel.",
+    "fa": "امروز تیمش بازی را می‌برد.",
+    "en": "Today his team wins the game."
+   },
+   {
+    "de": "Alle jubeln und umarmen Tom.",
+    "fa": "همه شادی می‌کنند و تام را در آغوش می‌گیرند.",
+    "en": "Everyone cheers and hugs Tom."
+   },
+   {
+    "de": "Danach gehen sie zusammen Pizza essen.",
+    "fa": "بعد با هم می‌روند پیتزا بخورند.",
+    "en": "Afterwards they go and eat pizza together."
+   }
+  ],
+  "q": [
+   {
+    "q": {
+     "de": "Was macht Tom am Montag?",
+     "fa": "تام دوشنبه چه می‌کند؟",
+     "en": "What does Tom do on Monday?"
+    },
+    "o": [
+     "Er spielt Fußball",
+     "Er schwimmt",
+     "Er fährt Rad"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Wo fährt Tom Fahrrad?",
+     "fa": "تام کجا دوچرخه می‌راند؟",
+     "en": "Where does Tom ride his bike?"
+    },
+    "o": [
+     "Im Wald",
+     "Im Park",
+     "In der Stadt"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Was essen sie nach dem Spiel?",
+     "fa": "بعد از بازی چه می‌خورند؟",
+     "en": "What do they eat after the game?"
+    },
+    "o": [
+     "Pizza",
+     "Salat",
+     "Kuchen"
+    ],
+    "a": 0
+   }
+  ]
+ },
+ {
+  "id": "urlaub",
+  "emoji": "🏖️",
+  "level": "A1",
+  "color": "#ff9a3d,#00c2a8",
+  "title": {
+   "de": "Urlaub am Meer",
+   "fa": "تعطیلات کنار دریا",
+   "en": "Holiday by the sea"
+  },
+  "s": [
+   {
+    "de": "Im Sommer fahren Lisa und Ben ans Meer.",
+    "fa": "تابستان لیزا و بن به کنار دریا می‌روند.",
+    "en": "In summer Lisa and Ben go to the sea."
+   },
+   {
+    "de": "Sie wohnen eine Woche in einem kleinen Hotel.",
+    "fa": "آن‌ها یک هفته در یک هتل کوچک می‌مانند.",
+    "en": "They stay for a week in a small hotel."
+   },
+   {
+    "de": "Jeden Morgen gehen sie zum Strand.",
+    "fa": "هر صبح به ساحل می‌روند.",
+    "en": "Every morning they go to the beach."
+   },
+   {
+    "de": "Das Wasser ist blau und warm.",
+    "fa": "آب آبی و گرم است.",
+    "en": "The water is blue and warm."
+   },
+   {
+    "de": "Ben baut eine Sandburg.",
+    "fa": "بن یک قلعه‌ی شنی می‌سازد.",
+    "en": "Ben builds a sandcastle."
+   },
+   {
+    "de": "Lisa sammelt schöne Muscheln.",
+    "fa": "لیزا صدف‌های قشنگ جمع می‌کند.",
+    "en": "Lisa collects beautiful shells."
+   },
+   {
+    "de": "Mittags essen sie Fisch am Hafen.",
+    "fa": "ظهر در بندر ماهی می‌خورند.",
+    "en": "At noon they eat fish at the harbour."
+   },
+   {
+    "de": "Am Abend sehen sie die Sonne untergehen.",
+    "fa": "عصر غروب خورشید را تماشا می‌کنند.",
+    "en": "In the evening they watch the sun go down."
+   },
+   {
+    "de": "Lisa macht viele Fotos.",
+    "fa": "لیزا عکس‌های زیادی می‌گیرد.",
+    "en": "Lisa takes lots of photos."
+   },
+   {
+    "de": "„Der Urlaub ist leider zu kurz“, sagt Ben.",
+    "fa": "بن می‌گوید: «افسوس که تعطیلات خیلی کوتاه است.»",
+    "en": "“The holiday is sadly too short,” says Ben."
+   }
+  ],
+  "q": [
+   {
+    "q": {
+     "de": "Wohin fahren Lisa und Ben?",
+     "fa": "لیزا و بن کجا می‌روند؟",
+     "en": "Where do Lisa and Ben go?"
+    },
+    "o": [
+     "Ans Meer",
+     "In die Berge",
+     "Nach Wien"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Was baut Ben?",
+     "fa": "بن چه می‌سازد؟",
+     "en": "What does Ben build?"
+    },
+    "o": [
+     "Eine Sandburg",
+     "Ein Haus",
+     "Ein Boot"
+    ],
+    "a": 0
+   },
+   {
+    "q": {
+     "de": "Wie lange bleiben sie?",
+     "fa": "چقدر می‌مانند؟",
+     "en": "How long do they stay?"
+    },
+    "o": [
+     "Eine Woche",
+     "Einen Tag",
+     "Einen Monat"
+    ],
+    "a": 0
+   }
+  ]
+ }
 ]

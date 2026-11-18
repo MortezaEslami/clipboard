@@ -69,6 +69,7 @@ export async function renderSettings(root, nav) {
       row(t('زیرنویس پیش‌فرض'), null, seg([['de', 'DE'], ['de-fa', t('DE+فا')], ['de-en', 'DE+EN'], ['none', t('هیچ')]], S.settings.subMode === 'orig' ? 'de-fa' : S.settings.subMode, (k) => { S.settings.subMode = k; saveSettings(); })),
       row(t('زبان معنی در کارت‌ها'), null, seg([['fa', t('فارسی')], ['en', 'English'], ['both', t('هر دو')]], S.settings.meaningLang, (k) => { S.settings.meaningLang = k; saveSettings(); })),
       row(t('زبان برنامه'), null, seg([['fa', 'فارسی'], ['en', 'English'], ['de', 'Deutsch']], lang, (k) => setLang(k))),
+      row(t('اندازه‌ی متن'), null, seg([['0.92', 'A−'], ['1', 'A'], ['1.12', 'A+'], ['1.25', 'A++']], String(S.settings.fontScale || 1), (k) => { S.settings.fontScale = +k; saveSettings(); document.documentElement.style.zoom = String(k); })),
       row(t('ظاهر'), null, seg([['auto', t('خودکار')], ['light', t('روشن')], ['dark', t('تیره')]], S.settings.theme, (k) => { S.settings.theme = k; saveSettings(); document.documentElement.dataset.theme = k; }))));
 
   // ---------- review
@@ -143,5 +144,21 @@ export async function renderSettings(root, nav) {
       for (const s of ['vocab', 'cards', 'marks', 'progress']) { await DB.clear(s); S[s].clear(); }
       S.days = {}; await DB.put('meta', { id: 'days', v: {} }); toast(t('پاک شد')); nav('home');
     } }, t('پاک کردن')))),
-    h('div', { style: { textAlign: 'center', color: 'var(--muted)', fontSize: '12px', padding: '20px 0 6px' } }, 'Clipboard · v1.9.1 — Nicos Weg & Momente'));
+    h('div', { style: { textAlign: 'center', color: 'var(--muted)', fontSize: '12px', padding: '20px 0 6px' } }, 'Clipboard · v2.0.0 — Nicos Weg & Momente'));
+  collapsible(root);
+}
+
+// every ".sect-t" heading folds the cards below it (state remembered)
+function collapsible(root) {
+  let open; try { open = JSON.parse(localStorage.getItem('lc-sect') || 'null'); } catch (e) { open = null; }
+  open = open || { '🎬': 1, '🎨': 1 };
+  let cur = null;
+  [...root.children].forEach((el) => {
+    if (el.classList.contains('sect-t')) {
+      const key = el.textContent.trim().slice(0, 2); const body = h('div', { class: 'sect-body' });
+      el.after(body); cur = body;
+      const on = !!open[key]; body.hidden = !on; el.classList.add('fold'); el.classList.toggle('open', on);
+      el.addEventListener('click', () => { const o = body.hidden; body.hidden = !o; el.classList.toggle('open', o); open[key] = o ? 1 : 0; try { localStorage.setItem('lc-sect', JSON.stringify(open)); } catch (e) { /* ignore */ } });
+    } else if (cur && !el.classList.contains('page-h')) cur.append(el);
+  });
 }

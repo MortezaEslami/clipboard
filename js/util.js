@@ -107,10 +107,12 @@ export function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t 
 
 // ---- toast
 let toastT;
-export function toast(msg) {
+export function toast(msg, act) {
   const el = document.getElementById('toast'); if (!el) return;
-  el.textContent = msg; el.classList.add('show');
-  clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 2200);
+  el.replaceChildren(document.createTextNode(msg)); el.classList.toggle('act', !!act);
+  if (act) { const b = document.createElement('button'); b.textContent = act.label; b.addEventListener('click', () => { act.fn(); el.classList.remove('show'); }); el.append(b); }
+  el.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), act ? 5200 : 2200);
 }
 
 // ---- bottom sheet
@@ -156,16 +158,33 @@ try { loadVoices(); speechSynthesis.addEventListener('voiceschanged', loadVoices
 export const LANG_NAMES = { en: 'English', fr: 'Français', es: 'Español', tr: 'Türkçe', it: 'Italiano', ar: t('العربية'), de: 'Deutsch' };
 const LOCALE = { de: 'de-DE', en: 'en-US', fr: 'fr-FR', es: 'es-ES', tr: 'tr-TR', it: 'it-IT', ar: 'ar-SA' };
 export const vlang = (v) => (v && v.ctx && v.ctx.lang) || 'de';
+// Text-to-speech that survives Chrome/Android quirks:
+//  - utterances are kept referenced (otherwise onend may never fire),
+//  - a short delay after cancel() (otherwise the next utterance is dropped),
+//  - cancel/interrupt events never advance a chain,
+//  - a watchdog calls onend if the engine forgets to.
+let spkId = 0; const keepU = new Set();
+export const ttsOK = () => { try { return 'speechSynthesis' in window; } catch (e) { return false; } };
+export const hasVoice = (l = 'de') => { try { if (!voices.length) loadVoices(); } catch (e) { /* ignore */ } return voices.some((x) => x.lang.toLowerCase().startsWith(l)); };
+export function stopSpeak() { spkId++; try { speechSynthesis.cancel(); } catch (e) { /* ignore */ } }
 export function speak(text, rate = 0.9, lang = 'de', onend = null) {
   try {
-    speechSynthesis.cancel();
+    if (!ttsOK()) return false;
+    if (!voices.length) loadVoices();
+    const id = ++spkId; const ss = speechSynthesis;
+    try { if (ss.speaking || ss.pending) ss.cancel(); } catch (e) { /* ignore */ }
     const u = new SpeechSynthesisUtterance(text);
     const loc = LOCALE[lang] || lang;
     u.lang = loc; u.rate = rate;
-    if (onend) { u.onend = onend; u.onerror = onend; }
     const v = voices.find((x) => x.lang.replace('_', '-').toLowerCase() === loc.toLowerCase()) || voices.find((x) => x.lang.toLowerCase().startsWith(lang));
     if (v) u.voice = v;
-    speechSynthesis.speak(u);
+    let fin = false; let wd = 0;
+    const finish = () => { if (fin) return; fin = true; clearTimeout(wd); keepU.delete(u); if (onend && id === spkId) onend(); };
+    u.onend = finish;
+    u.onerror = (e) => { if (e && (e.error === 'canceled' || e.error === 'interrupted')) { fin = true; clearTimeout(wd); keepU.delete(u); return; } finish(); };
+    keepU.add(u);
+    wd = setTimeout(finish, Math.max(2500, (text.length * 120) / Math.max(0.4, rate) + 1500));
+    setTimeout(() => { if (id !== spkId) { keepU.delete(u); return; } try { ss.speak(u); if (ss.paused) ss.resume(); } catch (e) { finish(); } }, 90);
     return true;
   } catch (e) { return false; }
 }

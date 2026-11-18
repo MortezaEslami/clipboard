@@ -1,8 +1,9 @@
 import { t } from './i18n.js';
-import { addWatch, flushDays, S, MARKS, loadCues, loadGlossary, lookup as lookupDE, findVocab, addVocab, saveVocab, deleteVocab, setMark, removeMark, markId, saveProgress, addDone, markKnown, unmarkKnown, knownMap, saveSettings, KINDS, vocabLevel } from './state.js';
+import { addWatch, flushDays, S, MARKS, loadCues, loadGlossary, lookup as lookupDE, findVocab, addVocab, saveVocab, deleteVocab, setMark, removeMark, markId, saveProgress, addDone, markKnown, unmarkKnown, knownMap, todayWatch, streak, lessonDone, saveSettings, KINDS, vocabLevel } from './state.js';
 import { confetti, sfx, buzz } from './fx.js';
 import * as Videos from './videos.js';
 import { occurSection } from './occur.js';
+import { knownSet } from './corpus.js';
 import { h, ic, icon, fmtTime, tokenize, norm, openSheet, toast, speak, fa, confirmSheet, LANG_NAMES } from './util.js';
 
 const SPEEDS = [0.6, 0.75, 0.9, 1, 1.25];
@@ -38,7 +39,21 @@ export async function renderPlayer(root, lessonId, opts = {}) {
   const mask = h('div', { class: 'mask' });
   const ovl = h('div', { class: 'ovl' });
   const bigPlay = h('div', { class: 'big', html: ic('play') });
-  const tap = h('div', { class: 'tap', onclick: () => togglePlay() }, bigPlay);
+  const tap = h('div', { class: 'tap' }, bigPlay);
+  // gestures: tap = play/pause, double tap = replay sentence, swipe left/right = next/previous sentence
+  {
+    let tx = 0, ty = 0, lastTap = 0, tapT = 0;
+    tap.addEventListener('pointerdown', (e) => { tx = e.clientX; ty = e.clientY; });
+    tap.addEventListener('pointerup', (e) => {
+      const dx = e.clientX - tx, dy = e.clientY - ty;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) { clearTimeout(tapT); lastTap = 0; gotoCue(cur + (dx < 0 ? 1 : -1)); return; }
+      if (Math.abs(dx) < 14 && Math.abs(dy) < 14) {
+        const now = Date.now();
+        if (now - lastTap < 320) { clearTimeout(tapT); lastTap = 0; replayCue(); } else { lastTap = now; tapT = setTimeout(() => togglePlay(), 230); }
+      }
+    });
+    try { if (!localStorage.getItem('lc-gest')) { localStorage.setItem('lc-gest', '1'); setTimeout(() => toast(t('💡 روی ویدیو: دوبار لمس = تکرار جمله · کشیدن به چپ/راست = جمله بعد/قبل')), 1200); } } catch (e) { /* ignore */ }
+  }
   const fsBtn = h('button', { class: 'fs', onclick: (e) => { e.stopPropagation(); toggleFs(); }, html: ic('full'), 'aria-label': t('تمام‌صفحه') });
   const novideo = h('div', { class: 'novideo' });
   const vbox = h('div', { class: 'vbox paused' }, video, mask, ovl, tap, fsBtn, novideo);
@@ -213,6 +228,27 @@ export async function renderPlayer(root, lessonId, opts = {}) {
     i = Math.max(0, Math.min(cues.length - 1, i < 0 ? 0 : i));
     if (hasVideo()) { seekTo(cues[i].s - 0.05, true); setCur(i); } else { setCur(i); speak(cues[i].de, 0.85, lang); }
   }
+  function openFinished() {
+    if (!root.isConnected) return;
+    const kn = knownSet(); const cnt = new Map();
+    cues.forEach((c) => tokenize(c.de).forEach((x) => { if (!x.w) return; const k = norm(x.t); if (k.length < 3 || kn.has(k)) return; const e = cnt.get(k) || { w: x.t, n: 0 }; e.n++; cnt.set(k, e); }));
+    const words = [...cnt.entries()].sort((a, b) => b[1].n - a[1].n).slice(0, 30);
+    const on = new Set(words.map(([k]) => k));
+    const sib = S.lessons.filter((l) => l.course === lesson.course); const nx = sib[sib.indexOf(lesson) + 1];
+    const chips = h('div', { class: 'chips', style: { flexWrap: 'wrap' } });
+    const okB = h('button', { class: 'btn', onclick: () => { markKnown(words.filter(([k]) => on.has(k)).map(([, e]) => e.w)); sh.close(); toast(t('✓ در فهرست «بلدم» ثبت شد')); } });
+    const paintBtn = () => { okB.textContent = t('ثبت: {0} کلمه را بلدم', fa(on.size)); okB.disabled = !on.size; };
+    const paint = () => { chips.replaceChildren(...words.map(([k, e]) => h('button', { class: 'chip' + (on.has(k) ? ' on' : ''), onclick: () => { on.has(k) ? on.delete(k) : on.add(k); paint(); } }, e.w))); paintBtn(); };
+    const body = [h('div', { class: 'fin-sum' }, h('div', null, h('b', { class: 'num' }, fa(lessonDone(lessonId))), h('small', null, t('بار کامل دیده‌ای'))),
+      h('div', null, h('b', { class: 'num' }, fa(Math.round(todayWatch() / 60))), h('small', null, t('دقیقه تماشای امروز'))), h('div', null, h('b', { class: 'num' }, fa(streak())), h('small', null, t('سری روزها')))) ];
+    if (words.length) body.push(h('div', { class: 'wl' }, t('کلمه‌ای را که نمی‌دانی از حالت تیک دربیاور؛ بقیه «بلدم» ثبت می‌شوند.')), chips);
+    const acts = h('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap' } });
+    if (words.length) acts.append(okB);
+    if (nx) acts.append(h('button', { class: 'btn sec', onclick: () => { sh.close(); opts.nav('p-' + nx.id); } }, t('کلیپ بعدی ›')));
+    acts.append(h('button', { class: 'btn sec', onclick: () => { sh.close(); replayCue(); } }, t('دوباره ببین')));
+    const sh = openSheet({ title: '🎉 ' + t('کلیپ تمام شد'), body, actions: acts });
+    paint();
+  }
   function replayCue() {
     const i = cur >= 0 ? cur : 0;
     if (hasVideo()) { seekTo(cues[i].s - 0.05, true); setCur(i); } else speak(cues[i].de, 0.85, lang);
@@ -285,7 +321,7 @@ export async function renderPlayer(root, lessonId, opts = {}) {
   }
   video.addEventListener('play', () => { clearWait(); playing = true; updateButtons(); cancelAnimationFrame(raf); raf = requestAnimationFrame(tick); });
   video.addEventListener('pause', () => { playing = false; updateButtons(); saveProgress(lessonId, video.currentTime, dur); });
-  video.addEventListener('ended', () => { playing = false; updateButtons(); addDone(lessonId, dur); });
+  video.addEventListener('ended', () => { playing = false; updateButtons(); addDone(lessonId, dur); setTimeout(openFinished, 450); });
   video.addEventListener('seeked', () => { if (video.paused) tick(); });
   video.addEventListener('timeupdate', () => { if (video.paused) tick(); });
   video.addEventListener('loadedmetadata', () => {
@@ -380,9 +416,9 @@ export async function renderPlayer(root, lessonId, opts = {}) {
     function paintKnownRow() {
       const ws = selWords(); const inVocab = !!findVocab(deIn.value); const all = ws.length && ws.every((x) => knownMap()[norm(x)]);
       knownRow.replaceChildren(...[
-        !inVocab && !all ? h('button', { class: 'btn sec sm', onclick: () => { markKnown(ws); refreshKnown(); repaintWords(); sh.close(); toast(t('✓ به فهرست «بلدم» اضافه شد')); } }, '✓ ' + t('بلدم')) : null,
+        !inVocab && !all ? h('button', { class: 'btn sec sm', onclick: () => { markKnown(ws); refreshKnown(); repaintWords(); sh.close(); toast(t('✓ به فهرست «بلدم» اضافه شد'), { label: t('برگردان'), fn: () => { unmarkKnown(ws); refreshKnown(); repaintWords(); } }); } }, '✓ ' + t('بلدم')) : null,
         all && !inVocab ? h('button', { class: 'btn sec sm', onclick: () => { unmarkKnown(ws); refreshKnown(); repaintWords(); sh.close(); toast(t('از فهرست «بلدم» برداشته شد')); } }, '✗ ' + t('دیگر بلد نیستم')) : null,
-        h('button', { class: 'btn sec sm', onclick: () => { markKnown(words2(c.de)); refreshKnown(); repaintWords(); sh.close(); toast(t('همهٔ کلمه‌های این جمله اضافه شد ✓')); } }, '✓✓ ' + t('همهٔ جمله را بلدم')),
+        h('button', { class: 'btn sec sm', onclick: () => { const all = words2(c.de); markKnown(all); refreshKnown(); repaintWords(); sh.close(); toast(t('همهٔ کلمه‌های این جمله اضافه شد ✓'), { label: t('برگردان'), fn: () => { unmarkKnown(all); refreshKnown(); repaintWords(); } }); } }, '✓✓ ' + t('همهٔ جمله را بلدم')),
       ].filter(Boolean));
     }
     const saveBtn = h('button', { class: 'btn block' });

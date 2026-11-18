@@ -1,10 +1,10 @@
 import { t } from './i18n.js';
-import { S, KINDS, addVocab, saveVocab, deleteVocab, vocabLevel, vocabCards, findVocab, activeKinds } from './state.js';
+import { S, KINDS, addVocab, saveVocab, deleteVocab, vocabLevel, vocabCards, findVocab, activeKinds, snapshotVocab, restoreVocab } from './state.js';
 import { occurSection } from './occur.js';
 import { h, ic, fa, fmtTime, openSheet, toast, speak, confirmSheet, norm, vlang } from './util.js';
 
 const LV = [t('جدید'), t('در حال یادگیری'), t('نسبتاً مسلط'), t('مسلط')];
-let filter = { q: '', lv: 'all', lesson: 'all' };
+let filter = { q: '', lv: 'all', lesson: 'all', sort: 'new' };
 
 export function renderVocab(root, nav) {
   const head = h('div', { class: 'page-h' }, h('div', null, h('h1', null, t('واژگان')), h('div', { class: 'sub', id: 'vsub' })),
@@ -12,16 +12,20 @@ export function renderVocab(root, nav) {
   const q = h('input', { class: 'input', placeholder: t('جستجو در واژه‌ها…'), value: filter.q });
   q.addEventListener('input', () => { filter.q = q.value; paint(); });
   const search = h('div', { class: 'search' }, h('span', { html: ic('search') }), q);
-  const lvChips = h('div', { class: 'chips' });
+  const lvChips = h('div', { class: 'chips wrap' });
   const lessonSel = h('select', { class: 'input', style: { marginBottom: '10px' } });
+  const sortSel = h('select', { class: 'input', style: { marginBottom: '10px' } }, [['new', t('جدیدترین')], ['weak', t('ضعیف‌ترین اول')], ['az', t('الفبایی')]].map(([k, n]) => h('option', { value: k }, n)));
+  sortSel.value = filter.sort; sortSel.addEventListener('change', () => { filter.sort = sortSel.value; paint(); });
+  const tools = h('div', { class: 'vtools' }, lessonSel, sortSel);
   const list = h('div');
   const fab = h('button', { class: 'fab', onclick: () => openEdit(null), html: ic('plus'), 'aria-label': t('افزودن واژه') });
-  root.append(head, search, lvChips, lessonSel, list, fab);
+  root.append(head, search, lvChips, tools, list, fab);
 
   lessonSel.addEventListener('change', () => { filter.lesson = lessonSel.value; paint(); });
 
   function paint() {
     const all = [...S.vocab.values()].sort((a, b) => b.created - a.created);
+    const sorted = (rows) => (filter.sort === 'weak' ? [...rows].sort((a, b) => vocabLevel(a) - vocabLevel(b)) : filter.sort === 'az' ? [...rows].sort((a, b) => a.de.localeCompare(b.de, 'de')) : rows);
     document.getElementById('vsub').textContent = t('{0} واژه', fa(all.length));
     const levels = [['all', t('همه')], [0, LV[0]], [1, LV[1]], [2, LV[2]], [3, LV[3]]];
     lvChips.replaceChildren(...levels.map(([k, l]) => {
@@ -37,11 +41,13 @@ export function renderVocab(root, nav) {
       && (!qq || norm(v.de).includes(qq) || norm(v.fa).includes(qq) || norm(v.en).includes(qq)));
     list.replaceChildren();
     if (!rows.length) {
+      if (!all.length) list.append(h('div', { class: 'empty' }, h('div', { html: ic('book') }), h('b', null, t('هنوز واژه‌ای نداری؛ بیا با هم شروع کنیم ✨')), h('div', { style: { display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '14px', flexWrap: 'wrap' } }, h('button', { class: 'btn', onclick: () => nav('wordtest') }, '⚡ ' + t('تست سریع واژه‌ها')), h('button', { class: 'btn sec', onclick: () => nav('freq') }, '📚 ' + t('واژه‌های پرتکرار'))), h('div', { style: { marginTop: '10px' } }, t('داخل پلیر روی هر واژه‌ای بزن و «ذخیره در واژه‌ها» را بزن. یا با دکمه + دستی اضافه کن.'))));
+      else
       list.append(h('div', { class: 'empty' }, h('div', { html: ic('book') }), h('b', null, all.length ? t('چیزی پیدا نشد') : t('هنوز واژه‌ای نداری؛ بیا با هم شروع کنیم ✨')),
         all.length ? '' : t('داخل پلیر روی هر واژه‌ای بزن و «ذخیره در واژه‌ها» را بزن. یا با دکمه + دستی اضافه کن.')));
       return;
     }
-    rows.forEach((v) => {
+    sorted(rows).forEach((v) => {
       const l = v.ctx && v.ctx.lesson ? S.lessonMap.get(v.ctx.lesson) : null;
       list.append(h('div', { class: 'card vitem', onclick: () => openEdit(v) },
         h('div', { class: 'lv l' + vocabLevel(v) }),
@@ -81,7 +87,7 @@ export function renderVocab(root, nav) {
     const acts = h('div', { style: { display: 'flex', gap: '10px', flexWrap: 'wrap' } });
     const sh = openSheet({ title: isNew ? t('واژه جدید') : t('ویرایش واژه'), body, actions: acts });
     if (!isNew) {
-      acts.append(h('button', { class: 'btn danger', onclick: async () => { if (await confirmSheet({ title: t('حذف واژه'), text: t('«{0}» و کارت‌هایش حذف شود؟', v.de), okText: t('حذف'), danger: true })) { deleteVocab(v.id); sh.close(); paint(); toast(t('حذف شد')); } }, html: ic('trash') }));
+      acts.append(h('button', { class: 'btn danger', onclick: () => { const snap = snapshotVocab(v.id); deleteVocab(v.id); sh.close(); paint(); toast(t('حذف شد'), { label: t('برگردان'), fn: () => { restoreVocab(snap); paint(); } }); }, html: ic('trash') }));
       if (hasCtx) acts.append(h('button', { class: 'btn sec', onclick: () => { sh.close(); nav('p-' + v.ctx.lesson, { startAt: v.ctx.s, loop: true }); }, html: ic('film') + ' ' + t('صحنه') }));
     }
     acts.append(h('button', { class: 'btn block', style: { flex: 1 }, onclick: () => {

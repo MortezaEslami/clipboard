@@ -1,10 +1,11 @@
 import { t, locale, lang, setLang } from './i18n.js';
-import { S, counts, streak, lastDays, lessonProgress, lessonDone, levelInfo, todayReviews } from './state.js';
+import { S, saveSettings, counts, streak, lastDays, lessonProgress, lessonDone, levelInfo, todayReviews } from './state.js';
 import * as Videos from './videos.js';
-import { h, ic, fa, fmtTime } from './util.js';
+import { h, ic, fa, fmtTime, openSheet } from './util.js';
 import { openAddClip } from './addclip.js';
 import { deleteCustomLesson } from './state.js';
 import { confirmSheet } from './util.js';
+import { recommendNext } from './corpus.js';
 import { mascot, ring, animateRings, countUp, confetti, sfx } from './fx.js';
 
 let courseId = null;
@@ -16,7 +17,7 @@ function langPicker() {
   const menu = h('div', { class: 'flag-menu' }, flags.map(([k, f, n]) => h('button', { class: 'flag' + (k === lang ? ' on' : ''), title: n, 'aria-label': n, onclick: () => { if (k !== lang) setLang(k); else menu.classList.remove('open'); } }, f)));
   globe.addEventListener('click', (e) => { e.stopPropagation(); menu.classList.toggle('open'); });
   document.addEventListener('click', () => menu.classList.remove('open'));
-  return h('div', { class: 'lang-pick' }, h('small', { class: 'ver' }, 'v1.9.1'), globe, menu);
+  return h('div', { class: 'lang-pick' }, h('small', { class: 'ver' }, 'v2.0.0'), globe, menu);
 }
 
 export function renderHome(root, nav) {
@@ -57,6 +58,22 @@ export function renderHome(root, nav) {
   hero.append(...['✦', '✧', '★'].map((x, i) => h('span', { class: 'spark s' + i }, x)));
   root.append(hero);
   animateRings(hero);
+  const recSlot = h('div'); root.append(recSlot);
+  // ---- continue
+  const last = [...S.progress.values()].filter((p) => p.pos > 3 && p.dur && p.pos < p.dur - 5).sort((a, b) => (b.t || 0) - (a.t || 0))[0];
+  if (last && S.lessonMap.has(last.id)) {
+    const l = S.lessonMap.get(last.id);
+    root.append(h('div', { class: 'card cont', onclick: () => nav('p-' + l.id) },
+      h('div', { class: 'thumb', html: ic('play') }),
+      h('div', { class: 'txt' }, h('small', null, t('ادامه تماشا')), h('b', null, l.title), h('div', { class: 'prog' }, h('i', { style: { width: `${(last.pos / last.dur) * 100}%` } }))),
+      h('span', { class: 'pill acc num' }, fmtTime(last.pos))));
+  }
+
+  const tiles = [['⚡', t('تست واژه'), 'wordtest'], ['✍️', t('دیکته'), 'dictation'], ['🧩', t('جای‌خالی'), 'cloze'], ['📖', t('داستان‌ها'), 'stories'],
+    ['📚', t('پرتکرار'), 'freq'], ['🔎', t('جستجو'), 'search']];
+  tiles.push(['🎮', t('بازی'), 'game'], ['📊', t('آمار'), 'stats']);
+  root.append(h('div', { class: 'sect-t', style: { marginTop: '4px' } }, t('تمرین‌ها')),
+    h('div', { class: 'tiles' }, tiles.map(([e, n, r]) => h('button', { class: 'tile', onclick: () => nav(r) }, h('span', { class: 'te' }, e), h('b', null, n)))));
 
   // ---- level / XP
   const lvCard = h('div', { class: 'card lvcard' },
@@ -78,20 +95,32 @@ export function renderHome(root, nav) {
   const statEls = [];
   const mk = (n, label, icon, color) => { const b = h('b', { class: 'num' }, fa(0)); statEls.push([b, n]); return h('div', { class: `card stat s-${color}` }, h('div', { class: 'si', html: ic(icon) }), b, h('div', { class: 'sl' }, label)); };
   root.append(h('div', { class: 'stats' }, mk(S.vocab.size, t('واژگان'), 'book', 'indigo'), mk(today, t('مرور امروز'), 'zap', 'amber'), mk(S.marks.size, t('مارک'), 'bookmark', 'rose')));
-  root.append(h('button', { class: 'game-card story-entry', onclick: () => nav('stories') }, h('span', { class: 'gc-ic' }, '📖'), h('span', { class: 'gc-t' }, h('b', null, t('داستان‌ها')), h('small', null, t('داستان‌های ساده و جذاب سطح A1')))));
-  root.append(h('button', { class: 'game-card dict-entry', onclick: () => nav('dictation') }, h('span', { class: 'gc-ic' }, '✍️'), h('span', { class: 'gc-t' }, h('b', null, t('دیکتهٔ شنیداری')), h('small', null, t('جمله‌های کلیپ‌ها را بشنو و بنویس')))));
-  if (S.vocab.size >= 3) root.append(h('button', { class: 'game-card', onclick: () => nav('game') }, h('span', { class: 'gc-ic' }, '🎮'), h('span', { class: 'gc-t' }, h('b', null, t('بازی جفت‌یابی')), h('small', null, t('با بازی، واژه‌هایت را سرگرم‌کننده تمرین کن')))));
   statEls.forEach(([el, n]) => countUp(el, n, { fmt: fa }));
-
-  // ---- continue
-  const last = [...S.progress.values()].filter((p) => p.pos > 3 && p.dur && p.pos < p.dur - 5).sort((a, b) => (b.t || 0) - (a.t || 0))[0];
-  if (last && S.lessonMap.has(last.id)) {
-    const l = S.lessonMap.get(last.id);
-    root.append(h('div', { class: 'card cont', onclick: () => nav('p-' + l.id) },
-      h('div', { class: 'thumb', html: ic('play') }),
-      h('div', { class: 'txt' }, h('small', null, t('ادامه تماشا')), h('b', null, l.title), h('div', { class: 'prog' }, h('i', { style: { width: `${(last.pos / last.dur) * 100}%` } }))),
-      h('span', { class: 'pill acc num' }, fmtTime(last.pos))));
+  // ---- first run: pick a daily goal and jump into the quick word test
+  if (!S.settings.onboarded && !S.vocab.size && ![...S.progress.values()].length) {
+    setTimeout(() => {
+      const goals = [10, 15, 30]; let g = S.settings.dailyGoal || 15;
+      const chips = h('div', { class: 'chips', style: { flexWrap: 'wrap' } });
+      const paint = () => chips.replaceChildren(...goals.map((n) => h('button', { class: 'chip' + (g === n ? ' on' : ''), onclick: () => { g = n; paint(); } }, t('{0} کارت در روز', fa(n)))));
+      paint();
+      const fin = () => { S.settings.onboarded = true; S.settings.dailyGoal = g; saveSettings(); };
+      const sh = openSheet({ title: '👋 ' + t('خوش آمدی!'), onClose: fin, body: [
+        h('div', { style: { textAlign: 'center' }, html: mascot('cheer', 96) }),
+        h('p', { style: { textAlign: 'center' } }, t('اول بگو هر روز چقدر وقت داری:')), chips,
+        h('p', { style: { textAlign: 'center', marginTop: '14px' } }, t('بعد با یک تست ۲ دقیقه‌ای به اپ بگو چه واژه‌هایی را از قبل بلدی تا درصد آشنایی کلیپ‌ها درست حساب شود.'))],
+      actions: h('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap' } },
+        h('button', { class: 'btn', onclick: () => { fin(); sh.close(); nav('wordtest'); } }, '⚡ ' + t('تست سریع واژه‌ها')),
+        h('button', { class: 'btn sec', onclick: () => { fin(); sh.close(); } }, t('بعداً'))) });
+    }, 700);
   }
+
+  recommendNext((id) => Videos.has(id), lessonProgress).then((r) => {
+    if (!r || r.cov < 0.35 || !recSlot.isConnected) return;
+    recSlot.replaceChildren(h('div', { class: 'card cont rec', onclick: () => nav('p-' + r.l.id) },
+      h('div', { class: 'thumb', html: '✨' }),
+      h('div', { class: 'txt' }, h('small', null, t('پیشنهاد بعدی برای تو')), h('b', null, r.l.title), h('small', { class: 'rec-s' }, t('{0}٪ از واژه‌هایش را می‌شناسی', fa(Math.round(r.cov * 100))))),
+      h('span', { class: 'pill acc' }, '›')));
+  }).catch(() => {});
 
   // ---- course tabs
   root.append(h('div', { class: 'courses' }, S.courses.map((co) => {

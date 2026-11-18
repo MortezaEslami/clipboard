@@ -1,7 +1,7 @@
 {
   "name": "Clipboard — Language Learning",
   "short_name": "Clipboard",
-  "description": "مرور ویدیوهای Nicos Weg و Momente با زیرنویس هوشمند، مارک و لغت‌های FSRS",
+  "description": "مرور ویدیوهای Nicos Weg و Momente با زیرنویس هوشمند، مارک و واژه‌های FSRS",
   "lang": "fa",
   "dir": "rtl",
   "start_url": "./index.html",

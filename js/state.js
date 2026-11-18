@@ -161,6 +161,18 @@ export function deleteVocab(id) {
   S.vocab.delete(id); DB.del('vocab', id);
   tomb(id);
 }
+export function snapshotVocab(id) {
+  const v = S.vocab.get(id); if (!v) return null;
+  const cards = Object.keys(KINDS).map((k) => S.cards.get(cardId(id, k))).filter(Boolean).map((c) => ({ ...c }));
+  return { v: { ...v }, cards };
+}
+export function restoreVocab(snap) {
+  if (!snap) return;
+  S.vocab.set(snap.v.id, snap.v); DB.put('vocab', snap.v);
+  snap.cards.forEach((c) => { S.cards.set(c.id, c); DB.put('cards', c); });
+  if (S.settings.tomb) delete S.settings.tomb[snap.v.id];
+  saveSettings();
+}
 export const todayReviews = () => (S.days[dayKey()] || {}).r || 0;
 export function vocabLevel(v) {
   const cs = vocabCards(v).filter((c) => c.state !== 0);

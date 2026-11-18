@@ -10,6 +10,8 @@ import { renderMarks } from './marks.js';
 import { renderGame } from './game.js';
 import { renderDictation } from './dictation.js';
 import { renderStats } from './stats.js';
+import { renderWordTest, renderFreq, renderCloze } from './learn.js';
+import { renderSearch } from './search.js';
 import { renderStoryList, renderStory } from './stories.js';
 import { getToken, syncNow, lastSync } from './sync.js';
 import { renderSettings } from './settings.js';
@@ -44,6 +46,10 @@ async function render() {
       if (my !== seq) { c && c(); return; } cleanup = c;
     } else if (name === 'stats') { renderStats(view, nav); key = 'home';
     } else if (name === 'dictation') { await renderDictation(view, nav); key = 'review';
+    } else if (name === 'wordtest') { await renderWordTest(view, nav); key = 'home';
+    } else if (name === 'freq') { await renderFreq(view, nav); key = 'vocab';
+    } else if (name === 'cloze') { await renderCloze(view, nav); key = 'review';
+    } else if (name === 'search') { await renderSearch(view, nav); key = 'home';
     } else if (name === 'game') { renderGame(view, nav); key = 'review';
     } else if (name === 'review') {
       view.classList.add('full'); key = 'review';
@@ -71,6 +77,7 @@ function drawTabs(active) {
 document.title = 'Clipboard';
 function applyTheme() {
   document.documentElement.dataset.theme = S.settings.theme || 'auto';
+  if (S.settings.fontScale && S.settings.fontScale !== 1) document.documentElement.style.zoom = String(S.settings.fontScale);
   const dark = S.settings.theme === 'dark' || (S.settings.theme === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
   const m = document.querySelector('meta[name=theme-color]'); if (m) m.content = dark ? '#0e131b' : '#f5f2ec';
 }
