@@ -1,5 +1,6 @@
 import { t } from './i18n.js';
 import { S, KINDS, addVocab, saveVocab, deleteVocab, vocabLevel, vocabCards, findVocab, activeKinds } from './state.js';
+import { occurSection } from './occur.js';
 import { h, ic, fa, fmtTime, openSheet, toast, speak, confirmSheet, norm, vlang } from './util.js';
 
 const LV = [t('جدید'), t('در حال یادگیری'), t('نسبتاً مسلط'), t('مسلط')];
@@ -76,6 +77,7 @@ export function renderVocab(root, nav) {
       h('div', { class: 'field' }, h('label', null, t('فارسی')), faIn),
       h('div', { class: 'field' }, h('label', null, 'English'), enIn),
       h('div', { class: 'field' }, h('label', null, t('نوع کارت‌ها')), kindRow));
+    if (v && v.de) body.push(occurSection(v.de, (id, s) => { sh.close(); nav('p-' + id, { startAt: s, loop: true }); }));
     const acts = h('div', { style: { display: 'flex', gap: '10px', flexWrap: 'wrap' } });
     const sh = openSheet({ title: isNew ? t('واژه جدید') : t('ویرایش واژه'), body, actions: acts });
     if (!isNew) {

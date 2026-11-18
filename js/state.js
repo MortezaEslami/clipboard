@@ -23,7 +23,8 @@ export const DEFAULTS = {
   typing: false,
   theme: 'auto',
   speed: 1,
-  repeatMode: 'off',         // off | pause | loop
+  repeatMode: 'off',         // off | pause | wait | loop
+  waitSec: 0.5,              // pause length in 'wait' mode
   maskTop: 0.765,
   autoplayClip: true,
   dailyGoal: 15, xp: 0, sound: true, haptics: true,

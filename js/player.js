@@ -2,6 +2,7 @@ import { t } from './i18n.js';
 import { addWatch, flushDays, S, MARKS, loadCues, loadGlossary, lookup as lookupDE, findVocab, addVocab, saveVocab, deleteVocab, setMark, removeMark, markId, saveProgress, addDone, saveSettings, KINDS, vocabLevel } from './state.js';
 import { confetti, sfx, buzz } from './fx.js';
 import * as Videos from './videos.js';
+import { occurSection } from './occur.js';
 import { h, ic, icon, fmtTime, tokenize, norm, openSheet, toast, speak, fa, confirmSheet, LANG_NAMES } from './util.js';
 
 const SPEEDS = [0.6, 0.75, 0.9, 1, 1.25];
@@ -24,6 +25,9 @@ export async function renderPlayer(root, lessonId, opts = {}) {
   let mode = S.settings.subMode;
   if (mode === 'orig' && !course.mask) mode = 'de-fa';
   let repeat = opts.loop ? 'loop' : S.settings.repeatMode;
+  let waitT = 0;
+  const clearWait = () => { clearTimeout(waitT); waitT = 0; };
+  const waitMs = () => Math.max(100, (S.settings.waitSec || 0.5) * 1000);
   let cur = -1, handled = -1, playing = false, raf = 0, lastSave = 0, userScroll = 0, dur = 0;
   const known = new Map();   // normalised word -> SRS level (0 new, 1 learning, 2 young, 3 mature)
   const refreshKnown = () => { known.clear(); S.vocab.forEach((v) => { const l = vocabLevel(v); known.set(norm(v.de), l); known.set(norm(v.form), l); }); };
@@ -186,19 +190,21 @@ export async function renderPlayer(root, lessonId, opts = {}) {
     playBtn.innerHTML = ic(playing ? 'pause' : 'play');
     vbox.classList.toggle('paused', !playing);
     speedBtn.textContent = `${video.playbackRate || S.settings.speed}×`;
-    repBtn.innerHTML = ic(repeat === 'loop' ? 'loop1' : repeat === 'pause' ? 'pausebar' : 'repeat');
+    repBtn.innerHTML = ic(repeat === 'loop' ? 'loop1' : repeat === 'pause' || repeat === 'wait' ? 'pausebar' : 'repeat') + (repeat === 'wait' ? `<small class="wsec">${fa(S.settings.waitSec || 0.5)}</small>` : '');
     repBtn.classList.toggle('on', repeat !== 'off');
-    repBtn.title = repeat === 'loop' ? t('تکرار جمله') : repeat === 'pause' ? t('توقف آخر هر جمله') : t('پخش عادی');
+    repBtn.title = repeat === 'loop' ? t('تکرار جمله') : repeat === 'pause' ? t('توقف آخر هر جمله') : repeat === 'wait' ? t('مکث کوتاه بعد از هر جمله') : t('پخش عادی');
   }
 
   // ---------- playback
   function hasVideo() { return !!video.getAttribute('src'); }
   function togglePlay() {
     if (!hasVideo()) return;
+    clearWait();
     if (video.paused) video.play().catch(() => {}); else video.pause();
   }
   function seekTo(t, play = true) {
     if (!hasVideo()) return;
+    clearWait();
     video.currentTime = Math.max(0, t);
     if (play) video.play().catch(() => {});
     handled = -1;
@@ -217,9 +223,10 @@ export async function renderPlayer(root, lessonId, opts = {}) {
     video.playbackRate = n; S.settings.speed = n; saveSettings(); updateButtons();
   }
   function cycleRepeat() {
-    repeat = repeat === 'off' ? 'pause' : repeat === 'pause' ? 'loop' : 'off';
+    clearWait();
+    repeat = repeat === 'off' ? 'pause' : repeat === 'pause' ? 'wait' : repeat === 'wait' ? 'loop' : 'off';
     S.settings.repeatMode = repeat; saveSettings(); updateButtons();
-    toast(repeat === 'loop' ? t('تکرار جمله روشن شد') : repeat === 'pause' ? t('ویدیو آخر هر جمله می‌ایستد') : t('پخش عادی'));
+    toast(repeat === 'loop' ? t('تکرار جمله روشن شد') : repeat === 'wait' ? t('بعد از هر جمله {0} ثانیه مکث می‌کند', fa(S.settings.waitSec || 0.5)) : repeat === 'pause' ? t('ویدیو آخر هر جمله می‌ایستد') : t('پخش عادی'));
   }
   function peek() {
     player.classList.add('peek');
@@ -228,10 +235,11 @@ export async function renderPlayer(root, lessonId, opts = {}) {
   function tick() {
     const t = video.currentTime;
     const i = findCue(t);
-    if (i !== cur) { setCur(i); if (repeat === 'pause') handled = -1; }
+    if (i !== cur) { setCur(i); if (repeat === 'pause' || repeat === 'wait') handled = -1; }
     if (i >= 0) {
       const c = cues[i];
       if (repeat === 'loop' && t >= c.e - 0.03 && !video.paused) { video.currentTime = Math.max(0, c.s - 0.02); }
+      else if (repeat === 'wait' && t >= c.e - 0.03 && handled !== i && !video.paused) { handled = i; video.pause(); clearWait(); waitT = setTimeout(() => { waitT = 0; if (repeat === 'wait' && video.paused) video.play().catch(() => {}); }, waitMs()); }
       else if (repeat === 'pause' && t >= c.e - 0.03 && handled !== i && !video.paused) { handled = i; video.pause(); }
       now.classList.toggle('stale', t > c.e + 1.2);
     }
@@ -239,7 +247,7 @@ export async function renderPlayer(root, lessonId, opts = {}) {
     if (performance.now() - lastSave > 4000) { lastSave = performance.now(); saveProgress(lessonId, t, dur); }
     if (!video.paused) raf = requestAnimationFrame(tick);
   }
-  video.addEventListener('play', () => { playing = true; updateButtons(); cancelAnimationFrame(raf); raf = requestAnimationFrame(tick); });
+  video.addEventListener('play', () => { clearWait(); playing = true; updateButtons(); cancelAnimationFrame(raf); raf = requestAnimationFrame(tick); });
   video.addEventListener('pause', () => { playing = false; updateButtons(); saveProgress(lessonId, video.currentTime, dur); });
   video.addEventListener('ended', () => { playing = false; updateButtons(); addDone(lessonId, dur); });
   video.addEventListener('seeked', () => { if (video.paused) tick(); });
@@ -341,7 +349,7 @@ export async function renderPlayer(root, lessonId, opts = {}) {
         class: 'c' + (idx >= a && idx <= b ? ' on' : ''), onclick: () => {
           if (idx < a) a = idx; else if (idx > b) b = idx;
           else if (idx === a && a < b) a++; else if (idx === b && b > a) b--;
-          touched = { de: false, fa: false, en: false }; faIn.value = ''; enIn.value = ''; refresh(true);
+          touched = { de: false, fa: false, en: false }; faIn.value = ''; enIn.value = ''; refresh(true); showOcc();
         },
       }, tk.t)));
       const text = selText();
@@ -374,6 +382,11 @@ export async function renderPlayer(root, lessonId, opts = {}) {
       if (await confirmSheet({ title: t('حذف واژه'), text: t('«{0}» و کارت‌هایش حذف شود؟', ex.de), okText: t('حذف'), danger: true })) { deleteVocab(ex.id); refreshKnown(); repaintWords(); toast(t('حذف شد')); sh.close(); }
     });
 
+    const occHolder = h('div');
+    let occFor = '';
+    const showOcc = () => { const w = deIn.value.trim(); if (w === occFor) return; occFor = w; occHolder.replaceChildren(w ? occurSection(w, async (id, s) => { sh.close(); const m = await import('./main.js'); m.nav('p-' + id, { startAt: s, loop: true }); }, { skip: { lesson: lessonId, i } }) : ''); };
+    deIn.addEventListener('change', showOcc);
+    setTimeout(showOcc, 0);
     const sh = openSheet({
       title: t('افزودن به واژه‌ها'),
       body: [
@@ -384,6 +397,7 @@ export async function renderPlayer(root, lessonId, opts = {}) {
         hint,
         h('div', { class: 'field' }, h('label', null, t('فارسی')), faIn),
         h('div', { class: 'field' }, h('label', null, 'English'), enIn),
+        occHolder,
       ],
       actions: h('div', { style: { display: 'flex', gap: '10px' } }, delBtn, saveBtn),
       onClose: () => { if (wasPlaying) video.play().catch(() => {}); },
@@ -477,6 +491,13 @@ export async function renderPlayer(root, lessonId, opts = {}) {
       rng.addEventListener('change', saveSettings);
       body.push(h('div', { class: 'field' }, h('label', null, t('ارتفاع نوار پوششی زیرنویس سوخته')), rng, h('div', { class: 'note-box' }, t('اگر پایین تصویر هنوز بخشی از زیرنویس اصلی پیداست، نوار را بالاتر ببر.') + ' ', val)));
     }
+    {
+      const wv = h('span', { class: 'num' }, t('{0} ثانیه', fa(S.settings.waitSec || 0.5)));
+      const wr = h('input', { type: 'range', min: 0.2, max: 5, step: 0.1, value: S.settings.waitSec || 0.5, class: 'seek', style: { width: '100%' } });
+      wr.addEventListener('input', () => { S.settings.waitSec = Math.round(wr.value * 10) / 10; wv.textContent = t('{0} ثانیه', fa(S.settings.waitSec)); updateButtons(); });
+      wr.addEventListener('change', saveSettings);
+      body.push(h('div', { class: 'field' }, h('label', null, t('مدت مکث بعد از هر جمله'), ' ', wv), wr, h('div', { class: 'note-box' }, t('با دکمه‌ی تکرار (نوار توقف با عدد) روشنش کن؛ ویدیو آخر هر جمله همین مقدار می‌ایستد و خودش ادامه می‌دهد.'))));
+    }
     body.push(h('div', { style: { display: 'flex', gap: '10px', flexWrap: 'wrap' } },
       h('button', { class: 'btn sec', onclick: () => { sh.close(); pickFile(); } }, t('تعویض فایل ویدیو')),
       Videos.has(lessonId) ? h('button', { class: 'btn danger', onclick: async () => { if (await confirmSheet({ title: t('حذف ویدیو'), text: t('فایل این درس از حافظه اپ پاک شود؟ (واژه‌ها و مارک‌ها می‌مانند)'), okText: t('حذف'), danger: true })) { await Videos.remove(lessonId); video.removeAttribute('src'); video.load(); attach(); sh.close(); } } }, t('حذف ویدیو از اپ')) : null));
@@ -515,6 +536,7 @@ export async function renderPlayer(root, lessonId, opts = {}) {
 
   const watchTimer = setInterval(() => { if (playing && !document.hidden && hasVideo()) addWatch(1); }, 1000);
   return function cleanup() {
+    clearWait();
     clearInterval(watchTimer); flushDays();
     cancelAnimationFrame(raf);
     try { saveProgress(lessonId, video.currentTime || 0, dur); } catch (e) { /* ignore */ }
