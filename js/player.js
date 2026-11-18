@@ -1,5 +1,5 @@
 import { t } from './i18n.js';
-import { addWatch, flushDays, S, MARKS, loadCues, loadGlossary, lookup as lookupDE, findVocab, addVocab, saveVocab, deleteVocab, setMark, removeMark, markId, saveProgress, addDone, saveSettings, KINDS, vocabLevel } from './state.js';
+import { addWatch, flushDays, S, MARKS, loadCues, loadGlossary, lookup as lookupDE, findVocab, addVocab, saveVocab, deleteVocab, setMark, removeMark, markId, saveProgress, addDone, markKnown, unmarkKnown, knownMap, saveSettings, KINDS, vocabLevel } from './state.js';
 import { confetti, sfx, buzz } from './fx.js';
 import * as Videos from './videos.js';
 import { occurSection } from './occur.js';
@@ -27,10 +27,10 @@ export async function renderPlayer(root, lessonId, opts = {}) {
   let repeat = opts.loop ? 'loop' : S.settings.repeatMode;
   let waitT = 0;
   const clearWait = () => { clearTimeout(waitT); waitT = 0; };
-  const waitMs = () => Math.max(100, (S.settings.waitSec || 0.5) * 1000);
+  const waitMs = (c) => S.settings.waitLen && c ? Math.max(400, (c.e - c.s) * 1000 * (S.settings.waitLen || 1)) : Math.max(100, (S.settings.waitSec || 0.5) * 1000);
   let cur = -1, handled = -1, playing = false, raf = 0, lastSave = 0, userScroll = 0, dur = 0;
   const known = new Map();   // normalised word -> SRS level (0 new, 1 learning, 2 young, 3 mature)
-  const refreshKnown = () => { known.clear(); S.vocab.forEach((v) => { const l = vocabLevel(v); known.set(norm(v.de), l); known.set(norm(v.form), l); }); };
+  const refreshKnown = () => { known.clear(); S.vocab.forEach((v) => { const l = vocabLevel(v); known.set(norm(v.de), l); known.set(norm(v.form), l); }); Object.keys(knownMap()).forEach((w) => { if (!known.has(w)) known.set(w, 4); }); };
   refreshKnown();
 
   // ---------- DOM
@@ -50,7 +50,7 @@ export async function renderPlayer(root, lessonId, opts = {}) {
 
   const playBtn = h('button', { class: 'icon-btn play', onclick: () => togglePlay(), 'aria-label': t('پخش') });
   const speedBtn = h('button', { class: 'tg', onclick: cycleSpeed, 'aria-label': t('سرعت') });
-  const repBtn = h('button', { class: 'tg', onclick: cycleRepeat, 'aria-label': t('تکرار') });
+  const repBtn = h('button', { class: 'tg', onclick: () => openModes(), 'aria-label': t('تکرار') });
   const ctl = h('div', { class: 'pl-ctl' },
     speedBtn,
     h('button', { class: 'icon-btn', onclick: () => gotoCue(cur - 1), html: ic('prev'), 'aria-label': t('جمله قبل') }),
@@ -190,7 +190,7 @@ export async function renderPlayer(root, lessonId, opts = {}) {
     playBtn.innerHTML = ic(playing ? 'pause' : 'play');
     vbox.classList.toggle('paused', !playing);
     speedBtn.textContent = `${video.playbackRate || S.settings.speed}×`;
-    repBtn.innerHTML = ic(repeat === 'loop' ? 'loop1' : repeat === 'pause' || repeat === 'wait' ? 'pausebar' : 'repeat') + (repeat === 'wait' ? `<small class="wsec">${fa(S.settings.waitSec || 0.5)}</small>` : '');
+    repBtn.innerHTML = ic(repeat === 'loop' ? 'loop1' : repeat === 'pause' || repeat === 'wait' ? 'pausebar' : 'repeat') + (repeat === 'wait' ? `<small class="wsec">${S.settings.waitLen ? '⟷' : fa(S.settings.waitSec || 0.5)}</small>` : '');
     repBtn.classList.toggle('on', repeat !== 'off');
     repBtn.title = repeat === 'loop' ? t('تکرار جمله') : repeat === 'pause' ? t('توقف آخر هر جمله') : repeat === 'wait' ? t('مکث کوتاه بعد از هر جمله') : t('پخش عادی');
   }
@@ -222,6 +222,42 @@ export async function renderPlayer(root, lessonId, opts = {}) {
     const n = SPEEDS[(i + 1) % SPEEDS.length];
     video.playbackRate = n; S.settings.speed = n; saveSettings(); updateButtons();
   }
+  function setMode(m) {
+    clearWait(); repeat = m; S.settings.repeatMode = m; saveSettings(); updateButtons();
+  }
+  function openModes() {
+    const MODES2 = [
+      ['off', '▶️', t('پخش عادی'), t('ویدیو بی‌وقفه پخش می‌شود')],
+      ['pause', '⏸️', t('توقف آخر جمله'), t('آخر هر جمله می‌ایستد؛ خودت ادامه می‌دهی')],
+      ['wait', '⏱️', t('مکث خودکار'), t('آخر هر جمله چند لحظه می‌ایستد و خودش ادامه می‌دهد')],
+      ['loop', '🔁', t('تکرار جمله'), t('جملهٔ فعلی مدام تکرار می‌شود')],
+    ];
+    const waitBox = h('div', { class: 'wbox' });
+    const list = h('div', { class: 'modes' });
+    const secs = [0.5, 1, 1.5, 2, 3, 5];
+    function paintWait() {
+      const len = !!S.settings.waitLen;
+      waitBox.style.display = repeat === 'wait' ? '' : 'none';
+      waitBox.replaceChildren(...[
+        h('div', { class: 'wl' }, t('مدت مکث')),
+        h('div', { class: 'chips', style: { flexWrap: 'wrap' } },
+          ...secs.map((s) => h('button', { class: 'chip' + (!len && (S.settings.waitSec || 0.5) === s ? ' on' : ''), onclick: () => { S.settings.waitLen = 0; S.settings.waitSec = s; saveSettings(); updateButtons(); paintWait(); } }, t('{0} ثانیه', fa(s)))),
+          h('button', { class: 'chip' + (len ? ' on' : ''), onclick: () => { S.settings.waitLen = 1; saveSettings(); updateButtons(); paintWait(); } }, '⟷ ' + t('هم‌اندازهٔ جمله'))),
+        len ? h('div', { class: 'note-box' }, t('مکث به اندازهٔ خود جمله است؛ مناسب تکرار کردن با صدای بلند (سایه‌خوانی).')) : null,
+        h('div', { class: 'wl', style: { marginTop: '10px' } }, t('دقیق‌تر'), ' ', h('span', { class: 'num' }, t('{0} ثانیه', fa(S.settings.waitSec || 0.5)))),
+      ].filter(Boolean));
+      const rng = h('input', { type: 'range', min: 0.2, max: 6, step: 0.1, value: S.settings.waitSec || 0.5, class: 'seek', style: { width: '100%' } });
+      rng.addEventListener('input', () => { S.settings.waitLen = 0; S.settings.waitSec = Math.round(rng.value * 10) / 10; waitBox.querySelector('.wl .num').textContent = t('{0} ثانیه', fa(S.settings.waitSec)); updateButtons(); });
+      rng.addEventListener('change', () => { saveSettings(); paintWait(); });
+      waitBox.append(rng);
+    }
+    function paint() {
+      list.replaceChildren(...MODES2.map(([id, em, name, sub]) => h('button', { class: 'mode' + (repeat === id ? ' on' : ''), onclick: () => { setMode(id); paint(); paintWait(); if (id !== 'wait') { sh.close(); } } },
+        h('span', { class: 'me' }, em), h('span', { class: 'mt' }, h('b', null, name), h('small', null, sub)))));
+    }
+    const sh = openSheet({ title: t('حالت پخش'), body: [list, waitBox]});
+    paint(); paintWait();
+  }
   function cycleRepeat() {
     clearWait();
     repeat = repeat === 'off' ? 'pause' : repeat === 'pause' ? 'wait' : repeat === 'wait' ? 'loop' : 'off';
@@ -239,7 +275,7 @@ export async function renderPlayer(root, lessonId, opts = {}) {
     if (i >= 0) {
       const c = cues[i];
       if (repeat === 'loop' && t >= c.e - 0.03 && !video.paused) { video.currentTime = Math.max(0, c.s - 0.02); }
-      else if (repeat === 'wait' && t >= c.e - 0.03 && handled !== i && !video.paused) { handled = i; video.pause(); clearWait(); waitT = setTimeout(() => { waitT = 0; if (repeat === 'wait' && video.paused) video.play().catch(() => {}); }, waitMs()); }
+      else if (repeat === 'wait' && t >= c.e - 0.03 && handled !== i && !video.paused) { handled = i; video.pause(); clearWait(); waitT = setTimeout(() => { waitT = 0; if (repeat === 'wait' && video.paused) video.play().catch(() => {}); }, waitMs(c)); }
       else if (repeat === 'pause' && t >= c.e - 0.03 && handled !== i && !video.paused) { handled = i; video.pause(); }
       now.classList.toggle('stale', t > c.e + 1.2);
     }
@@ -339,11 +375,22 @@ export async function renderPlayer(root, lessonId, opts = {}) {
     faIn.addEventListener('input', () => { touched.fa = true; });
     enIn.addEventListener('input', () => { touched.en = true; });
     const chipsEl = h('div', { class: 'selchips' });
+    const knownRow = h('div', { class: 'known-row' });
+    const selWords = () => words2(selText());
+    function paintKnownRow() {
+      const ws = selWords(); const inVocab = !!findVocab(deIn.value); const all = ws.length && ws.every((x) => knownMap()[norm(x)]);
+      knownRow.replaceChildren(...[
+        !inVocab && !all ? h('button', { class: 'btn sec sm', onclick: () => { markKnown(ws); refreshKnown(); repaintWords(); sh.close(); toast(t('✓ به فهرست «بلدم» اضافه شد')); } }, '✓ ' + t('بلدم')) : null,
+        all && !inVocab ? h('button', { class: 'btn sec sm', onclick: () => { unmarkKnown(ws); refreshKnown(); repaintWords(); sh.close(); toast(t('از فهرست «بلدم» برداشته شد')); } }, '✗ ' + t('دیگر بلد نیستم')) : null,
+        h('button', { class: 'btn sec sm', onclick: () => { markKnown(words2(c.de)); refreshKnown(); repaintWords(); sh.close(); toast(t('همهٔ کلمه‌های این جمله اضافه شد ✓')); } }, '✓✓ ' + t('همهٔ جمله را بلدم')),
+      ].filter(Boolean));
+    }
     const saveBtn = h('button', { class: 'btn block' });
     const delBtn = h('button', { class: 'btn danger' }, h('span', { html: ic('trash') }));
     let existing = null;
 
     function selText() { return c.de.slice(toks[a].a, toks[b].b); }
+    const words2 = (s) => tokenize(s).filter((x) => x.w).map((x) => x.t);
     function refresh(fromChip) {
       chipsEl.replaceChildren(...toks.map((tk, idx) => h('button', {
         class: 'c' + (idx >= a && idx <= b ? ' on' : ''), onclick: () => {
@@ -364,6 +411,7 @@ export async function renderPlayer(root, lessonId, opts = {}) {
       hint.style.fontFamily = 'var(--f-de)';
       saveBtn.textContent = existing ? t('به‌روزرسانی واژه') : t('ذخیره در واژه‌ها');
       delBtn.style.display = existing ? '' : 'none';
+      paintKnownRow();
     }
     deIn.addEventListener('input', () => { existing = findVocab(deIn.value); saveBtn.textContent = existing ? t('به‌روزرسانی واژه') : t('ذخیره در واژه‌ها'); delBtn.style.display = existing ? '' : 'none'; });
     refresh();
@@ -393,6 +441,7 @@ export async function renderPlayer(root, lessonId, opts = {}) {
         h('div', { class: 'sent' }, h('div', { class: 's-de de' }, c.de), c.fa || c.en ? h('div', { class: 's-tr ' + (c.fa ? 'fa' : 'en') }, c.fa || c.en) : null),
         h('div', { style: { fontSize: '12.5px', color: 'var(--muted)', fontWeight: 700, marginBottom: '6px' } }, t('واژه‌ها را بزن تا عبارت بسازی')),
         chipsEl,
+        knownRow,
         h('div', { class: 'field' }, h('label', null, LN), h('div', { style: { display: 'flex', gap: '8px' } }, deIn, h('button', { class: 'icon-btn', style: { background: 'var(--bg2)' }, html: ic('vol'), onclick: () => speak(deIn.value || selText(), undefined, lang), 'aria-label': t('تلفظ') }))),
         hint,
         h('div', { class: 'field' }, h('label', null, t('فارسی')), faIn),
@@ -490,13 +539,6 @@ export async function renderPlayer(root, lessonId, opts = {}) {
       rng.addEventListener('input', () => { S.settings.maskTop = rng.value / 100; val.textContent = fa(Math.round(rng.value)) + t('٪'); applyMask(); });
       rng.addEventListener('change', saveSettings);
       body.push(h('div', { class: 'field' }, h('label', null, t('ارتفاع نوار پوششی زیرنویس سوخته')), rng, h('div', { class: 'note-box' }, t('اگر پایین تصویر هنوز بخشی از زیرنویس اصلی پیداست، نوار را بالاتر ببر.') + ' ', val)));
-    }
-    {
-      const wv = h('span', { class: 'num' }, t('{0} ثانیه', fa(S.settings.waitSec || 0.5)));
-      const wr = h('input', { type: 'range', min: 0.2, max: 5, step: 0.1, value: S.settings.waitSec || 0.5, class: 'seek', style: { width: '100%' } });
-      wr.addEventListener('input', () => { S.settings.waitSec = Math.round(wr.value * 10) / 10; wv.textContent = t('{0} ثانیه', fa(S.settings.waitSec)); updateButtons(); });
-      wr.addEventListener('change', saveSettings);
-      body.push(h('div', { class: 'field' }, h('label', null, t('مدت مکث بعد از هر جمله'), ' ', wv), wr, h('div', { class: 'note-box' }, t('با دکمه‌ی تکرار (نوار توقف با عدد) روشنش کن؛ ویدیو آخر هر جمله همین مقدار می‌ایستد و خودش ادامه می‌دهد.'))));
     }
     body.push(h('div', { style: { display: 'flex', gap: '10px', flexWrap: 'wrap' } },
       h('button', { class: 'btn sec', onclick: () => { sh.close(); pickFile(); } }, t('تعویض فایل ویدیو')),

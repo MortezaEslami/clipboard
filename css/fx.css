@@ -316,3 +316,19 @@ html[lang=fa] body,html[lang=fa] button,html[lang=fa] input,html[lang=fa] textar
 .occ-w{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-weight:700;margin-bottom:3px}
 .occ-de{font-size:14.5px;direction:ltr;text-align:left}.occ-de .hl{color:var(--accent)}
 .occ-tr{font-size:12.5px;color:var(--ink2);margin-top:2px}
+
+.modes{display:flex;flex-direction:column;gap:8px}
+.mode{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:var(--bg2);border:2px solid transparent;width:100%}
+.mode.on{border-color:var(--accent);background:var(--accent-soft)}
+.mode .me{font-size:24px}.mode .mt{display:flex;flex-direction:column}.mode .mt small{color:var(--muted);font-size:12px;margin-top:2px}
+.wbox{margin-top:14px}.wl{font-weight:800;font-size:13px;color:var(--ink2);margin-bottom:8px}
+
+.dict{max-width:560px;margin:0 auto}
+.dict-bar{height:6px;border-radius:99px;background:var(--bg2);overflow:hidden;margin-bottom:12px}.dict-bar i{display:block;height:100%;background:var(--accent);transition:width .3s}
+.dict-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}.dict-play{flex:1}
+.dict-in{width:100%;min-height:64px;font-size:17px;margin-bottom:10px}
+.dict-res{margin:8px 0 12px}.dict-score{font-weight:800;margin-bottom:6px}.dict-score.ok{color:var(--ok)}.dict-score.mid{color:var(--warn)}.dict-score.bad{color:var(--bad,#e5484d)}
+.dict-ans{font-size:17px;direction:ltr;text-align:left;line-height:1.8}.dw.ok{color:var(--ok)}.dw.miss{color:var(--bad,#e5484d);text-decoration:underline wavy}
+
+.w.known.lv4{border-color:#9aa6b2;background:color-mix(in srgb,#9aa6b2 12%,transparent);border-bottom-style:dotted}
+.known-row{display:flex;gap:8px;flex-wrap:wrap;margin:-2px 0 12px}

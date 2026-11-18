@@ -27,7 +27,7 @@ async function findGist() {
   if (g) { localStorage.setItem(GID, g.id); return api('/gists/' + g.id); }
   return null;
 }
-const payload = () => ({ v: 1, t: Date.now(), xp: S.settings.xp || 0, days: S.days, vocab: [...S.vocab.values()], cards: [...S.cards.values()], marks: [...S.marks.values()], progress: [...S.progress.values()], tomb: S.settings.tomb || {}, stories: S.settings.stories || {} });
+const payload = () => ({ v: 1, t: Date.now(), xp: S.settings.xp || 0, days: S.days, vocab: [...S.vocab.values()], cards: [...S.cards.values()], marks: [...S.marks.values()], progress: [...S.progress.values()], tomb: S.settings.tomb || {}, stories: S.settings.stories || {}, known: S.settings.known || {} });
 const stamp = (o) => o.upd || o.created || o.t || 0;
 
 async function merge(r) {
@@ -35,6 +35,9 @@ async function merge(r) {
   for (const [k, v] of Object.entries(r.tomb || {})) tomb[k] = Math.max(tomb[k] || 0, v);
   S.settings.tomb = tomb;
   const putV = [], putC = [], putM = [], putP = [], dels = [];
+  const kn = (S.settings.known = S.settings.known || {});
+  for (const [w, ts] of Object.entries(r.known || {})) if ((tomb['k:' + w] || 0) < ts && (kn[w] || 0) < ts) kn[w] = ts;
+  for (const w of Object.keys(kn)) if ((tomb['k:' + w] || 0) >= kn[w]) delete kn[w];
   const gone = (id, o) => tomb[id] && tomb[id] >= stamp(o);
   for (const v of r.vocab || []) {
     const l = S.vocab.get(v.id);

@@ -1,5 +1,5 @@
 import { t } from './i18n.js';
-import { S, streak, bestStreak, dayActive, todayWatch } from './state.js';
+import { S, knownCount, streak, bestStreak, dayActive, todayWatch } from './state.js';
 import { h, fa, dayKey } from './util.js';
 
 export function fmtDur(sec) {
@@ -43,7 +43,8 @@ export function renderStats(root, nav) {
     const mk = (ic, v, l, cls) => h('div', { class: 'st-card ' + cls }, h('div', { class: 'ic' }, ic), h('b', null, v), h('small', null, l));
     cards.replaceChildren(
       mk('🔥', fa(streak()), t('سری فعلی'), 'a'), mk('🏆', fa(bestStreak()), t('بهترین سری'), 'b'),
-      mk('⏱️', fmtDur(todayWatch()), t('زمان تماشای امروز'), 'c'), mk('🎬', fmtDur(totW), t('کل زمان تماشا'), 'd'));
+      mk('⏱️', fmtDur(todayWatch()), t('زمان تماشای امروز'), 'c'), mk('🎬', fmtDur(totW), t('کل زمان تماشا'), 'd'),
+      mk('✅', fa(knownCount()), t('واژه‌های «بلدم»'), 'a'), mk('📚', fa(S.vocab.size), t('واژه‌های ذخیره‌شده'), 'b'));
     bars(c1, t('زمان تماشا (دقیقه در روز)'), data.map((x) => ({ ...x, m: Math.round(x.w / 60) })), 'm', (v) => fa(v), 'linear-gradient(180deg,#2e7bff,#8a4dff)');
     bars(c2, t('تعداد مرور در روز'), data, 'r', (v) => fa(v), 'linear-gradient(180deg,#ffb800,#ff4fa3)');
     const act = data.filter((x) => x.on).length; const sumW = data.reduce((a, x) => a + x.w, 0);

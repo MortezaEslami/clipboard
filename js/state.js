@@ -176,6 +176,19 @@ export function setMark(lesson, cue, i, color, note) {
   S.marks.set(m.id, m); DB.put('marks', m); return m;
 }
 export function removeMark(lesson, i) { S.marks.delete(markId(lesson, i)); DB.del('marks', markId(lesson, i)); tomb(markId(lesson, i)); }
+// words the user says they already know (without a flashcard): { normalisedWord: timestamp }
+export const knownMap = () => (S.settings.known = S.settings.known || {});
+export function markKnown(ws) {
+  const k = knownMap(); const now = Date.now();
+  ws.forEach((w) => { const n = w.toLowerCase().normalize('NFC').replace(/[^\p{L}\p{N}]+/gu, ' ').trim(); if (n) { k[n] = now; if (S.settings.tomb) delete S.settings.tomb['k:' + n]; } });
+  saveSettings();
+}
+export function unmarkKnown(ws) {
+  const k = knownMap();
+  ws.forEach((w) => { const n = w.toLowerCase().normalize('NFC').replace(/[^\p{L}\p{N}]+/gu, ' ').trim(); if (n && k[n]) { delete k[n]; tomb('k:' + n); } });
+  saveSettings();
+}
+export const knownCount = () => Object.keys(S.settings.known || {}).length;
 export function tomb(id) { S.settings.tomb = S.settings.tomb || {}; S.settings.tomb[id] = Date.now(); saveSettings(); }
 
 // ---------- progress

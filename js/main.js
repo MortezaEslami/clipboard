@@ -8,6 +8,7 @@ import { renderReview } from './review.js';
 import { renderVocab } from './vocab.js';
 import { renderMarks } from './marks.js';
 import { renderGame } from './game.js';
+import { renderDictation } from './dictation.js';
 import { renderStats } from './stats.js';
 import { renderStoryList, renderStory } from './stories.js';
 import { getToken, syncNow, lastSync } from './sync.js';
@@ -42,6 +43,7 @@ async function render() {
       key = 'home'; const c = await renderStory(view, nav, name.slice(6));
       if (my !== seq) { c && c(); return; } cleanup = c;
     } else if (name === 'stats') { renderStats(view, nav); key = 'home';
+    } else if (name === 'dictation') { await renderDictation(view, nav); key = 'review';
     } else if (name === 'game') { renderGame(view, nav); key = 'review';
     } else if (name === 'review') {
       view.classList.add('full'); key = 'review';
