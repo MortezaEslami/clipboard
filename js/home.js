@@ -1,12 +1,12 @@
 import { t, locale, lang, setLang } from './i18n.js';
-import { S, saveSettings, counts, streak, lastDays, lessonProgress, lessonDone, levelInfo, todayReviews } from './state.js';
+import { S, saveSettings, counts, streak, weekDays, lessonProgress, lessonDone, levelInfo, todayReviews } from './state.js';
 import * as Videos from './videos.js';
 import { h, ic, fa, fmtTime, openSheet } from './util.js';
 import { openAddClip } from './addclip.js';
 import { deleteCustomLesson } from './state.js';
 import { confirmSheet } from './util.js';
 import { recommendNext } from './corpus.js';
-import { mascot, ring, animateRings, countUp, confetti, sfx } from './fx.js';
+import { mascot, ring, animateRings, confetti, sfx } from './fx.js';
 
 let courseId = null;
 const WD = [t('ی'), t('د'), t('س'), t('چ'), t('پ'), t('ج'), t('ش')];   // Sunday..Saturday (Persian initials)
@@ -37,6 +37,11 @@ export function renderHome(root, nav) {
     h('div', { class: 'hdr-end' },
       h('div', { class: 'streak' + (st ? ' lit' : '') }, h('span', { class: 'flame', html: ic('flame') }), h('b', { class: 'num' }, fa(st))),
       langPicker())));
+
+  // ---- exercises: tiny icon-only row at the very top
+  const tiles = [['⚡', t('تست واژه'), 'wordtest'], ['✍️', t('دیکته'), 'dictation'], ['🧩', t('جای‌خالی'), 'cloze'], ['📖', t('داستان‌ها'), 'stories'],
+    ['📚', t('پرتکرار'), 'freq'], ['🔎', t('جستجو'), 'search'], ['🎮', t('بازی'), 'game'], ['📊', t('آمار'), 'stats']];
+  root.append(h('div', { class: 'qtools' }, tiles.map(([e, n, r]) => h('button', { class: 'qtool', title: n, 'aria-label': n, onclick: () => nav(r) }, e))));
 
   // ---- review hero with daily-goal ring
   const hasVocab = S.vocab.size > 0;
@@ -69,11 +74,6 @@ export function renderHome(root, nav) {
       h('span', { class: 'pill acc num' }, fmtTime(last.pos))));
   }
 
-  const tiles = [['⚡', t('تست واژه'), 'wordtest'], ['✍️', t('دیکته'), 'dictation'], ['🧩', t('جای‌خالی'), 'cloze'], ['📖', t('داستان‌ها'), 'stories'],
-    ['📚', t('پرتکرار'), 'freq'], ['🔎', t('جستجو'), 'search']];
-  tiles.push(['🎮', t('بازی'), 'game'], ['📊', t('آمار'), 'stats']);
-  root.append(h('div', { class: 'sect-t', style: { marginTop: '4px' } }, t('تمرین‌ها')),
-    h('div', { class: 'tiles' }, tiles.map(([e, n, r]) => h('button', { class: 'tile', onclick: () => nav(r) }, h('span', { class: 'te' }, e), h('b', null, n)))));
 
   // ---- level / XP
   const lvCard = h('div', { class: 'card lvcard' },
@@ -84,18 +84,12 @@ export function renderHome(root, nav) {
   requestAnimationFrame(() => requestAnimationFrame(() => lvCard.querySelectorAll('.xpbar i').forEach((i) => { i.style.width = i.dataset.w; })));
 
   // ---- week streak dots
-  const days = lastDays(7);
+  const days = weekDays();
   root.append(h('div', { class: 'card weekdots', onclick: () => nav('stats') }, h('div', { class: 'wd-row' }, days.map((d, i) => {
-    const dt = new Date(d.k + 'T12:00:00');
-    return h('div', { class: 'wd' + (d.on ? ' on' : '') + (i === 6 ? ' today' : '') },
-      h('span', { class: 'dot', html: d.on ? ic('flame') : '' }), h('small', null, WD[dt.getDay()]));
+    return h('div', { class: 'wd' + (d.on ? ' on' : '') + (d.today ? ' today' : '') + (d.future ? ' future' : '') },
+      h('span', { class: 'dot', html: d.on ? ic('flame') : '' }), h('small', null, WD[d.d.getDay()]));
   })), h('div', { class: 'wk-l' }, st >= 2 ? t('{0} روز پشت‌سرهم 🔥', fa(st)) : t('هر روز چند کارت مرور کن تا زنجیره بسازی')), h('div', { class: 'wk-more' }, '📊 ' + t('آمار کامل') + ' ›')));
 
-  // ---- stats
-  const statEls = [];
-  const mk = (n, label, icon, color) => { const b = h('b', { class: 'num' }, fa(0)); statEls.push([b, n]); return h('div', { class: `card stat s-${color}` }, h('div', { class: 'si', html: ic(icon) }), b, h('div', { class: 'sl' }, label)); };
-  root.append(h('div', { class: 'stats' }, mk(S.vocab.size, t('واژگان'), 'book', 'indigo'), mk(today, t('مرور امروز'), 'zap', 'amber'), mk(S.marks.size, t('مارک'), 'bookmark', 'rose')));
-  statEls.forEach(([el, n]) => countUp(el, n, { fmt: fa }));
   // ---- first run: pick a daily goal and jump into the quick word test
   if (!S.settings.onboarded && !S.vocab.size && ![...S.progress.values()].length) {
     setTimeout(() => {
@@ -145,6 +139,15 @@ export function renderHome(root, nav) {
     const ls = lessons.filter((l) => !g.kind || l.kind === g.kind);
     if (!ls.length) return;
     if (g.title) wrap.append(h('div', { class: 'sect-t' }, g.title));
+    if (course.id !== 'mine') {
+      wrap.append(h('div', { class: 'lgrid' }, ls.map((l) => {
+        const p = lessonProgress(l.id); const has = Videos.has(l.id);
+        return h('button', { class: 'ltile' + (p > 0.9 ? ' done' : p > 0.02 ? ' part' : '') + (has ? '' : ' novid'), title: l.title + (l.sub ? ' · ' + l.sub : ''), 'aria-label': l.title, onclick: () => nav('p-' + l.id) },
+          p > 0.9 ? h('span', { html: ic('check') }) : h('span', { class: 'num' }, fa(l.n)),
+          p > 0.02 && p <= 0.9 ? h('i', { class: 'lp', style: { width: `${p * 100}%` } }) : null);
+      })));
+      return;
+    }
     ls.forEach((l) => {
       const p = lessonProgress(l.id);
       const has = Videos.has(l.id);

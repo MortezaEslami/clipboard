@@ -268,6 +268,9 @@ html[lang=fa] body,html[lang=fa] button,html[lang=fa] input,html[lang=fa] textar
 .st-chart{padding:14px;margin-bottom:12px}.st-t{font-weight:700;font-size:13px;margin-bottom:10px}
 .bars{display:flex;align-items:flex-end;gap:4px;height:130px;direction:ltr}
 .bars.week{gap:8px}
+/* week view follows the page direction: Monday at the start (right in fa), Sunday at the end */
+[dir=rtl] .bars.week{direction:rtl}
+.bar-c.future,.wd.future{opacity:.45}
 .bar-c{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px;min-width:0}
 .bar-c i{display:block;width:100%;max-width:34px;border-radius:7px 7px 3px 3px;min-height:2px;opacity:.9}
 .bar-c.today i{opacity:1;box-shadow:0 0 0 2px var(--accent-soft)}
@@ -361,3 +364,19 @@ html[lang=fa] body,html[lang=fa] button,html[lang=fa] input,html[lang=fa] textar
 .cz-gap{display:inline-block;min-width:70px;text-align:center;border-bottom:3px dashed var(--accent);color:var(--accent);font-weight:800}.cz-gap.ok{color:var(--ok);border-color:var(--ok)}.cz-gap.bad{color:#e5484d;border-color:#e5484d}
 .cz-opts{display:flex;flex-direction:column;gap:8px;margin-top:14px}
 .pl-stage .tap{touch-action:pan-y}
+
+/* compact home: tiny icon-only exercises row + small square lesson tiles */
+.qtools{display:flex;justify-content:space-between;gap:6px;margin:2px 0 10px}
+.qtool{all:unset;box-sizing:border-box;cursor:pointer;flex:1;max-width:44px;height:36px;display:grid;place-items:center;font-size:19px;line-height:1;border-radius:12px;background:var(--surface);box-shadow:var(--shadow);-webkit-tap-highlight-color:transparent}
+.qtool:active{transform:scale(.92)}
+.lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:8px;margin-bottom:12px}
+.ltile{all:unset;box-sizing:border-box;cursor:pointer;position:relative;overflow:hidden;aspect-ratio:1;display:grid;place-items:center;border-radius:14px;font-weight:900;font-size:16px;color:var(--cb,var(--accent));background:linear-gradient(135deg,color-mix(in srgb,var(--ca,var(--accent)) 18%,var(--surface)),color-mix(in srgb,var(--cb,var(--accent)) 18%,var(--surface)));box-shadow:var(--shadow);-webkit-tap-highlight-color:transparent}
+.ltile:active{transform:scale(.94)}
+.ltile.part{background:linear-gradient(135deg,var(--ca,var(--accent)),var(--cb,var(--accent)));color:#fff}
+.ltile.done{background:linear-gradient(135deg,#43c78a,#1fa36b);color:#fff}
+.ltile.novid{opacity:.55}
+.ltile svg{width:20px;height:20px}
+.ltile .lp{position:absolute;inset-inline-start:0;bottom:0;height:4px;background:#fff;opacity:.9;border-radius:0 2px 2px 0}
+/* settings: the stored-videos list scrolls inside a small box */
+.vlist{max-height:200px;overflow-y:auto;overscroll-behavior:contain;border-top:1px solid var(--line)}
+.vlist .vrow:first-child{position:sticky;top:0;z-index:1}

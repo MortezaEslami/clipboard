@@ -270,6 +270,18 @@ export function bestStreak() {
   for (const k of ks) { const dt = new Date(k + 'T12:00:00'); if (prev && Math.round((dt - prev) / 864e5) === 1) run++; else run = 1; best = Math.max(best, run); prev = dt; }
   return Math.max(best, streak());
 }
+// calendar week of today, Monday first .. Sunday last (days after today are flagged future)
+export function weekDays() {
+  const now = new Date(); const d = new Date(now); d.setHours(12, 0, 0, 0);
+  d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+  const tk = dayKey(now); const out = [];
+  for (let i = 0; i < 7; i++) {
+    const k = dayKey(d); const e = S.days[k] || {};
+    out.push({ k, d: new Date(d), r: e.r || 0, w: e.w || 0, on: dayActive(e), today: k === tk, future: k > tk });
+    d.setDate(d.getDate() + 1);
+  }
+  return out;
+}
 export function lastDays(n = 7) {
   const out = []; const d = new Date(); d.setDate(d.getDate() - n + 1);
   for (let i = 0; i < n; i++) { const e = S.days[dayKey(d)] || {}; out.push({ k: dayKey(d), r: e.r || 0, w: e.w || 0, on: dayActive(e) }); d.setDate(d.getDate() + 1); }

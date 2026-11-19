@@ -1,5 +1,5 @@
 import { t } from './i18n.js';
-import { S, knownCount, streak, bestStreak, dayActive, todayWatch } from './state.js';
+import { S, knownCount, streak, bestStreak, dayActive, todayWatch, weekDays } from './state.js';
 import { h, fa, dayKey } from './util.js';
 
 export function fmtDur(sec) {
@@ -20,16 +20,17 @@ export function renderStats(root, nav) {
   paint();
 
   function series(n) {
+    if (range === 'week') return weekDays(); // calendar week: Monday .. Sunday
     const out = []; const d = new Date(); d.setDate(d.getDate() - n + 1);
-    for (let i = 0; i < n; i++) { const e = S.days[dayKey(d)] || {}; out.push({ d: new Date(d), r: e.r || 0, w: e.w || 0, on: dayActive(e) }); d.setDate(d.getDate() + 1); }
+    for (let i = 0; i < n; i++) { const e = S.days[dayKey(d)] || {}; out.push({ d: new Date(d), r: e.r || 0, w: e.w || 0, on: dayActive(e), today: i === n - 1 }); d.setDate(d.getDate() + 1); }
     return out;
   }
   function bars(el, title, data, key, fmt, color) {
     const max = Math.max(1, ...data.map((x) => x[key]));
     el.replaceChildren(h('div', { class: 'st-t' }, title), h('div', { class: 'bars ' + range }, data.map((x, i) => {
       const hgt = Math.max(x[key] ? 6 : 2, (x[key] / max) * 100);
-      const today = i === data.length - 1;
-      return h('div', { class: 'bar-c' + (today ? ' today' : '') },
+      const today = !!x.today;
+      return h('div', { class: 'bar-c' + (today ? ' today' : '') + (x.future ? ' future' : '') },
         h('span', { class: 'bv' }, x[key] && (range === 'week' || today) ? fmt(x[key]) : ''),
         h('i', { style: { height: hgt + '%', background: color } }),
         h('small', null, range === 'week' ? WD[x.d.getDay()] : ((x.d.getDate() % 5 === 0 && i > 2 && i < data.length - 3) || i === 0 || today ? fa(x.d.getDate()) : '')));
