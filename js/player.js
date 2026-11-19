@@ -305,18 +305,18 @@ export async function renderPlayer(root, lessonId, opts = {}) {
     clearTimeout(peek.t); peek.t = setTimeout(() => player.classList.remove('peek'), 4500);
   }
   function tick() {
-    const t = video.currentTime;
-    const i = findCue(t);
+    const ct = video.currentTime;
+    const i = findCue(ct);
     if (i !== cur) { setCur(i); if (repeat === 'pause' || repeat === 'wait') handled = -1; }
     if (i >= 0) {
       const c = cues[i];
-      if (repeat === 'loop' && t >= c.e - 0.03 && !video.paused) { video.currentTime = Math.max(0, c.s - 0.02); }
-      else if (repeat === 'wait' && t >= c.e - 0.03 && handled !== i && !video.paused) { handled = i; video.pause(); clearWait(); waitT = setTimeout(() => { waitT = 0; if (repeat === 'wait' && video.paused) video.play().catch(() => {}); }, waitMs(c)); }
-      else if (repeat === 'pause' && t >= c.e - 0.03 && handled !== i && !video.paused) { handled = i; video.pause(); }
-      now.classList.toggle('stale', t > c.e + 1.2);
+      if (repeat === 'loop' && ct >= c.e - 0.03 && !video.paused) { video.currentTime = Math.max(0, c.s - 0.02); }
+      else if (repeat === 'wait' && ct >= c.e - 0.03 && handled !== i && !video.paused) { handled = i; video.pause(); clearWait(); waitT = setTimeout(() => { waitT = 0; if (repeat === 'wait' && video.paused) video.play().catch(() => {}); }, waitMs(c)); }
+      else if (repeat === 'pause' && ct >= c.e - 0.03 && handled !== i && !video.paused) { handled = i; video.pause(); }
+      now.classList.toggle('stale', ct > c.e + 1.2);
     }
-    updateTimeUi(t);
-    if (performance.now() - lastSave > 4000) { lastSave = performance.now(); saveProgress(lessonId, t, dur); }
+    updateTimeUi(ct);
+    if (performance.now() - lastSave > 4000) { lastSave = performance.now(); saveProgress(lessonId, ct, dur); }
     if (!video.paused) raf = requestAnimationFrame(tick);
   }
   video.addEventListener('play', () => { clearWait(); playing = true; updateButtons(); cancelAnimationFrame(raf); raf = requestAnimationFrame(tick); });
