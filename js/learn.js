@@ -74,8 +74,11 @@ export async function renderFreq(root, nav) {
     const rows = all.filter((e) => (filter === 'all' ? true : filter === 'known' ? isK(e, kn) : !isK(e, kn)));
     list.replaceChildren(...rows.slice(0, shown).map((e) => {
       const k = isK(e, kn);
-      return h('button', { class: 'fq-row' + (k ? ' ok' : ''), onclick: () => openWord(e) },
-        h('span', { class: 'fq-w de' }, e.w), h('span', { class: 'fq-m' }, meaningOf(e.w) || ''), h('span', { class: 'fq-n num' }, '×' + fa(e.n)), h('span', { class: 'fq-s' }, k ? '✓' : ''));
+      // quick "I know it" button: marks the word without opening the sheet
+      const quick = k ? h('span', { class: 'fq-s' }, '✓')
+        : h('button', { class: 'fq-k', title: t('بلدم'), 'aria-label': t('بلدم'), onclick: (ev) => { ev.stopPropagation(); markKnown([e.w]); sfx('good'); buzz(15); paint(); } }, '✓');
+      return h('div', { class: 'fq-row' + (k ? ' ok' : ''), role: 'button', tabindex: '0', onclick: () => openWord(e), onkeydown: (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); openWord(e); } } },
+        h('span', { class: 'fq-w de' }, e.w), h('span', { class: 'fq-m' }, meaningOf(e.w) || ''), h('span', { class: 'fq-n num' }, '×' + fa(e.n)), quick);
     }));
     if (!rows.length) list.replaceChildren(h('div', { class: 'occ-n' }, filter === 'todo' ? t('آفرین! همه‌ی واژه‌های پرتکرار را بلدی 🎉') : t('چیزی اینجا نیست')));
     more.style.display = rows.length > shown ? '' : 'none';
