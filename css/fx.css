@@ -380,3 +380,5 @@ html[lang=fa] body,html[lang=fa] button,html[lang=fa] input,html[lang=fa] textar
 /* settings: the stored-videos list scrolls inside a small box */
 .vlist{max-height:200px;overflow-y:auto;overscroll-behavior:contain;border-top:1px solid var(--line)}
 .vlist .vrow:first-child{position:sticky;top:0;z-index:1}
+.ltile .lc{position:absolute;top:3px;inset-inline-end:4px;font-size:9.5px;font-weight:800;line-height:1;padding:2px 4px;border-radius:8px;background:rgba(0,0,0,.18);color:#fff}
+.ltile:not(.part):not(.done) .lc{background:color-mix(in srgb,var(--cb,var(--accent)) 22%,transparent);color:var(--cb,var(--accent))}

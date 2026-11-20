@@ -142,8 +142,9 @@ export function renderHome(root, nav) {
     if (course.id !== 'mine') {
       wrap.append(h('div', { class: 'lgrid' }, ls.map((l) => {
         const p = lessonProgress(l.id); const has = Videos.has(l.id);
-        return h('button', { class: 'ltile' + (p > 0.9 ? ' done' : p > 0.02 ? ' part' : '') + (has ? '' : ' novid'), title: l.title + (l.sub ? ' · ' + l.sub : ''), 'aria-label': l.title, onclick: () => nav('p-' + l.id) },
+        return h('button', { class: 'ltile' + (p > 0.9 ? ' done' : p > 0.02 ? ' part' : '') + (has ? '' : ' novid'), title: l.title + (l.sub ? ' · ' + l.sub : '') + (lessonDone(l.id) ? ' · ▶ ' + lessonDone(l.id) + '×' : ''), 'aria-label': l.title, onclick: () => nav('p-' + l.id) },
           p > 0.9 ? h('span', { html: ic('check') }) : h('span', { class: 'num' }, fa(l.n)),
+          lessonDone(l.id) ? h('small', { class: 'lc num' }, fa(lessonDone(l.id)) + '×') : null,
           p > 0.02 && p <= 0.9 ? h('i', { class: 'lp', style: { width: `${p * 100}%` } }) : null);
       })));
       return;
