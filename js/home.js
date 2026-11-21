@@ -6,6 +6,7 @@ import { openAddClip } from './addclip.js';
 import { deleteCustomLesson } from './state.js';
 import { confirmSheet } from './util.js';
 import { recommendNext } from './corpus.js';
+import { goalCard } from './goal.js';
 import { mascot, ring, animateRings, confetti, sfx } from './fx.js';
 
 let courseId = null;
@@ -63,6 +64,7 @@ export function renderHome(root, nav) {
   hero.append(...['✦', '✧', '★'].map((x, i) => h('span', { class: 'spark s' + i }, x)));
   root.append(hero);
   animateRings(hero);
+  root.append(goalCard(() => { root.replaceChildren(); renderHome(root, nav); }));
   const recSlot = h('div'); root.append(recSlot);
   // ---- continue
   const last = [...S.progress.values()].filter((p) => p.pos > 3 && p.dur && p.pos < p.dur - 5).sort((a, b) => (b.t || 0) - (a.t || 0))[0];

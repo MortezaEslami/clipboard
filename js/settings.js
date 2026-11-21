@@ -3,6 +3,7 @@ import { t, lang, locale, setLang } from './i18n.js';
 import { S, saveSettings, exportAll, importAll, vocabCSV, importCSV } from './state.js';
 import * as Videos from './videos.js';
 import * as DB from './db.js';
+import { openGoalSheet } from './goal.js';
 import { h, ic, fa, toast, download, copyText, confirmSheet, speak, voicesFor, savedVoice, setVoice, ttsOK } from './util.js';
 
 const sw = (on, fn) => { const el = h('button', { class: 'switch' + (on ? ' on' : ''), role: 'switch', 'aria-checked': on, onclick: () => { el.classList.toggle('on'); fn(el.classList.contains('on')); } }); return el; };
@@ -85,14 +86,16 @@ export async function renderSettings(root, nav) {
 
   // ---------- review
   const nInp = h('input', { class: 'input', type: 'number', min: 0, max: 100, value: S.settings.newPerDay, style: { width: '84px', textAlign: 'center', minHeight: '40px' } });
-  nInp.addEventListener('change', () => { S.settings.newPerDay = Math.max(0, +nInp.value || 0); saveSettings(); });
+  nInp.addEventListener('change', () => { S.settings.newPerDay = Math.max(0, +nInp.value || 0); if ((S.settings.goals || []).length) S.settings.goalAuto = false; saveSettings(); });
   const rInp = h('input', { class: 'seek', type: 'range', min: 80, max: 97, value: S.settings.retention * 100, style: { width: '130px' } });
   const rVal = h('span', { class: 'num', style: { minWidth: '40px', textAlign: 'center', fontWeight: 700 } }, fa(Math.round(S.settings.retention * 100)) + t('٪'));
   rInp.addEventListener('input', () => { rVal.textContent = fa(rInp.value) + t('٪'); });
   rInp.addEventListener('change', () => { S.settings.retention = rInp.value / 100; saveSettings(); });
+  root.append(h('div', { class: 'sect-t' }, t('🎯 هدف سطح')), h('div', { class: 'card' },
+    row(t('هدف A2 / B1'), t('تاریخ هدف و تعداد واژهٔ تازهٔ روزانه'), h('button', { class: 'btn sec', onclick: () => openGoalSheet(() => { root.replaceChildren(); renderSettings(root, nav); }) }, t('تنظیم')))));
   root.append(h('div', { class: 'sect-t' }, t('🧠 مرور هوشمند (FSRS)')),
     h('div', { class: 'card' },
-      row(t('کارت جدید در روز'), null, nInp),
+      row(t('کارت جدید در روز'), (S.settings.goals || []).length && S.settings.goalAuto !== false ? t('خودکار از روی هدف سطح؛ تغییر دستی، حالت خودکار را خاموش می‌کند') : null, nInp),
       row(t('میزان یادآوری هدف'), t('بالاتر = مرور بیشتر'), h('div', { style: { display: 'flex', alignItems: 'center', gap: '8px' } }, rInp, rVal)),
       row(t('هدف مرور روزانه'), t('برای حلقهٔ رنگی صفحهٔ خانه'), seg([['10', fa(10)], ['15', fa(15)], ['25', fa(25)], ['40', fa(40)]], String(S.settings.dailyGoal || 15), (k) => { S.settings.dailyGoal = +k; saveSettings(); })),
       row(t('صدای جلوه‌ها'), t('صدای کوتاه موقع مرور و افزودن واژه'), sw(S.settings.sound !== false, (v) => { S.settings.sound = v; saveSettings(); })),
