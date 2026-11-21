@@ -25,9 +25,37 @@ export async function corpus() {
   }
   for (const st of await loadStories()) st.s.forEach((c) => add({ de: c.de, fa: c.fa || '', en: c.en || '', story: st.id, lname: st.title.de }));
   const list = [...freq.values()].sort((a, b) => b.n - a.n);
-  C = { freq, list, sents };
+  // A2 word list: [word, en, fa, example de, example fa, example en]; meanings go into the glossary
+  const a2 = [];
+  const G = S.glossary || (S.glossary = {});
+  for (const [w, en, fa, de, xfa, xen] of await loadA2()) {
+    const k = norm(w); if (!k || freq.has(k) && freq.get(k).n >= 3) continue;
+    if (!G[w.toLowerCase()]) G[w.toLowerCase()] = [w, en, fa];
+    const ex = { de, fa: xfa, en: xen, lname: 'A2', a2: true, len: tokenize(de).filter((x) => x.w).length };
+    a2.push({ k, w, n: 0, lv: 'A2', ex, hk: hlKey(de, k) });
+    sents.push(ex);
+  }
+  C = { freq, list, sents, a2 };
   return C;
 }
+
+let A2 = null;
+async function loadA2() {
+  if (!A2) { try { A2 = await (await fetch('data/a2.json')).json(); } catch (e) { A2 = []; } }
+  return A2;
+}
+// the token in the example that is the word itself (or its closest inflected form) – for highlighting
+function hlKey(de, k) {
+  let best = k, bl = 0;
+  for (const x of tokenize(de)) {
+    if (!x.w) continue; const n = norm(x.t); if (n === k) return k;
+    let i = 0; while (i < n.length && i < k.length && n[i] === k[i]) i++;
+    if (i >= 3 && i > bl) { bl = i; best = n; }
+  }
+  return best;
+}
+// words of the chosen level for the frequency list and the word test
+export const levelWords = (C, lv) => (lv === 'A2' ? C.a2 : C.list);
 
 export const knownSet = () => {
   const s = new Set(Object.keys(S.settings.known || {}));

@@ -384,3 +384,4 @@ html[lang=fa] body,html[lang=fa] button,html[lang=fa] input,html[lang=fa] textar
 .ltile:not(.part):not(.done) .lc{background:color-mix(in srgb,var(--cb,var(--accent)) 22%,transparent);color:var(--cb,var(--accent))}
 
 .card.goal .thumb{font-size:22px}.card.goal.ok{background:linear-gradient(135deg,rgba(46,204,113,.14),rgba(0,184,148,.08))}
+.lv-chips{margin:0 0 10px}

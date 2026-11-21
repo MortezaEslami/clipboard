@@ -1,11 +1,16 @@
 import { t } from './i18n.js';
-import { S, gainXP, markKnown, unmarkKnown, knownMap } from './state.js';
+import { S, gainXP, markKnown, unmarkKnown, knownMap, saveSettings } from './state.js';
 import { h, ic, fa, norm, tokenize, openSheet, toast, speak } from './util.js';
 import { mascot, confetti, sfx, buzz } from './fx.js';
-import { corpus, knownSet, meaningOf, saveWord, marked } from './corpus.js';
+import { corpus, knownSet, meaningOf, saveWord, marked, levelWords } from './corpus.js';
 
 const shuffle = (a) => { const r = [...a]; for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
 const seen = () => (S.settings.testSeen = S.settings.testSeen || {});
+const freqLv = () => S.settings.freqLv || 'A2';
+const setFreqLv = (lv) => { S.settings.freqLv = lv; saveSettings(); };
+function lvChips(onPick) {
+  return h('div', { class: 'chips lv-chips' }, [['A1', t('A1 · کلیپ‌ها')], ['A2', 'A2']].map(([k, n]) => h('button', { class: 'chip' + (freqLv() === k ? ' on' : ''), onclick: () => { if (freqLv() !== k) { setFreqLv(k); onPick(); } } }, n)));
+}
 const trOf = (ex) => (S.settings.meaning === 'en' ? ex.en : ex.fa) || ex.fa || ex.en || '';
 
 function header(title, sub) { return h('div', { class: 'page-h' }, h('div', null, h('h1', null, title), h('div', { class: 'sub' }, sub))); }
@@ -14,9 +19,10 @@ function emptyBox(nav, msg) { return h('div', { class: 'empty' }, h('div', { cla
 // ------------------------------------------------------------------ quick word test
 export async function renderWordTest(root, nav) {
   root.append(header('⚡ ' + t('تست سریع واژه‌ها'), t('واژه‌های پرتکرار را ببین؛ فقط بگو بلدی یا نه')));
+  root.append(lvChips(() => { root.replaceChildren(); renderWordTest(root, nav); }));
   const box = h('div', { class: 'dict' }, h('div', { class: 'occ-n' }, t('در حال آماده‌سازی…'))); root.append(box);
   const C = await corpus(); const kn = knownSet();
-  const pool = C.list.filter((e) => !kn.has(e.k) && !seen()[e.k] && e.ex && e.k.length >= 2).slice(0, 20);
+  const pool = levelWords(C, freqLv()).filter((e) => !kn.has(e.k) && !seen()[e.k] && e.ex && e.k.length >= 2).slice(0, 20);
   if (!pool.length) { box.replaceChildren(emptyBox(nav, t('واژهٔ تازه‌ای برای تست نمانده'))); return; }
   let idx = 0, yes = 0;
   function show() {
@@ -41,7 +47,7 @@ export async function renderWordTest(root, nav) {
       h('div', { class: 'wt-card' },
         h('div', { class: 'wt-word de' }, e.w, h('button', { class: 'icon-btn sm', html: ic('vol'), 'aria-label': t('بشنو'), onclick: () => speak(e.w, 0.8, 'de') })),
         meaning,
-        h('div', { class: 'wt-ex de' }, ...marked(e.ex.de, e.k)), tr),
+        h('div', { class: 'wt-ex de' }, ...marked(e.ex.de, e.hk || e.k)), tr),
       actions);
     speak(e.w, 0.85, 'de');
   }
@@ -61,7 +67,8 @@ export async function renderWordTest(root, nav) {
 export async function renderFreq(root, nav) {
   root.append(header('📚 ' + t('واژه‌های پرتکرار'), t('پرکاربردترین واژه‌ها در کلیپ‌ها و داستان‌ها؛ با جمله‌ی نمونه')));
   const box = h('div', { class: 'freq' }, h('div', { class: 'occ-n' }, t('در حال آماده‌سازی…'))); root.append(box);
-  const C = await corpus(); const TOP = Math.min(500, C.list.length); const all = C.list.slice(0, TOP);
+  root.append(lvChips(() => { root.replaceChildren(); renderFreq(root, nav); }));
+  const C = await corpus(); const src = levelWords(C, freqLv()); const TOP = freqLv() === 'A2' ? src.length : Math.min(500, src.length); const all = src.slice(0, TOP);
   let filter = 'todo', shown = 60;
   const bar = h('div', { class: 'dict-bar' }); const stat = h('div', { class: 'mg-info' });
   const chips = h('div', { class: 'chips' }); const list = h('div', { class: 'fq-list' }); const more = h('button', { class: 'btn sec block', onclick: () => { shown += 60; paint(); } }, t('نمایش بیشتر'));
@@ -78,7 +85,7 @@ export async function renderFreq(root, nav) {
       const quick = k ? h('span', { class: 'fq-s' }, '✓')
         : h('button', { class: 'fq-k', title: t('بلدم'), 'aria-label': t('بلدم'), onclick: (ev) => { ev.stopPropagation(); markKnown([e.w]); sfx('good'); buzz(15); paint(); } }, '✓');
       return h('div', { class: 'fq-row' + (k ? ' ok' : ''), role: 'button', tabindex: '0', onclick: () => openWord(e), onkeydown: (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); openWord(e); } } },
-        h('span', { class: 'fq-w de' }, e.w), h('span', { class: 'fq-m' }, meaningOf(e.w) || ''), h('span', { class: 'fq-n num' }, '×' + fa(e.n)), quick);
+        h('span', { class: 'fq-w de' }, e.w), h('span', { class: 'fq-m' }, meaningOf(e.w) || ''), e.lv ? null : h('span', { class: 'fq-n num' }, '×' + fa(e.n)), quick);
     }));
     if (!rows.length) list.replaceChildren(h('div', { class: 'occ-n' }, filter === 'todo' ? t('آفرین! همه‌ی واژه‌های پرتکرار را بلدی 🎉') : t('چیزی اینجا نیست')));
     more.style.display = rows.length > shown ? '' : 'none';
@@ -89,8 +96,8 @@ export async function renderFreq(root, nav) {
     const acts = h('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap' } });
     const sh = openSheet({ title: e.w, body: [
       h('div', { class: 'wt-mean' }, meaningOf(e.w) || '—'),
-      e.ex ? h('div', { class: 'sent' }, h('div', { class: 's-de de' }, ...marked(e.ex.de, e.k)), trOf(e.ex) ? h('div', { class: 's-tr ' + (S.settings.meaning === 'en' ? 'en' : 'fa') }, trOf(e.ex)) : null) : null,
-      h('div', { class: 'occ-n' }, t('{0} بار در کلیپ‌ها و داستان‌ها آمده', fa(e.n)))].filter(Boolean), actions: acts });
+      e.ex ? h('div', { class: 'sent' }, h('div', { class: 's-de de' }, ...marked(e.ex.de, e.hk || e.k)), trOf(e.ex) ? h('div', { class: 's-tr ' + (S.settings.meaning === 'en' ? 'en' : 'fa') }, trOf(e.ex)) : null) : null,
+      h('div', { class: 'occ-n' }, e.lv ? t('واژهٔ پرکاربرد سطح {0}', e.lv) : t('{0} بار در کلیپ‌ها و داستان‌ها آمده', fa(e.n)))].filter(Boolean), actions: acts });
     if (!inVocab) acts.append(h('button', { class: 'btn sec', onclick: () => { if (saveWord(e)) { toast(t('به واژه‌هایت اضافه شد ✓ +۳ XP')); sfx('add'); } sh.close(); paint(); } }, '📌 ' + t('ذخیره در واژگان')));
     acts.append(k && !inVocab
       ? h('button', { class: 'btn sec', onclick: () => { unmarkKnown([e.w]); sh.close(); paint(); } }, '✗ ' + t('دیگر بلد نیستم'))
