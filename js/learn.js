@@ -66,8 +66,8 @@ export async function renderWordTest(root, nav) {
 // ------------------------------------------------------------------ frequency list
 export async function renderFreq(root, nav) {
   root.append(header('📚 ' + t('واژه‌های پرتکرار'), t('پرکاربردترین واژه‌ها در کلیپ‌ها و داستان‌ها؛ با جمله‌ی نمونه')));
-  const box = h('div', { class: 'freq' }, h('div', { class: 'occ-n' }, t('در حال آماده‌سازی…'))); root.append(box);
   root.append(lvChips(() => { root.replaceChildren(); renderFreq(root, nav); }));
+  const box = h('div', { class: 'freq' }, h('div', { class: 'occ-n' }, t('در حال آماده‌سازی…'))); root.append(box);
   const C = await corpus(); const src = levelWords(C, freqLv()); const TOP = freqLv() === 'A2' ? src.length : Math.min(500, src.length); const all = src.slice(0, TOP);
   let filter = 'todo', shown = 60;
   const bar = h('div', { class: 'dict-bar' }); const stat = h('div', { class: 'mg-info' });
