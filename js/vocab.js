@@ -8,7 +8,9 @@ let filter = { q: '', lv: 'all', lesson: 'all', sort: 'new' };
 
 export function renderVocab(root, nav) {
   const head = h('div', { class: 'page-h' }, h('div', null, h('h1', null, t('واژگان')), h('div', { class: 'sub', id: 'vsub' })),
-    h('button', { class: 'btn sec sm', onclick: () => nav('review'), html: ic('cards') + ' ' + t('مرور') }));
+    h('div', { style: { display: 'flex', gap: '6px' } },
+      h('button', { class: 'btn sec sm', onclick: () => nav('known') }, '✓ ' + t('بلدها')),
+      h('button', { class: 'btn sec sm', onclick: () => nav('review'), html: ic('cards') + ' ' + t('مرور') })));
   const q = h('input', { class: 'input', placeholder: t('جستجو در واژه‌ها…'), value: filter.q });
   q.addEventListener('input', () => { filter.q = q.value; paint(); });
   const search = h('div', { class: 'search' }, h('span', { html: ic('search') }), q);

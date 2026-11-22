@@ -78,6 +78,35 @@ export function goalCard(refresh) {
   return slot;
 }
 
+// rough current-level estimate from vocabulary size alone (no grammar)
+const BOUNDS = [['A1', 0], ['A2', LEVEL_WORDS.A1], ['B1', LEVEL_WORDS.A2], ['B2', LEVEL_WORDS.B1]];
+export function cefrEstimate(st = wordStats()) {
+  const known = st.known;
+  let cur = BOUNDS[0], next = BOUNDS[1];
+  for (let i = 0; i < BOUNDS.length - 1; i++) {
+    if (known < BOUNDS[i + 1][1]) { cur = BOUNDS[i]; next = BOUNDS[i + 1]; break; }
+    cur = BOUNDS[i + 1]; next = BOUNDS[i + 2] || null;
+  }
+  const into = known - cur[1];
+  const need = next ? next[1] - cur[1] : null;
+  return { lv: cur[0], next: next ? next[0] : null, into, need, known };
+}
+
+// home-screen badge: rough current level from vocabulary size, links to the known-words list
+export function levelCard(nav) {
+  const slot = h('div');
+  loadGlossary().catch(() => {}).then(() => {
+    if (!slot.isConnected && !slot.parentNode) return;
+    const st = wordStats(); const est = cefrEstimate(st);
+    const label = est.next ? t('سطح تقریبی {0} · {1} واژه تا {2}', est.lv, fa(Math.max(0, est.need - est.into)), est.next) : t('سطح تقریبی {0}+', est.lv);
+    slot.replaceChildren(h('div', { class: 'card cont lvest', onclick: () => nav('known') },
+      h('div', { class: 'thumb' }, '📈'),
+      h('div', { class: 'txt' }, h('small', null, t('بر اساس {0} واژه‌ای که بلدی', fa(st.known))), h('b', null, label)),
+      h('span', { class: 'pill acc' }, '›')));
+  });
+  return slot;
+}
+
 export function openGoalSheet(onDone) {
   const cur = S.settings.goals && S.settings.goals.length ? S.settings.goals : DEF_GOALS;
   const dateOf = (lv) => (cur.find((g) => g.lv === lv) || {}).date || '';

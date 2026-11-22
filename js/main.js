@@ -15,6 +15,7 @@ import { renderSearch } from './search.js';
 import { renderStoryList, renderStory } from './stories.js';
 import { getToken, syncNow, lastSync } from './sync.js';
 import { renderSettings } from './settings.js';
+import { renderKnown } from './known.js';
 
 const view = document.getElementById('view');
 const tabsEl = document.getElementById('tabs');
@@ -48,6 +49,7 @@ async function render() {
     } else if (name === 'dictation') { await renderDictation(view, nav); key = 'review';
     } else if (name === 'wordtest') { await renderWordTest(view, nav); key = 'home';
     } else if (name === 'freq') { await renderFreq(view, nav); key = 'vocab';
+    } else if (name === 'known') { await renderKnown(view, nav); key = 'vocab';
     } else if (name === 'cloze') { await renderCloze(view, nav); key = 'review';
     } else if (name === 'search') { await renderSearch(view, nav); key = 'home';
     } else if (name === 'game') { renderGame(view, nav); key = 'review';

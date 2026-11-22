@@ -385,3 +385,4 @@ html[lang=fa] body,html[lang=fa] button,html[lang=fa] input,html[lang=fa] textar
 
 .card.goal .thumb{font-size:22px}.card.goal.ok{background:linear-gradient(135deg,rgba(46,204,113,.14),rgba(0,184,148,.08))}
 .lv-chips{margin:0 0 10px}
+.card.lvest .thumb{font-size:22px}

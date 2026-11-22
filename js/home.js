@@ -6,7 +6,7 @@ import { openAddClip } from './addclip.js';
 import { deleteCustomLesson } from './state.js';
 import { confirmSheet } from './util.js';
 import { recommendNext } from './corpus.js';
-import { goalCard } from './goal.js';
+import { goalCard, levelCard } from './goal.js';
 import { mascot, ring, animateRings, confetti, sfx } from './fx.js';
 
 let courseId = null;
@@ -64,6 +64,7 @@ export function renderHome(root, nav) {
   hero.append(...['✦', '✧', '★'].map((x, i) => h('span', { class: 'spark s' + i }, x)));
   root.append(hero);
   animateRings(hero);
+  root.append(levelCard(nav));
   root.append(goalCard(() => { root.replaceChildren(); renderHome(root, nav); }));
   const recSlot = h('div'); root.append(recSlot);
   // ---- continue
