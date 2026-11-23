@@ -1,6 +1,7 @@
 import { t, locale } from './i18n.js';
 import { S, saveSettings, vocabLevel, loadGlossary, lookup } from './state.js';
 import { h, fa, dayKey, norm, openSheet, toast } from './util.js';
+import { isProperNoun } from './names.js';
 
 // rough vocabulary size (lemmas) at the end of each CEFR level
 export const LEVEL_WORDS = { A1: 650, A2: 1300, B1: 2400 };
@@ -15,11 +16,13 @@ const fmtDate = (iso) => new Date(iso + 'T12:00:00').toLocaleDateString(locale +
 export function wordStats() {
   const known = new Set(), learning = new Set(), todayNew = new Set(); const tk = dayKey();
   for (const [w, ts] of Object.entries(S.settings.known || {})) {
-    const k = lemmaKey(w); if (!k) continue; known.add(k);
+    const k = lemmaKey(w); if (!k || isProperNoun(k)) continue; known.add(k);
     if (dayKey(new Date(ts)) === tk) todayNew.add(k);
   }
   S.vocab.forEach((v) => {
     const k = norm(v.de); if (!k) return;
+    const fromLesson = !!(v.ctx && v.ctx.lesson);
+    if (isProperNoun(k) && !fromLesson) return;  // a name you added yourself, not learned from a lesson
     (vocabLevel(v) >= 2 ? known : learning).add(k);
     if (v.created && dayKey(new Date(v.created)) === tk) todayNew.add(k);
   });

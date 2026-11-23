@@ -2,6 +2,7 @@ import { t } from './i18n.js';
 import { S, unmarkKnown, loadGlossary, lookup } from './state.js';
 import { meaningOf } from './corpus.js';
 import { h, fa, norm, toast, speak } from './util.js';
+import { isProperNoun } from './names.js';
 
 // best display form for a normalised known-word key (lemma from the glossary, else the key itself)
 function displayWord(key) {
@@ -20,6 +21,7 @@ export async function renderKnown(root, nav) {
   box.replaceChildren(h('div', { class: 'field' }, q), stat, list);
 
   const rows = () => Object.entries(S.settings.known || {})
+    .filter(([k]) => !isProperNoun(k))
     .map(([k, ts]) => ({ k, ts, w: displayWord(k), m: meaningOf(k) }))
     .sort((a, b) => b.ts - a.ts);
 

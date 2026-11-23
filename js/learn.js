@@ -3,6 +3,7 @@ import { S, gainXP, markKnown, unmarkKnown, knownMap, saveSettings } from './sta
 import { h, ic, fa, norm, tokenize, openSheet, toast, speak } from './util.js';
 import { mascot, confetti, sfx, buzz } from './fx.js';
 import { corpus, knownSet, meaningOf, saveWord, marked, levelWords } from './corpus.js';
+import { isProperNoun } from './names.js';
 
 const shuffle = (a) => { const r = [...a]; for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
 const seen = () => (S.settings.testSeen = S.settings.testSeen || {});
@@ -119,7 +120,7 @@ export async function renderCloze(root, nav) {
   for (const s of cand) {
     if (items.length >= 10) break;
     if (used.has(norm(s.de))) continue;
-    const toks = tokenize(s.de).filter((w) => w.w).filter((w) => w.t.length >= 4);
+    const toks = tokenize(s.de).filter((w) => w.w).filter((w) => w.t.length >= 4 && !isProperNoun(norm(w.t)));
     if (!toks.length) continue;
     const learning = toks.filter((w) => !kn.has(norm(w.t)) || [...S.vocab.values()].some((v) => norm(v.form || v.de) === norm(w.t)));
     const pick = (learning.length ? learning : toks)[Math.floor(Math.random() * (learning.length || toks.length))];

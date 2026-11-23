@@ -2,6 +2,7 @@ import { t } from './i18n.js';
 import { S, loadCues, loadGlossary, lookup, addVocab, findVocab, markKnown } from './state.js';
 import { h, norm, tokenize, toast } from './util.js';
 import { loadStories } from './stories.js';
+import { isProperNoun } from './names.js';
 
 // every German sentence the app has (clips + stories), with word frequencies
 let C = null;
@@ -13,6 +14,7 @@ export async function corpus() {
     const toks = tokenize(src.de).filter((x) => x.w); const n = toks.length;
     toks.forEach((x) => {
       const k = norm(x.t); if (k.length < 2 || /\d/.test(k)) return;
+      if (isProperNoun(k)) return;
       let e = freq.get(k); if (!e) { e = { k, w: x.t, n: 0, ex: null }; freq.set(k, e); }
       e.n++; if (n >= 3 && n <= 10 && (!e.ex || n < e.ex.len)) e.ex = { ...src, len: n };
     });
@@ -29,7 +31,7 @@ export async function corpus() {
   const a2 = [];
   const G = S.glossary || (S.glossary = {});
   for (const [w, en, fa, de, xfa, xen] of await loadA2()) {
-    const k = norm(w); if (!k || freq.has(k) && freq.get(k).n >= 3) continue;
+    const k = norm(w); if (!k || isProperNoun(k) || freq.has(k) && freq.get(k).n >= 3) continue;
     if (!G[w.toLowerCase()]) G[w.toLowerCase()] = [w, en, fa];
     const ex = { de, fa: xfa, en: xen, lname: 'A2', a2: true, len: tokenize(de).filter((x) => x.w).length };
     a2.push({ k, w, n: 0, lv: 'A2', ex, hk: hlKey(de, k) });
