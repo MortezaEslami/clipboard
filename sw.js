@@ -1,5 +1,5 @@
 // Offline cache for the app shell + lesson data. Videos live in OPFS, not here.
-const VERSION = 'clipboard-v32';
+const VERSION = 'clipboard-v33';
 const CORE = ['./', 'index.html', 'css/app.css', 'css/polish.css', 'css/fx.css', 'js/fx.js', 'js/i18n.js', 'js/subs.js', 'js/addclip.js', 'js/occur.js','js/dictation.js','js/corpus.js','js/learn.js','js/search.js','js/game.js', 'js/stats.js', 'js/sync.js', 'js/stories.js', 'js/goal.js', 'js/known.js', 'js/names.js', 'data/stories.json', 'data/a2.json', 'manifest.webmanifest', 'fonts/vazirmatn.woff2', 'fonts/inter-latin.woff2',
   'js/main.js', 'js/state.js', 'js/db.js', 'js/util.js', 'js/fsrs.js', 'js/videos.js', 'js/home.js', 'js/player.js', 'js/review.js', 'js/vocab.js', 'js/marks.js', 'js/settings.js',
   'data/index.json', 'data/glossary.json', 'icons/icon-192.png', 'icons/icon-512.png'];

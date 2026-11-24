@@ -18,6 +18,7 @@ import { renderSettings } from './settings.js';
 import { renderKnown } from './known.js';
 
 const view = document.getElementById('view');
+const appEl = document.getElementById('app');
 const tabsEl = document.getElementById('tabs');
 const TABS = [['home', t('خانه'), 'home'], ['review', t('مرور'), 'zap'], ['vocab', t('واژگان'), 'book'], ['marks', t('مارک‌ها'), 'bookmark'], ['settings', t('تنظیمات'), 'settings']];
 let cleanup = null, pending = {}, seq = 0;
@@ -65,6 +66,7 @@ async function render() {
     console.error(e);
     view.append(h('div', { class: 'empty' }, h('b', null, t('مشکلی پیش آمد')), String(e && e.message || e), h('div', { style: { marginTop: '14px' } }, h('button', { class: 'btn', onclick: () => nav('home') }, t('خانه')))));
   }
+  appEl.classList.toggle('wide', view.classList.contains('full'));
   [...view.children].slice(0, 14).forEach((el, i) => el.style.setProperty('--i', i));
   drawTabs(key);
 }

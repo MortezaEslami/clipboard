@@ -54,14 +54,14 @@ export async function renderPlayer(root, lessonId, opts = {}) {
     });
     try { if (!localStorage.getItem('lc-gest')) { localStorage.setItem('lc-gest', '1'); setTimeout(() => toast(t('💡 روی ویدیو: دوبار لمس = تکرار جمله · کشیدن به چپ/راست = جمله بعد/قبل')), 1200); } } catch (e) { /* ignore */ }
   }
-  const fsBtn = h('button', { class: 'fs', onclick: (e) => { e.stopPropagation(); toggleFs(); }, html: ic('full'), 'aria-label': t('تمام‌صفحه') });
   const novideo = h('div', { class: 'novideo' });
-  const vbox = h('div', { class: 'vbox paused' }, video, mask, ovl, tap, fsBtn, novideo);
-  const stage = h('div', { class: 'pl-stage' }, vbox);
 
   const seek = h('input', { type: 'range', class: 'seek', min: 0, max: 100, step: 0.05, value: 0, 'aria-label': t('زمان') });
   const tmCur = h('span', { class: 'tm' }, '0:00');
   const tmDur = h('span', { class: 'tm' }, '0:00');
+  const subBtn = h('button', { class: 'tg ov-sub', onclick: () => openSubModes(), 'aria-label': t('زیرنویس') });
+  const fsBtn = h('button', { class: 'icon-btn sm', onclick: (e) => { e.stopPropagation(); toggleFs(); }, html: ic('full'), 'aria-label': t('تمام‌صفحه') });
+  const seekRow = h('div', { class: 'pl-bar' }, tmCur, seek, tmDur, subBtn, fsBtn);
 
   const playBtn = h('button', { class: 'icon-btn play', onclick: () => togglePlay(), 'aria-label': t('پخش') });
   const speedBtn = h('button', { class: 'tg', onclick: cycleSpeed, 'aria-label': t('سرعت') });
@@ -74,8 +74,9 @@ export async function renderPlayer(root, lessonId, opts = {}) {
     h('button', { class: 'icon-btn', onclick: () => gotoCue(cur + 1), html: ic('next'), 'aria-label': t('جمله بعد') }),
     repBtn);
 
-  const chips = h('div', { class: 'chips pl-modes' }, MODES.filter((m) => (!m.maskOnly || course.mask) && !(lang === 'en' && m.id === 'de-en')).map((m) => ({ ...m, label: m.label.replace(t('آلمانی'), LN) })).map((m) =>
-    h('button', { class: 'chip', dataset: { m: m.id }, onclick: () => setMode(m.id) }, m.label)));
+  const ovCtl = h('div', { class: 'ov-ctl' }, seekRow, ctl);
+  const vbox = h('div', { class: 'vbox paused' }, video, mask, ovl, tap, novideo, ovCtl);
+  const stage = h('div', { class: 'pl-stage' }, vbox);
 
   const nowDe = h('div', { class: 'n-de de' });
   const nowTr = h('div', { class: 'n-tr' });
@@ -106,8 +107,7 @@ export async function renderPlayer(root, lessonId, opts = {}) {
     h('div', { class: 'ttl' }, h('b', null, lesson.title), h('small', null, lesson.sub || ''), covEl),
     h('button', { class: 'icon-btn', onclick: openMore, html: ic('more'), 'aria-label': t('بیشتر') }));
 
-  const player = h('div', { class: 'player' }, topbar, stage,
-    h('div', { class: 'pl-bar' }, tmCur, seek, tmDur), ctl, chips, now, list);
+  const player = h('div', { class: 'player' }, topbar, stage, now, list);
   root.append(player);
   setTimeout(() => computeI1(), 0);
 
@@ -175,12 +175,26 @@ export async function renderPlayer(root, lessonId, opts = {}) {
     mask.style.height = `${(1 - S.settings.maskTop) * 100 + 0.4}%`;
     renderOvl();
   }
-  function setMode(m) {
+  function subLabel(m) {
+    return m === 'de' ? LN : m === 'de-fa' ? LN + '+FA' : m === 'de-en' ? LN + '+EN' : m === 'orig' ? '🎬' : t('—');
+  }
+  function setSubMode(m) {
     mode = m; S.settings.subMode = m; saveSettings();
     player.dataset.mode = m;
-    chips.querySelectorAll('.chip').forEach((c) => c.classList.toggle('on', c.dataset.m === m));
+    subBtn.textContent = subLabel(m);
     cues.forEach((_, i) => paintRowTr(i));
     applyMask(); renderNow();
+  }
+  function openSubModes() {
+    const avail = MODES.filter((m) => (!m.maskOnly || course.mask) && !(lang === 'en' && m.id === 'de-en'))
+      .map((m) => ({ ...m, label: m.label.replace(t('آلمانی'), LN) }));
+    const list2 = h('div', { class: 'modes' });
+    function paint() {
+      list2.replaceChildren(...avail.map((m) => h('button', { class: 'mode' + (mode === m.id ? ' on' : ''), onclick: () => { setSubMode(m.id); paint(); sh.close(); } },
+        h('span', { class: 'me' }, subLabel(m.id)), h('span', { class: 'mt' }, h('b', null, m.label)))));
+    }
+    const sh = openSheet({ title: '💬 ' + t('زیرنویس'), body: [list2] });
+    paint();
   }
   function setCur(i, scroll = true) {
     if (i === cur) return;
@@ -208,7 +222,16 @@ export async function renderPlayer(root, lessonId, opts = {}) {
     repBtn.innerHTML = ic(repeat === 'loop' ? 'loop1' : repeat === 'pause' || repeat === 'wait' ? 'pausebar' : 'repeat') + (repeat === 'wait' ? `<small class="wsec">${S.settings.waitLen ? '⟷' : fa(S.settings.waitSec || 0.5)}</small>` : '');
     repBtn.classList.toggle('on', repeat !== 'off');
     repBtn.title = repeat === 'loop' ? t('تکرار جمله') : repeat === 'pause' ? t('توقف آخر هر جمله') : repeat === 'wait' ? t('مکث کوتاه بعد از هر جمله') : t('پخش عادی');
+    showCtl();
   }
+  function showCtl(auto = true) {
+    vbox.classList.add('show-ctl');
+    clearTimeout(showCtl.t);
+    if (auto && playing) showCtl.t = setTimeout(() => vbox.classList.remove('show-ctl'), 2600);
+  }
+  vbox.addEventListener('pointermove', () => showCtl());
+  vbox.addEventListener('pointerdown', () => showCtl(), { passive: true });
+  vbox.addEventListener('pointerleave', () => { if (playing) { clearTimeout(showCtl.t); vbox.classList.remove('show-ctl'); } });
 
   // ---------- playback
   function hasVideo() { return !!video.getAttribute('src'); }
@@ -606,7 +629,7 @@ export async function renderPlayer(root, lessonId, opts = {}) {
 
   // ---------- init
   
-  setMode(mode);
+  setSubMode(mode);
   cues.forEach((_, i) => paintRowMark(i));
   updateButtons(); renderNow();
   await attach();

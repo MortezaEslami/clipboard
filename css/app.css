@@ -45,6 +45,7 @@ svg.ic{width:1.25em;height:1.25em;stroke:currentColor;fill:none;stroke-width:2;s
 svg.ic.fill{fill:currentColor;stroke:none}
 
 #app{height:100%;display:flex;flex-direction:column;max-width:760px;margin:0 auto;position:relative}
+#app.wide{max-width:1100px}
 #view{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 16px calc(var(--tabh) + 28px + env(safe-area-inset-bottom))}
 #view.full{padding:0}
 
@@ -169,7 +170,7 @@ textarea.input{resize:vertical;min-height:70px}
 .vbox video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
 .vbox .mask{position:absolute;inset-inline:0;bottom:0;background:var(--mask-c,#0c1d2b);pointer-events:none;z-index:2;display:none}
 .player.masked .vbox .mask{display:block}
-.vbox .ovl{position:absolute;inset-inline:0;bottom:0;z-index:3;display:none;flex-direction:column;justify-content:center;align-items:center;gap:2px;text-align:center;padding:0 5%;pointer-events:none}
+.vbox .ovl{position:absolute;inset-inline:0;bottom:64px;z-index:3;display:none;flex-direction:column;justify-content:center;align-items:center;gap:2px;text-align:center;padding:0 5%;pointer-events:none}
 .pl-stage:fullscreen .ovl.has{display:flex}
 .vbox .ovl .o-de{color:#fff;font-weight:600;font-size:clamp(15px,3.1vw,30px);line-height:1.25;text-align:center;text-shadow:0 1px 3px #000}
 .vbox .ovl .o-tr{color:#cfd8ea;font-size:clamp(12px,2.2vw,22px);line-height:1.3;text-align:center;text-shadow:0 1px 3px #000}
@@ -179,10 +180,25 @@ textarea.input{resize:vertical;min-height:70px}
 .vbox .tap .big{width:70px;height:70px;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;display:grid;place-items:center;opacity:0;transform:scale(.8);transition:all .2s}
 .vbox .tap .big svg{width:32px;height:32px}
 .vbox.paused .tap .big{opacity:1;transform:scale(1)}
-.vbox .fs{position:absolute;z-index:5;top:6px;inset-inline-end:6px;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.45);color:#fff;display:grid;place-items:center}
 .vbox .novideo{position:absolute;inset:0;z-index:6;background:linear-gradient(160deg,#1c2740,#0c1424);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#dfe6f7;text-align:center;padding:16px}
 .vbox .novideo b{font-size:15px}
 .vbox .novideo small{color:#9fb0d0;font-size:12.5px}
+/* bottom control overlay: sits on the video itself, hidden until hover/tap/paused */
+.vbox .ov-ctl{position:absolute;inset-inline:0;bottom:0;z-index:7;display:flex;flex-direction:column;gap:2px;
+  padding:4px 8px calc(6px + env(safe-area-inset-bottom));
+  background:linear-gradient(to top,rgba(0,0,0,.78),rgba(0,0,0,.42) 65%,transparent);
+  opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .2s,transform .2s;direction:ltr}
+.vbox.show-ctl .ov-ctl,.vbox.paused .ov-ctl{opacity:1;transform:none;pointer-events:auto}
+.ov-ctl .pl-bar{padding:0;gap:6px}
+.ov-ctl .pl-ctl{padding:2px 0 0}
+.ov-ctl .tm{color:#fff}
+.ov-ctl .icon-btn{color:#fff}
+.ov-ctl .icon-btn:active{background:rgba(255,255,255,.2)}
+.ov-ctl .icon-btn.sm{width:30px;height:30px;flex:none}
+.ov-ctl .icon-btn.sm svg{width:16px;height:16px}
+.ov-ctl .tg{background:rgba(255,255,255,.18);color:#fff}
+.ov-ctl .tg.on{background:var(--accent);color:var(--accent-ink)}
+.ov-ctl .ov-sub{flex:none;font-size:11px;min-width:0;height:28px;padding:0 9px}
 .pl-bar{display:flex;align-items:center;gap:10px;padding:8px 14px 0;flex:none;direction:ltr}
 .pl-bar .tm{font-size:12px;color:var(--muted);min-width:40px;text-align:center;font-feature-settings:"tnum";direction:ltr}
 .seek{flex:1;-webkit-appearance:none;appearance:none;height:26px;background:transparent;direction:ltr}
@@ -198,11 +214,10 @@ textarea.input{resize:vertical;min-height:70px}
 .pl-ctl .play svg{width:26px;height:26px}
 .pl-ctl .tg{font-size:12.5px;font-weight:800;min-width:46px;height:34px;border-radius:999px;background:var(--bg2);color:var(--ink2);display:grid;place-items:center;padding:0 10px;font-family:var(--f-de)}
 .pl-ctl .tg.on{background:var(--accent-soft);color:var(--accent)}
-.pl-modes{flex:none;padding:0 10px}
-.pl-now{flex:none;margin:6px 12px 4px;padding:12px 14px;border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow);border:1px solid color-mix(in srgb,var(--line) 60%,transparent);min-height:92px;position:relative}
-.pl-now .n-de{font-size:20px;font-weight:600;line-height:1.4;letter-spacing:-.1px}
-.pl-now .n-tr{margin-top:5px;color:var(--ink2);font-size:15px;line-height:1.55}
-.pl-now .n-tr.fa{font-size:16px}
+.pl-now{flex:none;margin:4px 12px 4px;padding:7px 10px;border-radius:var(--r-sm,12px);background:var(--surface);box-shadow:var(--shadow);border:1px solid color-mix(in srgb,var(--line) 60%,transparent);min-height:0;position:relative}
+.pl-now .n-de{font-size:14.5px;font-weight:600;line-height:1.35;letter-spacing:-.1px}
+.pl-now .n-tr{margin-top:2px;color:var(--ink2);font-size:12.5px;line-height:1.4}
+.pl-now .n-tr.fa{font-size:13px}
 .pl-now.stale .n-de{opacity:.45}
 .pl-now{display:flex;gap:6px;align-items:flex-start}
 .pl-now .n-body{flex:1;min-width:0}
@@ -232,15 +247,11 @@ textarea.input{resize:vertical;min-height:70px}
 .player[data-mode=none] .row.cur .bd,.player[data-mode=orig] .row.cur .bd{filter:blur(7px)}
 .player.peek .row.cur .bd{filter:none}
 @media (orientation:landscape) and (max-height:520px){
-  .player{display:grid;grid-template-columns:minmax(0,58%) minmax(0,1fr);grid-template-rows:auto auto auto auto 1fr;grid-template-areas:"top top" "stage now" "bar now" "ctl modes" "ctl list"}
+  .player{display:grid;grid-template-columns:minmax(0,58%) minmax(0,1fr);grid-template-rows:auto 1fr;grid-template-areas:"top top" "stage now" "list now"}
   .player .pl-top{grid-area:top;padding-block:2px}
   .player .pl-stage{grid-area:stage;align-self:start}
-  .player .pl-bar{grid-area:bar;padding-top:2px}
-  .player .pl-ctl{grid-area:ctl;align-self:start;padding:0}
-  .player .pl-modes{grid-area:modes}
   .player .pl-now{grid-area:now;margin-top:0;min-height:0}
   .player .pl-list{grid-area:list}
-  .pl-now .n-de{font-size:18px}
 }
 @media (orientation:landscape) and (max-height:520px){.player .pl-ctl .icon-btn{width:40px;height:40px}}
 
