@@ -12,6 +12,29 @@ import { mascot, ring, animateRings, confetti, sfx } from './fx.js';
 let courseId = null;
 const WD = [t('ی'), t('د'), t('س'), t('چ'), t('پ'), t('ج'), t('ش')];   // Sunday..Saturday (Persian initials)
 
+function openIdeasSheet() {
+  const list = h('div', { class: 'ideas-list' });
+  const paint = () => {
+    const ideas = S.settings.ideas || [];
+    list.replaceChildren(...(ideas.length ? ideas.map((idea, i) => h('div', { class: 'idea-row' },
+      h('div', { class: 'idea-txt' }, idea),
+      h('button', { class: 'icon-btn sm', html: ic('trash'), 'aria-label': t('حذف'), onclick: () => { ideas.splice(i, 1); saveSettings(); paint(); } }))) : [h('div', { class: 'empty-sm' }, t('هنوز ایده‌ای ثبت نکرده‌ای'))]));
+  };
+  paint();
+  const input = h('textarea', { class: 'idea-input', placeholder: t('ایدهٔ جدید برای ارتقای اپ…'), rows: 2 });
+  const add = () => {
+    const v = input.value.trim();
+    if (!v) return;
+    if (!S.settings.ideas) S.settings.ideas = [];
+    S.settings.ideas.unshift(v);
+    saveSettings();
+    input.value = '';
+    paint();
+  };
+  openSheet({ title: '💡 ' + t('ایده‌های من'),
+    body: [h('div', { class: 'idea-add' }, input, h('button', { class: 'btn', onclick: add }, t('افزودن'))), list] });
+}
+
 function langPicker() {
   const flags = [['fa', '🇮🇷', 'فارسی'], ['en', '🇬🇧', 'English'], ['de', '🇩🇪', 'Deutsch']];
   const globe = h('button', { class: 'globe-btn', 'aria-label': 'Language', html: '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/></svg>' });
@@ -34,15 +57,16 @@ export function renderHome(root, nav) {
 
   root.append(h('div', { class: 'page-h home-h' },
     h('div', { class: 'mascot-wrap', html: mascot(goalDone ? 'cheer' : (c.due + c.fresh ? 'happy' : 'sleep'), 66), onclick: (e) => { const k = e.currentTarget; k.classList.remove('boing'); void k.offsetWidth; k.classList.add('boing'); sfx('tap'); const r = k.getBoundingClientRect(); confetti(r.left + r.width / 2, r.top + 20, { n: 22, power: .6 }); } }),
-    h('div', { class: 'grow' }, h('h1', null, greet), h('div', { class: 'sub' }, dayName)),
-    h('div', { class: 'hdr-end' },
-      h('div', { class: 'streak' + (st ? ' lit' : '') }, h('span', { class: 'flame', html: ic('flame') }), h('b', { class: 'num' }, fa(st))),
-      langPicker())));
+    h('div', { class: 'grow' }, h('h1', null, greet), h('div', { class: 'sub' }, dayName))));
 
-  // ---- exercises: tiny icon-only row at the very top
+  // ---- toolbar: exercise icons + ideas bulb + streak + language, one scrollable strip
   const tiles = [['⚡', t('تست واژه'), 'wordtest'], ['✍️', t('دیکته'), 'dictation'], ['🧩', t('جای‌خالی'), 'cloze'], ['📖', t('داستان‌ها'), 'stories'],
     ['📚', t('پرتکرار'), 'freq'], ['🔎', t('جستجو'), 'search'], ['🎮', t('بازی'), 'game'], ['📊', t('آمار'), 'stats']];
-  root.append(h('div', { class: 'qtools' }, tiles.map(([e, n, r]) => h('button', { class: 'qtool', title: n, 'aria-label': n, onclick: () => nav(r) }, e))));
+  root.append(h('div', { class: 'toolbar' },
+    ...tiles.map(([e, n, r]) => h('button', { class: 'ttool', title: n, 'aria-label': n, onclick: () => nav(r) }, e)),
+    h('button', { class: 'ttool idea', title: t('ایده‌ها'), 'aria-label': t('ایده‌ها'), onclick: () => openIdeasSheet() }, '💡'),
+    h('div', { class: 'streak' + (st ? ' lit' : '') }, h('span', { class: 'flame', html: ic('flame') }), h('b', { class: 'num' }, fa(st))),
+    langPicker()));
 
   // ---- review hero with daily-goal ring
   const hasVocab = S.vocab.size > 0;
